@@ -1,0 +1,27 @@
+{
+  "short_name": "ATTA",
+  "name": "Atta Parune",
+  "description": "예약부터 결제까지 아따 빠르네~",
+  "icons": [
+    {
+      "src": "badge-72x72.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#ffffff",
+  "background_color": "#E7E1F9"
+}
