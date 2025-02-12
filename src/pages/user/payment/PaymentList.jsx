@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { ImFileEmpty } from "react-icons/im";
 import { IoIosArrowForward } from "react-icons/io";
-import MenuBar from "../../components/MenuBar";
+import MenuBar from "../../../components/MenuBar";
 import { IoArrowForward } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { getCookie } from "../../components/cookie";
-import QRCode from "../order/placetoorder/QRCode";
+import { getCookie } from "../../../components/cookie";
+import QRCode from "../order/QRCode";
 
 const OrderList = () => {
   const navigate = useNavigate();

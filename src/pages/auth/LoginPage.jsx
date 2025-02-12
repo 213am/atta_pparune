@@ -4,9 +4,11 @@ import { useForm } from "react-hook-form";
 import { IoMdClose } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
+import Swal from "sweetalert2";
+import { isLoginStoreAtom } from "../../atoms/restaurantAtom";
 import { roleAtom } from "../../atoms/roleAtom";
 import { loginAtom, userDataAtom } from "../../atoms/userAtom";
-import { isLoginStoreAtom } from "../../atoms/restaurantAtom";
+import { setCookie } from "../../components/cookie";
 import { STORE, USER } from "../../constants/Role";
 import {
   CloseDiv,
@@ -21,12 +23,6 @@ import {
   TextSpan,
   TitleDiv,
 } from "./loginStyle";
-import { getCookie, setCookie } from "../../components/cookie";
-import {
-  subscribeStoreLogin,
-  subscribeUserLogin,
-} from "../../components/notification/StompComponent";
-import Swal from "sweetalert2";
 
 function LoginPage() {
   const navigate = useNavigate();

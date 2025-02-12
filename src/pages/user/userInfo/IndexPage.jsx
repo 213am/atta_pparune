@@ -4,16 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
 import { MdOutlineMail } from "react-icons/md";
 import { useRecoilState } from "recoil";
-import { loginAtom, userDataAtom } from "../../atoms/userAtom";
-import MenuBar from "../../components/MenuBar";
-import Notification from "../../components/notification/NotificationIcon";
-import { isWhiteIcon } from "../../atoms/noticeAtom";
+
+import Swal from "sweetalert2";
+import { loginAtom, userDataAtom } from "../../../atoms/userAtom";
+import { isWhiteIcon } from "../../../atoms/noticeAtom";
 import {
   getCookie,
   removeCookie,
   removeCookieRefresh,
-} from "../../components/cookie";
-import Swal from "sweetalert2";
+} from "../../../components/cookie";
+import Notification from "../../../components/notification/NotificationIcon";
+import MenuBar from "../../../components/MenuBar";
 
 function IndexPage() {
   const navigate = useNavigate();

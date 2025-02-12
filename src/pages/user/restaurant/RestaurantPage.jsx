@@ -11,7 +11,7 @@ import {
 } from "react-kakao-maps-sdk";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { locationAtom } from "../../atoms/userAtom";
+import { locationAtom } from "../../../atoms/userAtom";
 
 // ListDiv styled component 수정
 const ListDiv = styled.div`

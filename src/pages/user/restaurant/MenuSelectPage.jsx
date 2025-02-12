@@ -10,10 +10,10 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { orderIdAtom, reserveState } from "../../atoms/restaurantAtom";
 import dayjs from "dayjs";
-import { userDataAtom } from "../../atoms/userAtom";
-import { getCookie } from "../../components/cookie";
-import { subscribeToReservationStatus } from "../../components/notification/StompComponent";
+import { userDataAtom } from "../../../atoms/userAtom";
 import Swal from "sweetalert2";
+import { getCookie } from "../../../components/cookie";
+import { subscribeToReservationStatus } from "../../../components/notification/StompComponent";
 
 const BackDiv = styled.div`
   background-color: #fff;

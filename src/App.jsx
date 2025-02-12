@@ -1,24 +1,22 @@
+import { Suspense, lazy, useEffect } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import React, { Suspense, lazy, useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { isLoginStoreAtom } from "./atoms/restaurantAtom";
+import { loginAtom } from "./atoms/userAtom";
+import Loading from "./components/Loading";
 import {
   initializeSocket,
   subscribeStoreLogin,
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
-import { useRecoilState } from "recoil";
-import { loginAtom } from "./atoms/userAtom";
-import { isLoginStoreAtom } from "./atoms/restaurantAtom";
-import Loading from "./components/Loading";
-import { removeCookie, removeCookieRefresh } from "./components/cookie";
-
 const IndexPage = lazy(() => import("./pages/IndexPage"));
 const EditPwPage = lazy(() => import("./pages/auth/EditPwPage"));
 const FindIdPage = lazy(() => import("./pages/auth/FindIdPage"));
 const FindPwPage = lazy(() => import("./pages/auth/FindPwPage"));
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
 const SignUpPage = lazy(() => import("./pages/auth/SignUpPage"));
-const Order = lazy(() => import("./pages/payment/PaymentList"));
-const Restaurant = lazy(() => import("./pages/restaurant/RestaurantPage"));
+const Order = lazy(() => import("./pages/user/payment/PaymentList"));
+const Restaurant = lazy(() => import("./pages/user/restaurant/RestaurantPage"));
 const Store = lazy(() => import("./pages/storeManager/StorePage"));
 const MenuPage = lazy(() => import("./pages/storeManager/menu/StoreMenuPage"));
 const StoreSales = lazy(
@@ -27,32 +25,30 @@ const StoreSales = lazy(
 const OrderPage = lazy(
   () => import("./pages/storeManager/salesConfirm/SalesPage"),
 );
-const EditInfoPage = lazy(() => import("./pages/userInfo/EditInfoPage"));
-const UserInfo = lazy(() => import("./pages/userInfo/IndexPage"));
+const EditInfoPage = lazy(() => import("./pages/user/userInfo/EditInfoPage"));
+const UserInfo = lazy(() => import("./pages/user/userInfo/IndexPage"));
 const EmailAuthPage = lazy(() => import("./pages/auth/EmailAuthPage"));
 const PolicyPage = lazy(() => import("./pages/auth/PolicyPage"));
-const PlaceToOrder = lazy(
-  () => import("./pages/order/placetoorder/PlaceToOrder"),
-);
-const MealTicketPage = lazy(() => import("./pages/order/placetoorder/QRCode"));
+const PlaceToOrder = lazy(() => import("./pages/user/order/PlaceToOrder"));
+const MealTicketPage = lazy(() => import("./pages/user/order/QRCode"));
 const StoreInfoPage = lazy(
   () => import("./pages/storeManager/storeAuth/StoreInfoPage"),
 );
 const UserMainPage = lazy(() => import("./pages/user/UserMainPage"));
 const RestaurantDetailPage = lazy(
-  () => import("./pages/restaurant/RestaurantDetailPage"),
+  () => import("./pages/user/restaurant/RestaurantDetailPage"),
 );
 const AddStorePage = lazy(() => import("./pages/storeManager/AddStorePage"));
 const OrderMemberPage = lazy(
-  () => import("./pages/order/placetoorder/OrderMemberPage"),
+  () => import("./pages/user/order/OrderMemberPage"),
 );
-const OrderPricePage = lazy(
-  () => import("./pages/order/placetoorder/OrderPricePage"),
+const OrderPricePage = lazy(() => import("./pages/user/order/OrderPricePage"));
+const MenuSelectPage = lazy(
+  () => import("./pages/user/restaurant/MenuSelectPage"),
 );
-const MenuSelectPage = lazy(() => import("./pages/restaurant/MenuSelectPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const OrderRequestPage = lazy(
-  () => import("./pages/order/placetoorder/OrderRequestPage"),
+  () => import("./pages/user/order/OrderRequestPage"),
 );
 
 const App = () => {

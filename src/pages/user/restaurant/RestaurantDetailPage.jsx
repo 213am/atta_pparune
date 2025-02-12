@@ -6,9 +6,10 @@ import { IoMdArrowBack, IoMdClose } from "react-icons/io";
 import { LuMapPin } from "react-icons/lu";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { reserveState } from "../../atoms/restaurantAtom";
-import { getCookie } from "../../components/cookie";
+
 import Swal from "sweetalert2";
+import { reserveState } from "../../../atoms/restaurantAtom";
+import { getCookie } from "../../../components/cookie";
 
 const BackDiv = styled.div`
   background-color: #fff;

@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import MenuBar from "../../components/MenuBar";
-import Notification from "../../components/notification/NotificationIcon";
+
 import { IoMdArrowBack } from "react-icons/io";
 import Swal from "sweetalert2";
 import { useRecoilState } from "recoil";
-import { userDataAtom } from "../../atoms/userAtom";
+
 import { MdOutlineMail } from "react-icons/md";
+import { userDataAtom } from "../../../atoms/userAtom";
+import Notification from "../../../components/notification/NotificationIcon";
+import MenuBar from "../../../components/MenuBar";
 
 function EditInfoPage() {
   const navigate = useNavigate();
