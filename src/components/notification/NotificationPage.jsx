@@ -125,7 +125,7 @@ const NotificationPage = () => {
   console.log(myPaymentData);
 
   return (
-    <div className="absolute right-4 w-[80%] bg-white z-50 top-12 border-2 border-darkGray rounded-md pb-6 overflow-x-hidden over overflow-y-scroll scrollbar-hide">
+    <div className="absolute top-12 right-5 w-[80%] bg-white z-50 border-2 border-darkGray rounded-md pb-4 overflow-x-hidden over overflow-y-scroll scrollbar-hide">
       <div className="p-5 font-semibold text-darkGray">알림</div>
       <div className="flex flex-col px-5 gap-5 font-medium text-nowrap">
         {isNotice?.length > 0 ? (
@@ -150,7 +150,12 @@ const NotificationPage = () => {
                 </>
               ) : (
                 <>
-                  <span>{item.message}</span> [{item.restaurantName}]
+                  <div className="flex gap-1 items-center">
+                    <span className="text-black text-xl">
+                      {item.restaurantName}{" "}
+                    </span>
+                    <span className="text-darkGray">주문을 완성해주세요</span>
+                  </div>
                 </>
               )}
             </div>
