@@ -122,7 +122,7 @@ function LoginPage() {
         </CloseDiv>
       </HeaderDiv>
       <TitleDiv>
-        <LogoImg src="/logo.png" alt="로고" />
+        <LogoImg src="/atta.png" alt="로고" />
         <RoleDiv>
           {role === USER ? "사용자" : role === STORE ? "사장님" : ""}
         </RoleDiv>

@@ -139,9 +139,8 @@ const Seatmate = () => {
   };
 
   const changeCheckHandler = e => {
-    const userId = e.userId; // 또는 e.target.value 등 적절한 방식으로 userId 추출
+    const userId = e.userId;
 
-    // setPaymentMember 업데이트
     setPaymentMember(prev => {
       const userIds = prev.userId || []; // 기본값으로 빈 배열 설정
       const isSelected = userIds.includes(userId);
