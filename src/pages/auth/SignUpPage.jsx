@@ -170,14 +170,14 @@ function SignUpPage() {
               />
               <YupDiv>{errors.name?.message}</YupDiv>
             </InputYupDiv>
-            <InputYupDiv>
+            {/* <InputYupDiv>
               <SignUpInput
                 type="email"
                 placeholder="이메일"
                 {...register("email")}
               />
               <YupDiv>{errors.email?.message}</YupDiv>
-            </InputYupDiv>
+            </InputYupDiv> */}
             <InputYupDiv>
               <SignUpInput
                 type="tel"

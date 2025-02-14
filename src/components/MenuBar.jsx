@@ -68,30 +68,32 @@ const MenuBar = () => {
   };
 
   return (
-    <div className="absolute bottom-0 left-0 w-full h-20 flex bg-white border-t-2 border-gray items-center z-10">
-      {menuItems.map(menu => {
-        const Icon = menu.icon;
-        const isActive = activeMenu === menu.id;
-        return (
-          <div
-            key={menu.id}
-            onClick={() => {
-              setActiveMenu(menu.id);
-              isLoginNav(menu.id);
-            }}
-            className={`w-1/4 flex flex-col items-center justify-center cursor-pointer`}
-          >
-            <Icon
-              className={`text-3xl ${isActive ? "text-primary" : "text-darkGray"}`}
-            />
-            <p
-              className={`text-sm ${isActive ? "font-bold text-primary" : "text-darkGray"}`}
+    <div className="fixed flex justify-center bottom-0 left-0 w-full h-20 items-center z-10">
+      <div className="w-[430px] h-20 flex bg-white border-t-2 border-gray items-center">
+        {menuItems.map(menu => {
+          const Icon = menu.icon;
+          const isActive = activeMenu === menu.id;
+          return (
+            <div
+              key={menu.id}
+              onClick={() => {
+                setActiveMenu(menu.id);
+                isLoginNav(menu.id);
+              }}
+              className={`w-1/4 flex flex-col items-center justify-center cursor-pointer`}
             >
-              {menu.label}
-            </p>
-          </div>
-        );
-      })}
+              <Icon
+                className={`text-3xl ${isActive ? "text-primary" : "text-darkGray"}`}
+              />
+              <p
+                className={`text-sm ${isActive ? "font-bold text-primary" : "text-darkGray"}`}
+              >
+                {menu.label}
+              </p>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

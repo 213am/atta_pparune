@@ -169,6 +169,9 @@ function MenuSelectPage() {
     const accessToken = getCookie();
     console.log(postData);
 
+    const nowTime = new Date();
+    console.log(nowTime);
+
     try {
       if (isReserve) {
         const res = await axios.post("/api/reservation", postData, {
@@ -179,6 +182,17 @@ function MenuSelectPage() {
         console.log(res.data.resultData);
         setOrderId(res.data.resultData);
         subscribeToReservationStatus(res.data?.resultData);
+        Swal.fire({
+          title: `${time}에 예약이 완료 되었습니다.`,
+          icon: "success",
+          confirmButtonText: "확인",
+          showConfirmButton: true, // ok 버튼 노출 여부
+          allowOutsideClick: false, // 외부 영역 클릭 방지
+        }).then(result => {
+          if (result.isConfirmed) {
+            navigate("/user");
+          }
+        });
       } else {
         const res = await axios.post("/api/order/with-detail", postData, {
           headers: {
@@ -188,18 +202,18 @@ function MenuSelectPage() {
         console.log(res.data.resultData);
         setOrderId(res.data.resultData);
         subscribeToReservationStatus(res.data?.resultData);
+        Swal.fire({
+          title: `${time}에 예약이 완료 되었습니다.`,
+          icon: "success",
+          confirmButtonText: "확인",
+          showConfirmButton: true, // ok 버튼 노출 여부
+          allowOutsideClick: false, // 외부 영역 클릭 방지
+        }).then(result => {
+          if (result.isConfirmed) {
+            navigate("/user");
+          }
+        });
       }
-      Swal.fire({
-        title: `${time}에 예약이 완료 되었습니다.`,
-        icon: "success",
-        confirmButtonText: "확인",
-        showConfirmButton: true, // ok 버튼 노출 여부
-        allowOutsideClick: false, // 외부 영역 클릭 방지
-      }).then(result => {
-        if (result.isConfirmed) {
-          navigate("/user");
-        }
-      });
     } catch (error) {
       console.log(error);
     }

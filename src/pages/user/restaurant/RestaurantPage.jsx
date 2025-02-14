@@ -441,9 +441,9 @@ function RestaurantPage() {
           {restaurantList.map(item => (
             <div
               key={item.restaurantId}
-              onClick={() =>
-                navigate(`/user/restaurant/detail/${item.restaurantId}`)
-              }
+              // onClick={() =>
+              //   navigate(`/user/restaurant/detail/${item.restaurantId}`)
+              // }
             >
               <FlexDiv>
                 <span>{item.restaurantName}</span>
@@ -472,18 +472,32 @@ function RestaurantPage() {
                 className="scrollbar-hide"
                 style={{ overflowX: "scroll", marginBottom: 20 }}
               >
-                {item.restaurantArroundPicList?.map((file, index) => (
-                  <img
-                    key={index}
-                    src={`http://112.222.157.156:5222/pic/restaurant/${item.restaurantId}/${file?.filePath}`}
-                    style={{
-                      minWidth: 140,
-                      width: 140,
-                      height: 140,
-                      objectFit: "cover",
-                    }}
-                  />
-                ))}
+                {item.restaurantArroundPicList?.map((file, index) =>
+                  file ? (
+                    <img
+                      onClick={() => console.log(file)}
+                      key={index}
+                      src={`http://112.222.157.156:5222/pic/restaurant/${item.restaurantId}/${file?.filePath}`}
+                      style={{
+                        minWidth: 140,
+                        width: 140,
+                        height: 140,
+                        objectFit: "cover",
+                      }}
+                    />
+                  ) : (
+                    <img
+                      key={index}
+                      src={"/restaurant_default.png"}
+                      style={{
+                        minWidth: 140,
+                        width: 140,
+                        height: 140,
+                        objectFit: "cover",
+                      }}
+                    />
+                  ),
+                )}
               </FlexDiv>
             </div>
           ))}
