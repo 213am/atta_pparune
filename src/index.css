@@ -42,7 +42,6 @@ html {
 body {
   font-size: var(--font-size-base);
   color: var(--primary-color);
-  max-width: 1400px;
 }
 /* 웹서비스 개발시 권장함.(개인적으로) */
 html,

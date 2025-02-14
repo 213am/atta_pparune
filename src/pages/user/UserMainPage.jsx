@@ -94,9 +94,9 @@ const UserMainPage = () => {
   };
 
   return (
-    <div className="w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
+    <div className="relative w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
       <Notification />
-      <div className="flex justify-center w-full h-[40%] sm:h-[50%]">
+      <div className="flex justify-center w-full h-[40%] ">
         <Swiper
           slidesPerView={1}
           // spaceBetween={30}
@@ -118,14 +118,14 @@ const UserMainPage = () => {
           >
             <img src="/swiper1.jpg" alt="" />
             <div className="absolute left-2 bottom-8 font-bold">
-              <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap sm:w-24 sm:text-2xl">
+              <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap ">
                 추천식당
               </p>
-              <div className="flex flex-col sm:gap-2">
-                <span className="pl-2 text-white text-2xl text-nowrap sm:w-24 sm:text-3xl">
+              <div className="flex flex-col ">
+                <span className="pl-2 text-white text-2xl text-nowrap ">
                   여기 진짜 맛있어요!
                 </span>
-                <span className="pl-2 text-white text-2xl text-nowrap sm:w-24 sm:text-3xl">
+                <span className="pl-2 text-white text-2xl text-nowrap ">
                   호불호 없을 누구나 좋아하는 맛
                 </span>
               </div>
@@ -138,14 +138,14 @@ const UserMainPage = () => {
           >
             <img src="/swiper2.jpg" alt="" />
             <div className="absolute left-2 bottom-8 font-bold">
-              <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap sm:w-24 sm:text-2xl">
+              <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap ">
                 추천식당
               </p>
-              <div className="flex flex-col sm:gap-2">
-                <span className="pl-2 text-white text-2xl text-nowrap sm:w-24 sm:text-3xl">
+              <div className="flex flex-col ">
+                <span className="pl-2 text-white text-2xl text-nowrap ">
                   여기 가성비 최고 식당이에요!
                 </span>
-                <span className="pl-2 text-white text-2xl text-nowrap sm:w-24 sm:text-3xl">
+                <span className="pl-2 text-white text-2xl text-nowrap ">
                   집밥이 생각날 때 꼭 한번 올만한 곳
                 </span>
               </div>
@@ -158,14 +158,14 @@ const UserMainPage = () => {
           >
             <img src="/swiper3.jpg" alt="" />
             <div className="absolute left-2 bottom-8 font-bold">
-              <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap sm:w-24 sm:text-2xl">
+              <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap ">
                 추천식당
               </p>
-              <div className="flex flex-col sm:gap-2">
-                <span className="pl-2 text-white text-2xl text-nowrap sm:w-24 sm:text-3xl">
+              <div className="flex flex-col ">
+                <span className="pl-2 text-white text-2xl text-nowrap ">
                   분위기 맛집!
                 </span>
-                <span className="pl-2 text-white text-2xl text-nowrap sm:w-24 sm:text-3xl">
+                <span className="pl-2 text-white text-2xl text-nowrap ">
                   특별한 날에 오기 좋은 곳
                 </span>
               </div>
@@ -222,12 +222,12 @@ const UserMainPage = () => {
                   <img
                     src={`http://112.222.157.156:5222/pic/restaurant/${data.restaurantId}/${data.restaurantAroundPicList?.filePath}`}
                     alt="/restaurant_default.png"
-                    className="w-full h-44 sm:h-72 lg:h-80 tb:h-96"
+                    className="w-full h-44"
                   />
                 ) : (
                   <img
                     src="/restaurant_default.png"
-                    className="w-full h-44 bg-cover bg-gray py-4 sm:h-96"
+                    className="w-full h-44 bg-cover bg-gray py-4 "
                   />
                 )}
               </div>

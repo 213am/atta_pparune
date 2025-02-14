@@ -90,6 +90,10 @@ const storeSchema = yup.object({
     .string()
     .required("가게이름은 필수입니다.")
     .min(2, "가게이름은 최소 2자 이상이어야 합니다."),
+  email: yup
+    .string()
+    .required("이메일은 필수입니다.")
+    .email("올바른 이메일 형식이 아닙니다."),
   restaurantAddress: yup.string(),
   businessNumber: yup.string(),
   restaurantNumber: yup
@@ -317,7 +321,6 @@ function AddStorePage() {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  marginTop: 20,
                   width: 500,
                 }}
               >
@@ -364,6 +367,14 @@ function AddStorePage() {
             </InputYupDiv>
             <InputYupDiv>
               <SignUpInput
+                type="email"
+                placeholder="이메일"
+                {...register("email")}
+              />
+              <YupDiv>{errors.email?.message}</YupDiv>
+            </InputYupDiv>
+            <InputYupDiv>
+              <SignUpInput
                 type="tel"
                 maxLength={12}
                 placeholder="가게 전화번호"
@@ -378,7 +389,6 @@ function AddStorePage() {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  marginTop: 20,
                   width: 500,
                 }}
               >

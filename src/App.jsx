@@ -9,6 +9,8 @@ import {
   subscribeStoreLogin,
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
+import UserLayout from "./components/layouts/UserLayout";
+import StoreLayout from "./components/layouts/StoreLayout";
 const IndexPage = lazy(() => import("./pages/IndexPage"));
 const EditPwPage = lazy(() => import("./pages/auth/EditPwPage"));
 const FindIdPage = lazy(() => import("./pages/auth/FindIdPage"));
@@ -85,46 +87,175 @@ const App = () => {
               <Route path="emailauth" element={<EmailAuthPage />} />
             </Route>
           </Route>
+
           <Route path="/user">
-            <Route index element={<UserMainPage />} />
+            <Route
+              index
+              element={
+                <UserLayout>
+                  <UserMainPage />
+                </UserLayout>
+              }
+            />
             <Route path="userinfo">
-              <Route index element={<UserInfo />} />
-              <Route path="edit" element={<EditInfoPage />} />
+              <Route
+                index
+                element={
+                  <UserLayout>
+                    <UserInfo />
+                  </UserLayout>
+                }
+              />
+              <Route
+                path="edit"
+                element={
+                  <UserLayout>
+                    <EditInfoPage />
+                  </UserLayout>
+                }
+              />
             </Route>
             <Route path="order">
-              <Route index element={<Order />} />
+              <Route
+                index
+                element={
+                  <UserLayout>
+                    <Order />
+                  </UserLayout>
+                }
+              />
             </Route>
             <Route path="placetoorder">
-              <Route index element={<PlaceToOrder />} />
+              <Route
+                index
+                element={
+                  <UserLayout>
+                    <PlaceToOrder />
+                  </UserLayout>
+                }
+              />
               <Route path="coupon">
-                <Route path=":id" element={<MealTicketPage />} />
+                <Route
+                  path=":id"
+                  element={
+                    <UserLayout>
+                      <MealTicketPage />
+                    </UserLayout>
+                  }
+                />
               </Route>
               <Route path="member">
-                <Route path=":id" element={<OrderMemberPage />} />
+                <Route
+                  path=":id"
+                  element={
+                    <UserLayout>
+                      <OrderMemberPage />
+                    </UserLayout>
+                  }
+                />
               </Route>
               <Route path="price">
-                <Route path=":id" element={<OrderPricePage />} />
+                <Route
+                  path=":id"
+                  element={
+                    <UserLayout>
+                      <OrderPricePage />
+                    </UserLayout>
+                  }
+                />
               </Route>
               <Route path="request">
-                <Route path=":id" element={<OrderRequestPage />} />
+                <Route
+                  path=":id"
+                  element={
+                    <UserLayout>
+                      <OrderRequestPage />
+                    </UserLayout>
+                  }
+                />
               </Route>
             </Route>
             <Route path="restaurant">
-              <Route index element={<Restaurant />} />
+              <Route
+                index
+                element={
+                  <UserLayout>
+                    <Restaurant />
+                  </UserLayout>
+                }
+              />
               <Route path="detail">
-                <Route path=":id" element={<RestaurantDetailPage />} />
-                <Route path="reserve/:id" element={<MenuSelectPage />} />
+                <Route
+                  path=":id"
+                  element={
+                    <UserLayout>
+                      <RestaurantDetailPage />
+                    </UserLayout>
+                  }
+                />
+                <Route
+                  path="reserve/:id"
+                  element={
+                    <UserLayout>
+                      <MenuSelectPage />
+                    </UserLayout>
+                  }
+                />
               </Route>
             </Route>
           </Route>
-          <Route path="/addstore" element={<AddStorePage />} />
+
+          <Route
+            path="/addstore"
+            element={
+              <StoreLayout>
+                <AddStorePage />
+              </StoreLayout>
+            }
+          />
           <Route path="/store">
-            <Route index element={<Store />} />
-            <Route path="menu" element={<MenuPage />} />
-            <Route path="order" element={<OrderPage />} />
-            <Route path="sales" element={<StoreSales />} />
-            <Route path="info" element={<StoreInfoPage />} />
+            <Route
+              index
+              element={
+                <StoreLayout>
+                  <Store />
+                </StoreLayout>
+              }
+            />
+            <Route
+              path="menu"
+              element={
+                <StoreLayout>
+                  <MenuPage />
+                </StoreLayout>
+              }
+            />
+            <Route
+              path="order"
+              element={
+                <StoreLayout>
+                  <OrderPage />
+                </StoreLayout>
+              }
+            />
+            <Route
+              path="sales"
+              element={
+                <StoreLayout>
+                  <StoreSales />
+                </StoreLayout>
+              }
+            />
+            <Route
+              path="info"
+              element={
+                <StoreLayout>
+                  <StoreInfoPage />
+                </StoreLayout>
+              }
+            />
           </Route>
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
