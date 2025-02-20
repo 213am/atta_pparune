@@ -10,6 +10,7 @@ import { useRecoilState } from "recoil";
 import Swal from "sweetalert2";
 import { reserveState } from "../../../atoms/restaurantAtom";
 import { getCookie } from "../../../components/cookie";
+import { DOCKER_URL } from "../../../constants/url";
 
 const BackDiv = styled.div`
   background-color: #fff;
@@ -246,7 +247,7 @@ function StoreDetailPage() {
     <div style={{ height: "100vh" }}>
       {formData?.restaurantPics?.filePath ? (
         <img
-          src={`http://112.222.157.156:5222/pic/restaurant/${formData?.restaurantId}/${formData?.restaurantPics?.filePath}`}
+          src={`${DOCKER_URL}/pic/restaurant/${formData?.restaurantId}/${formData?.restaurantPics?.filePath}`}
           alt="가게 이미지"
           style={{ width: "100%", height: 260, position: "relative" }}
         />
@@ -290,7 +291,7 @@ function StoreDetailPage() {
               <div key={index}>
                 <MenuDiv>
                   <img
-                    src={`http://112.222.157.156:5222/pic/menu/${list?.menuId}/${list?.menuPic}`}
+                    src={`${DOCKER_URL}/pic/menu/${list?.menuId}/${list?.menuPic}`}
                     alt="메뉴 이미지"
                   />
                   <div>

@@ -13,6 +13,7 @@ import MenuBar from "../../components/MenuBar";
 import Notification from "../../components/notification/NotificationIcon";
 import { loginAtom } from "../../atoms/userAtom";
 import { getCookie } from "../../components/cookie";
+import { DOCKER_URL } from "../../constants/url";
 
 const UserMainPage = () => {
   const [restaurantList, setRestaurantList] = useState([]);
@@ -220,7 +221,7 @@ const UserMainPage = () => {
               <div className="flex w-full">
                 {data.restaurantAroundPicList?.filePath ? (
                   <img
-                    src={`http://112.222.157.157:5222/pic/restaurant/${data.restaurantId}/${data.restaurantAroundPicList?.filePath}`}
+                    src={`${DOCKER_URL}/pic/restaurant/${data.restaurantId}/${data.restaurantAroundPicList?.filePath}`}
                     alt="/restaurant_default.png"
                     className="w-full h-44"
                   />
