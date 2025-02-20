@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { useRecoilState } from "recoil";
 import { ticketDataAtom, ticketIdAtom } from "../../../atoms/userAtom";
 import { getCookie } from "../../../components/cookie";
+import { DOCKER_URL } from "../../../constants/url";
 
 const QRCode = () => {
   const [newTicketId, setNewTicketId] = useRecoilState(ticketIdAtom);
@@ -178,7 +179,7 @@ const QRCode = () => {
         <div className="p-10 flex flex-col justify-center items-center bg-gray rounded-b-2xl">
           <div className="flex w-full justify-center items-center ">
             <QRCodeSVG
-              value={`http://112.222.157.156:5222/user/placetoorder`}
+              value={`${DOCKER_URL}/user/placetoorder`}
               size={180}
               bgColor="none"
             />

@@ -7,6 +7,7 @@ import { IoArrowForward } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { getCookie } from "../../../components/cookie";
 import QRCode from "../order/QRCode";
+import { DOCKER_URL } from "../../../constants/url";
 
 const OrderList = () => {
   const navigate = useNavigate();
@@ -121,7 +122,7 @@ const OrderList = () => {
                   src={
                     item.filePath === ""
                       ? `/storeimg.png`
-                      : `http://112.222.157.156:5222/pic/restaurant/${item?.restaurantId}/${item?.filePath}`
+                      : `${DOCKER_URL}/pic/restaurant/${item?.restaurantId}/${item?.filePath}`
                   }
                   alt="식당이미지"
                   className="w-16 h-16 rounded-xl"

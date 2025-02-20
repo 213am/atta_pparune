@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { getCookie } from "../../../components/cookie";
 import useModal from "../../../components/useModal";
 import Swal from "sweetalert2";
+import { DOCKER_URL } from "../../../constants/url";
 
 const LayoutDiv = styled.div`
   display: flex;
@@ -361,7 +362,7 @@ function StoreMenuPage() {
                   {item.menuList.map(menu => (
                     <MenuDiv key={menu.menuId}>
                       <MenuImg
-                        src={`http://112.222.157.156:5222/pic/menu/${menu.menuId}/${menu?.menuPic}`}
+                        src={`${DOCKER_URL}/pic/menu/${menu.menuId}/${menu?.menuPic}`}
                         alt="없음"
                       />
                       <div
@@ -388,7 +389,7 @@ function StoreMenuPage() {
                                   categoryId: item.categoryId,
                                 }));
                                 setMenuEditPic(
-                                  `http://112.222.157.156:5222/pic/menu/${menu.menuId}/${menu?.menuPic}`,
+                                  `${DOCKER_URL}/pic/menu/${menu.menuId}/${menu?.menuPic}`,
                                 );
                                 setIsClick({ modal2: true });
                                 setValue("categoryName", item.categoryName);
@@ -396,7 +397,7 @@ function StoreMenuPage() {
                                 setValue("price", menu.price);
                                 setValue(
                                   "pic",
-                                  `http://112.222.157.156:5222/pic/menu/${menu.menuId}/${menu?.menuPic}`,
+                                  `${DOCKER_URL}/pic/menu/${menu.menuId}/${menu?.menuPic}`,
                                 );
                                 open();
                               }}
@@ -435,7 +436,7 @@ function StoreMenuPage() {
           >
             <MenuImg
               style={{ borderRadius: 100 }}
-              src={`http://112.222.157.156:5222/pic/restaurant/${getData.restaurantId}/${getData.restaurantPics?.filePath}`}
+              src={`${DOCKER_URL}/pic/restaurant/${getData.restaurantId}/${getData.restaurantPics?.filePath}`}
               alt="없음"
             />
           </div>
@@ -480,7 +481,7 @@ function StoreMenuPage() {
               <img src={preview} />
               <p>
                 <label htmlFor="menuImg">
-                  <FaPlusCircle style={{ width: "100%", height: "100%" }} />
+                  <FaPlusCircle className="w-full h-full cursor-pointer" />
                 </label>
                 <input
                   type="file"
@@ -528,7 +529,7 @@ function StoreMenuPage() {
               <img src={preview || menuEditPic} />
               <p>
                 <label htmlFor="menuImg">
-                  <FaPlusCircle style={{ width: "100%", height: "100%" }} />
+                  <FaPlusCircle className="w-full h-full cursor-pointer" />
                 </label>
                 <input
                   type="file"

@@ -7,7 +7,7 @@ const UserLayout = ({ children }) => {
     return () => document.body.classList.remove("user-layout");
   }, []);
 
-  return <div className="user-layout">{children}</div>;
+  return <div className="user-layout h-[100vh]">{children}</div>;
 };
 
 export default UserLayout;
