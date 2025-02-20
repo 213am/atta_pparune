@@ -220,7 +220,7 @@ const UserMainPage = () => {
               <div className="flex w-full">
                 {data.restaurantAroundPicList?.filePath ? (
                   <img
-                    src={`http://112.222.157.156:5222/pic/restaurant/${data.restaurantId}/${data.restaurantAroundPicList?.filePath}`}
+                    src={`http://112.222.157.157:5222/pic/restaurant/${data.restaurantId}/${data.restaurantAroundPicList?.filePath}`}
                     alt="/restaurant_default.png"
                     className="w-full h-44"
                   />
