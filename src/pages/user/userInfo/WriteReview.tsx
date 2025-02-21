@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
-import { ChangeEvent, useState } from "react";
-import { AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { FaCameraRetro, FaCheckCircle, FaStar } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import ReactQuill from "react-quill";
@@ -39,6 +38,10 @@ function WriteReview() {
   const [preview, setPreview] = useState<string[]>([]);
   // 이미지 파일 state
   const [imgFile, setImgFile] = useState<File[]>([]);
+  // 파일 input value 값 추적
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  // 별점 상태
+  const [rating, setRating] = useState(0);
 
   const addImgHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const inputfile = e.target.files && e.target.files;
@@ -50,7 +53,28 @@ function WriteReview() {
       const imgURL = fileArray.map(data => URL.createObjectURL(data));
       setPreview(imgURL);
     }
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
+
+  const deleteImg = (url: string) => {
+    // 클릭한 이미지의 인덱스를 찾음
+    const indexToDelete = preview.indexOf(url);
+
+    if (indexToDelete !== -1) {
+      // preview 배열에서 해당 URL 삭제
+      setPreview(prev => prev.filter((_, idx) => idx !== indexToDelete));
+      // imgFile 배열에서도 같은 인덱스의 파일 삭제
+      setImgFile(prev => prev.filter((_, idx) => idx !== indexToDelete));
+    }
+  };
+
+  useEffect(() => {
+    console.log("프리뷰", preview);
+    console.log("이미지 파일", imgFile);
+  }, [imgFile, preview]);
 
   return (
     <div className="h-[100vh] relative">
@@ -58,7 +82,7 @@ function WriteReview() {
         <IconDiv>
           <IoMdClose
             className="w-full h-full cursor-pointer"
-            onClick={() => navigate("/")}
+            onClick={() => navigate(-1)}
           />
         </IconDiv>
         <span>만족도 평가 및 리뷰</span>
@@ -73,11 +97,17 @@ function WriteReview() {
         <div className="ml-[46px]">
           <div className="mt-2 text-[18px]">신라짬뽕</div>
           <div className="flex gap-1 mt-2">
-            <FaStar className="text-yellow" />
-            <FaStar className="text-yellow" />
-            <FaStar className="text-yellow" />
-            <FaStar className="text-yellow" />
-            <FaStar className="text-yellow" />
+            {[...Array(5)].map((_, index) => {
+              const starIndex = index + 1;
+              return (
+                <FaStar
+                  key={starIndex}
+                  className={starIndex <= rating ? "text-yellow" : "text-gray"}
+                  onClick={() => setRating(starIndex)} // 클릭 시 별점 변경
+                  style={{ cursor: "pointer" }}
+                />
+              );
+            })}
           </div>
           <ReactQuill
             className="h-[150px] mt-6 mr-5"
@@ -104,15 +134,27 @@ function WriteReview() {
               className="opacity-0 w-0 h-0"
               accept="image/png, image/jpeg"
               onChange={e => addImgHandler(e)}
+              ref={fileInputRef}
             />
             <div className="flex overflow-x-auto gap-4">
               {preview.map((url, index) => (
-                <IconDiv key={index} width={85} height={85}>
+                <IconDiv
+                  key={index}
+                  width={85}
+                  height={85}
+                  className="relative"
+                >
                   <img
                     src={url}
                     alt={`preview-${index}`}
                     className="w-full h-full"
                   />
+                  <div className="w-[24px] h-[24px] cursor-pointer absolute top-0 right-0 rounded-full bg-black text-white p-[2px]">
+                    <IoMdClose
+                      onClick={() => deleteImg(url)}
+                      className="w-full h-full"
+                    />
+                  </div>
                 </IconDiv>
               ))}
             </div>
@@ -120,9 +162,9 @@ function WriteReview() {
           <div className="mt-5 flex justify-between mr-5 items-center">
             <div>
               <div className="text-[18px]">1인 세트</div>
-              <div className="w-[200px]">차돌박이 짬뽕, 스프라이트 245ml</div>
+              <div>차돌박이 짬뽕, 스프라이트 245ml</div>
             </div>
-            <div className="flex gap-3">
+            {/* <div className="flex gap-3">
               <div className="px-3 py-2 bg-secondary rounded-[20px] text-white">
                 <IconDiv>
                   <AiOutlineLike className="w-full h-full" />
@@ -133,7 +175,7 @@ function WriteReview() {
                   <AiOutlineDislike className="w-full h-full" />
                 </IconDiv>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
