@@ -244,7 +244,7 @@ function StoreDetailPage() {
     console.log(id);
   }, []);
   return (
-    <div style={{ height: "100vh" }}>
+    <div style={{ height: "100vh", backgroundColor: "white" }}>
       {formData?.restaurantPics?.filePath ? (
         <img
           src={`${DOCKER_URL}/pic/restaurant/${formData?.restaurantId}/${formData?.restaurantPics?.filePath}`}
