@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 
 export const LayoutDiv = styled.div`
   text-align: center;
+  background-color: white;
   a {
     display: flex;
     justify-content: center;
