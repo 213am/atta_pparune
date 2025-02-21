@@ -26,6 +26,7 @@ export default {
       gray: "#eeeeee",
       red: "#E44B58",
       blue: "#79BAF2",
+      yellow: "#ffd400",
     },
     border: {
       1: 1,

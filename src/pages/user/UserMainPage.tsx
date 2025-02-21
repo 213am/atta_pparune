@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { FaStar } from "react-icons/fa";
 import { LuArrowDownUp } from "react-icons/lu";
 import { useInView } from "react-intersection-observer";
 import { useNavigate } from "react-router-dom";
@@ -8,16 +9,27 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { isWhiteIcon, noticeState } from "../../atoms/noticeAtom";
-import MenuBar from "../../components/MenuBar";
-import Notification from "../../components/notification/NotificationIcon";
+import { isWhiteIcon } from "../../atoms/noticeAtom";
 import { loginAtom } from "../../atoms/userAtom";
 import { getCookie } from "../../components/cookie";
+import MenuBar from "../../components/MenuBar";
+import Notification from "../../components/notification/NotificationIcon";
 
-const UserMainPage = () => {
-  const [restaurantList, setRestaurantList] = useState([]);
-  const [pagenation, setPagenation] = useState(1);
-  const [categoryId, setCategoryId] = useState(1);
+interface IRestaurantList {
+  avgRestaurant: number;
+  restaurantAddress: string;
+  restaurantAroundPicList: {
+    filePath: string;
+  };
+  restaurantId: number;
+  restaurantName: string;
+}
+
+const UserMainPage = (): JSX.Element => {
+  const [restaurantList, setRestaurantList] = useState<IRestaurantList[]>([]);
+  const [pagenation, setPagenation] = useState<number>(1);
+  const [categoryId, setCategoryId] = useState<number>(1);
+  const [isSelect, setIsSelect] = useState<boolean>(false);
   const navigate = useNavigate();
   const [isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
   const [isLogin, setIsLogin] = useRecoilState(loginAtom);
@@ -28,7 +40,7 @@ const UserMainPage = () => {
 
     const isLoginHandler = () => {
       const userId = sessionStorage.getItem("userId");
-      const accessToken = getCookie("accessToken");
+      const accessToken = getCookie();
       if (userId && accessToken) {
         setIsLogin(true);
       }
@@ -51,6 +63,7 @@ const UserMainPage = () => {
       try {
         const res = await axios.get("/api/restaurant/main", { params });
         const result = res.data.resultData;
+        console.log(result);
 
         setRestaurantList([...result]);
       } catch (error) {
@@ -85,12 +98,16 @@ const UserMainPage = () => {
     }
   }, [inView]);
 
-  const detailNavigateHandler = e => {
+  const detailNavigateHandler = (e: IRestaurantList) => {
     navigate(`/user/restaurant/detail/${e.restaurantId}`, {
       state: {
         restaurantId: e.restaurantId,
       },
     });
+  };
+
+  const filterChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(e.target.value);
   };
 
   return (
@@ -173,14 +190,23 @@ const UserMainPage = () => {
           </SwiperSlide>
         </Swiper>
       </div>
-      <div className="pt-2 pb-24">
+      <div className="block h-full pt-2 pb-24 bg-white">
         <h1>{inView}</h1>
-        <div className="w-100% flex pl-5 pt-2 justify-between">
-          <div className="flex items-center gap-1">
-            <LuArrowDownUp />
-            <p className="text-sm">기본순</p>
-          </div>
-          <div className="flex gap-2 pr-5 text-sm">
+        <div className="w-100% flex pl-5 pt-2 justify-between items-center">
+          <form className="relative">
+            <span className="absolute left-1 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <LuArrowDownUp />
+            </span>
+            <select
+              onChange={e => filterChangeHandler(e)}
+              className="text-base tracking-wide bg-white px-6 py-1 appearance-none w-[90px] outline-none cursor-pointer"
+            >
+              <option value="기본순">기본순</option>
+              <option value="별점순">별점순</option>
+              <option value="리뷰순">리뷰순</option>
+            </select>
+          </form>
+          <div className="flex gap-2 pr-5 text-sm h-full">
             <p
               className={`text-white px-2 py-0.5 rounded-lg font-bold cursor-pointer ${categoryId === 1 ? "bg-primary" : "bg-darkGray"}`}
               onClick={() => {
@@ -244,9 +270,15 @@ const UserMainPage = () => {
                     }
                   </p>
                 </div>
-                <p className="w-[30%] font-bold text-base text-primary text-nowrap">
-                  약 {data.avgRestaurant}분
-                </p>
+                <div className="w-1/3">
+                  <span className="flex items-center gap-1 pl-2">
+                    <FaStar className="text-yellow" />
+                    <span className="tracking-wide">4.8</span>
+                  </span>
+                  <p className="flex pl-2 font-semibold text-sm text-primary text-nowrap">
+                    약 {data.avgRestaurant}분
+                  </p>
+                </div>
               </div>
             </div>
           ))}

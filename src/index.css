@@ -50,5 +50,18 @@ body,
   font-family: "Pretendard-Regular";
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
+  background-image: url(//img1.daumcdn.net/thumb/R1280x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/9zZ9/image/YX2h-oOlLqoaRwpJ4WF0WrxUlvk.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  isolation: isolate;
+}
+html::after {
+  content: "";
+  position: absolute;
+  background: white;
+  z-index: -1;
+  inset: 0;
+  opacity: 0.3;
 }

@@ -45,14 +45,14 @@ const MenuBar = () => {
       } else {
         Swal.fire({
           title: "로그인이 필요한 서비스입니다!",
-          text: "확인을 누르시면 로그인 페이지로 이동합니다.",
+          text: "확인을 누르면 로그인으로 이동합니다.",
           icon: "error",
           confirmButtonText: "확인",
           showConfirmButton: true, // ok 버튼 노출 여부
           allowOutsideClick: false, // 외부 영역 클릭 방지
           customClass: {
-            popup: "flex w-[80%]",
-            title: "text-xl text-red",
+            popup: "flex w-[90%]",
+            title: "text-xl",
           },
         }).then(result => {
           if (result.isConfirmed) {

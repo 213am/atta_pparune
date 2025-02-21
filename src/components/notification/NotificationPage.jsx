@@ -144,13 +144,16 @@ const NotificationPage = () => {
             >
               {item.message === "나한테 온 승인요청 메세지" ? (
                 <>
-                  <span className="font-bold" onClick={() => orderData(item)}>
+                  <span
+                    className="font-bold cursor-pointer"
+                    onClick={() => orderData(item)}
+                  >
                     {item.message}
                   </span>
                 </>
               ) : (
                 <>
-                  <div className="flex gap-1 items-center">
+                  <div className="flex gap-1 items-center cursor-pointer">
                     <span className="text-black text-xl">
                       {item.restaurantName}{" "}
                     </span>

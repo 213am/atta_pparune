@@ -1,23 +1,7 @@
 {
-  // 컴파일 대상 파일
-  "include": ["src/**/*"],
-  // 컴파일 옵션
-  "compilerOptions": {
-    // 컴파일 대상 버전
-    "target": "ESNext",
-    // 라이브러리 체크 건너뛰기
-    "skipLibCheck": true,
-    // 모듈 버전(import, export 문법 사용)
-    "module": "ESNext",
-    // 컴파일 결과물 js파일 디렉토리
-    "outDir": "./dist",
-    // 엄격한 모드
-    "strict": true,
-    // 모듈 검색 강제
-    "moduleDetection": "force",
-    // js 파일 포함
-    "allowJs": true,
-    // jsx 문법 허용
-    "jsx": "react-jsx"
-  }
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }

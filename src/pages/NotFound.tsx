@@ -2,9 +2,9 @@ import { TbMoodSadDizzy } from "react-icons/tb";
 import { IoMdArrowDropleft } from "react-icons/io";
 import { IoMdArrowDropright } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { JSX, useState } from "react";
 
-const NotFound = () => {
+const NotFound = (): JSX.Element => {
   const navigate = useNavigate();
   const [isUser, setIsUser] = useState(true);
 

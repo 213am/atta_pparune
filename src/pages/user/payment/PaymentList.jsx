@@ -67,7 +67,7 @@ const OrderList = () => {
   console.log(activeList);
 
   return (
-    <div className="w-full h-dvh flex flex-col justify-between overflow-hidden overflow-y-scroll scrollbar-hide mb-32">
+    <div className="w-full h-dvh flex flex-col justify-between overflow-hidden overflow-y-scroll scrollbar-hide mb-32 bg-white">
       <div className="absolute top-0 left-0 w-full flex justify-between border-b-2 border-gray border-opacity-70 bg-white">
         <div
           onClick={() => setIsTap(!isTap)}
@@ -108,7 +108,7 @@ const OrderList = () => {
           {paymentList.map((item, index) => (
             <div
               key={index}
-              className="w-full h-1/5 bg-white shadow-lg border-y border-y-gray"
+              className="w-full h-1/4 bg-white shadow-lg border-y border-y-gray"
             >
               <div className="w-full h-1/4 flex justify-between items-center px-5 py-3">
                 <span className="text-darkGray">{item.createdAt.slice(0)}</span>
@@ -116,7 +116,7 @@ const OrderList = () => {
                   {item.reservationYn > 0 ? "예약주문" : "현장결제"}
                 </span>
               </div>
-              <div className="w-full h-3/4 flex justify-start items-center gap-5 px-5">
+              <div className="w-full h-2/4 flex justify-start items-center gap-5 px-5">
                 <img
                   src={
                     item.filePath === ""
@@ -146,6 +146,11 @@ const OrderList = () => {
                     </span>
                   </div>
                 </div>
+              </div>
+              <div className="flex justify-center h-1/4">
+                <button className="w-1/4 h-2/3 flex px-4 py-1 border border-darkGray rounded-sm text-nowrap items-center justify-center hover:bg-primary hover:text-white">
+                  리뷰 작성
+                </button>
               </div>
             </div>
           ))}

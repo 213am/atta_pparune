@@ -7,7 +7,11 @@ const UserLayout = ({ children }) => {
     return () => document.body.classList.remove("user-layout");
   }, []);
 
-  return <div className="user-layout">{children}</div>;
+  return (
+    <div className="user-layout w-full block outline outline-black">
+      {children}
+    </div>
+  );
 };
 
 export default UserLayout;

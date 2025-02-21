@@ -37,7 +37,7 @@ function EditInfoPage() {
   // const changeNumber = () => {};
 
   return (
-    <div className="h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
+    <div className="h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide bg-white">
       <div className="absolute w-full h-10% flex justify-between items-center px-3 py-5 border-b-2 border-gray border-opacity-70 bg-white ">
         <IoMdArrowBack className="text-3xl" onClick={() => navigate(-1)} />
         <span className="text-xl font-semibold">내 정보 수정</span>

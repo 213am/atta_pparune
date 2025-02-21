@@ -19,6 +19,9 @@ export default defineConfig({
         secure: false, // SSL 인증서 무시
       },
     },
+    watch: {
+      usePolling: true,
+    },
   },
   // webSocket 연결을 위한 설정
   define: {

@@ -53,7 +53,7 @@ const OrderRequestPage = lazy(
   () => import("./pages/user/order/OrderRequestPage"),
 );
 
-const App = () => {
+const App = (): JSX.Element => {
   const sessionRestaurant = sessionStorage.getItem("restaurantId");
   const sessionUser = sessionStorage.getItem("userId");
   const [isLogin, setIsLogin] = useRecoilState(loginAtom);

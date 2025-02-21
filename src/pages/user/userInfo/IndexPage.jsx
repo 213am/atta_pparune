@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
 import { MdOutlineMail } from "react-icons/md";
 import { useRecoilState } from "recoil";
 
@@ -80,11 +81,16 @@ function IndexPage() {
   };
 
   return (
-    <div className="h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
+    <div className="h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide bg-white">
       <Notification />
       <div className="absolute top-0 left-0 w-full flex justify-between items-center px-3 py-5 border-b-2 border-gray border-opacity-70 bg-white">
-        <IoMdArrowBack className="text-3xl" onClick={() => navigate(-1)} />
-        <span className="text-xl font-semibold">내 정보</span>
+        <IoMdArrowBack
+          className="text-3xl cursor-pointer"
+          onClick={() => navigate(-1)}
+        />
+        <span className="text-xl font-semibold pointer-events-none">
+          내 정보
+        </span>
         <span>&emsp;</span>
       </div>
       <div className="flex flex-col h-dvh justify-around mt-24 gap-10">
@@ -102,17 +108,20 @@ function IndexPage() {
               className="w-32 rounded-full bg-auto"
             />
           )}
-
-          <div className="flex items-center">
-            <span className="pr-3">사용가능 포인트</span>
+          <div className="flex items-center pointer-events-none">
+            <span className="pr-3 ">사용가능 포인트</span>
             <span className="font-bold text-2xl">{userData.point}</span>
           </div>
-          <span className="flex items-center gap-2 px-3 py-1 border-2 border-gray rounded-xl">
+          <span className="flex items-center gap-2 px-3 py-1 border-2 border-gray rounded-xl pointer-events-none">
             <MdOutlineMail className="text-xl" />
             {userData.email}
           </span>
+          <div className="flex items-center gap-1 cursor-pointer">
+            <span className="text-lg font-semibold">내가 작성한 리뷰</span>
+            <IoIosArrowForward className="text-xl font-semibold" />
+          </div>
         </div>
-        <div className="h-[40%] flex justify-center items-center">
+        <div className="h-[40%] flex justify-center items-center pointer-events-none">
           <div className="flex gap-5 items-center">
             <div className="flex flex-col gap-6 font-thin text-lg h-full text-darkGray">
               <span>이름</span>

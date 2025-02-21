@@ -7,7 +7,7 @@ import { reloadOrderAtom } from "../../atoms/restaurantAtom";
 import { useRecoilState } from "recoil";
 
 // SockJS로 WebSocket 연결 설정
-const socket = new SockJS("http://112.222.157.156:5222/ws-stomp");
+const socket = new SockJS("http://112.222.157.157:5232/ws-stomp");
 const stompClient = Stomp.over(() => socket); // SockJS 팩토리를 함수로 전달
 
 const sessionStoreId = window.sessionStorage.getItem("restaurantId");
