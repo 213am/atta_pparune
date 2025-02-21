@@ -7,7 +7,7 @@ const StoreLayout = ({ children }) => {
     return () => document.body.classList.remove("store-layout");
   }, []);
 
-  return <div className="store-container">{children}</div>;
+  return <div className="store-container bg-white">{children}</div>;
 };
 
 export default StoreLayout;

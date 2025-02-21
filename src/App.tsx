@@ -11,6 +11,7 @@ import {
   subscribeStoreLogin,
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
+import TableComponent from "./pages/admin/franchisee/StoreManage";
 const WriteReview = lazy(() => import("./pages/user/userInfo/WriteReview"));
 const IndexPage = lazy(() => import("./pages/IndexPage"));
 const EditPwPage = lazy(() => import("./pages/auth/EditPwPage"));
@@ -53,6 +54,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const OrderRequestPage = lazy(
   () => import("./pages/user/order/OrderRequestPage"),
 );
+const ServiceMainPage = lazy(() => import("./pages/admin/IndexPage"));
 
 const App = (): JSX.Element => {
   const sessionRestaurant = sessionStorage.getItem("restaurantId");
@@ -264,6 +266,8 @@ const App = (): JSX.Element => {
               }
             />
           </Route>
+          <Route path="/service" element={<ServiceMainPage />}></Route>
+          <Route path="/storeManage" element={<TableComponent />}></Route>
 
           <Route path="*" element={<NotFound />} />
         </Routes>
