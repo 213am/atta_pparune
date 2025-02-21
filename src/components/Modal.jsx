@@ -10,7 +10,10 @@ const Modal = ({ onClose, children, title }) => {
         <div className="relative flex w-full h-[15%]">
           <div className="absolute top-0 left-0 flex w-full h-full justify-between items-center px-5 border-b-2 border-gray">
             <span className="font-medium text-2xl">{title}</span>
-            <IoMdClose onClick={onClose} className="font-semibold size-6" />
+            <IoMdClose
+              onClick={onClose}
+              className="font-semibold size-6 cursor-pointer"
+            />
           </div>
         </div>
         <div className="flex w-full h-[85%]">{children}</div>

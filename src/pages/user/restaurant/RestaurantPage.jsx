@@ -12,6 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { locationAtom } from "../../../atoms/userAtom";
+import { DOCKER_URL } from "../../../constants/url";
 
 // ListDiv styled component 수정
 const ListDiv = styled.div`
@@ -441,9 +442,9 @@ function RestaurantPage() {
           {restaurantList.map(item => (
             <div
               key={item.restaurantId}
-              // onClick={() =>
-              //   navigate(`/user/restaurant/detail/${item.restaurantId}`)
-              // }
+              onClick={() =>
+                navigate(`/user/restaurant/detail/${item.restaurantId}`)
+              }
             >
               <FlexDiv>
                 <span>{item.restaurantName}</span>
@@ -475,9 +476,8 @@ function RestaurantPage() {
                 {item.restaurantArroundPicList?.map((file, index) =>
                   file ? (
                     <img
-                      onClick={() => console.log(file)}
                       key={index}
-                      src={`http://112.222.157.156:5222/pic/restaurant/${item.restaurantId}/${file?.filePath}`}
+                      src={`${DOCKER_URL}/pic/restaurant/${item.restaurantId}/${file?.filePath}`}
                       style={{
                         minWidth: 140,
                         width: 140,

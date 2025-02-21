@@ -19,14 +19,18 @@ export default {
       primary: "#6F4CDB",
       primaryFocus: "#4825b6",
       secondary: "#C4B6F0",
-      third: "#E7E1F9",
+      third: "#9176e4",
       white: "#ffffff",
       black: "#333333",
       darkGray: "#929292",
       gray: "#eeeeee",
       red: "#E44B58",
       blue: "#79BAF2",
+<<<<<<< HEAD
       yellow: "#ffd400",
+=======
+      yellow: "#FFD400",
+>>>>>>> 3cf4eebd5cab5826abc51aee2747fe1cd71ff691
     },
     border: {
       1: 1,

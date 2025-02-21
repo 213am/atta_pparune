@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import LineChartLayout from "./LineChart";
 import SalesPage from "./SalesPage";
 import { getCookie } from "../../../components/cookie";
+import { DOCKER_URL } from "../../../constants/url";
 
 const SalesConfirm = () => {
   const [storeData, setStoreData] = useState({});
@@ -70,7 +71,7 @@ const SalesConfirm = () => {
               <div className="flex gap-5 items-center">
                 {storeData?.filePath ? (
                   <img
-                    src={`http://112.222.157.156:5222/pic/restaurant/${sessionRestaurantId}/${storeData?.filePath}`}
+                    src={`${DOCKER_URL}/pic/restaurant/${sessionRestaurantId}/${storeData?.filePath}`}
                     alt="식당이미지"
                     className="flex size-36 rounded-full"
                   />

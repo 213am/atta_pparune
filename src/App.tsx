@@ -3,14 +3,15 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { isLoginStoreAtom } from "./atoms/restaurantAtom";
 import { loginAtom } from "./atoms/userAtom";
+import StoreLayout from "./components/layouts/StoreLayout";
+import UserLayout from "./components/layouts/UserLayout";
 import Loading from "./components/Loading";
 import {
   initializeSocket,
   subscribeStoreLogin,
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
-import UserLayout from "./components/layouts/UserLayout";
-import StoreLayout from "./components/layouts/StoreLayout";
+const WriteReview = lazy(() => import("./pages/user/userInfo/WriteReview"));
 const IndexPage = lazy(() => import("./pages/IndexPage"));
 const EditPwPage = lazy(() => import("./pages/auth/EditPwPage"));
 const FindIdPage = lazy(() => import("./pages/auth/FindIdPage"));
@@ -203,6 +204,14 @@ const App = (): JSX.Element => {
                 />
               </Route>
             </Route>
+            <Route
+              path="review"
+              element={
+                <UserLayout>
+                  <WriteReview />
+                </UserLayout>
+              }
+            />
           </Route>
 
           <Route
