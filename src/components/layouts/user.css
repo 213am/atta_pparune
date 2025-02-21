@@ -4,4 +4,5 @@ body :root {
 .user-layout {
   margin: 0 auto;
   max-width: 430px !important;
+  background-color: #fff;
 }
