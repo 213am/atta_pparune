@@ -11,13 +11,10 @@ import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { isWhiteIcon } from "../../atoms/noticeAtom";
 import { loginAtom } from "../../atoms/userAtom";
-import { getCookie } from "../../components/cookie";
-<<<<<<< HEAD:src/pages/user/UserMainPage.tsx
 import MenuBar from "../../components/MenuBar";
 import Notification from "../../components/notification/NotificationIcon";
-=======
 import { DOCKER_URL } from "../../constants/url";
->>>>>>> 3cf4eebd5cab5826abc51aee2747fe1cd71ff691:src/pages/user/UserMainPage.jsx
+import { getCookie } from "../../components/cookie";
 
 interface IRestaurantList {
   avgRestaurant: number;
