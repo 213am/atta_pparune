@@ -13,6 +13,7 @@ import {
 } from "./components/notification/StompComponent";
 import TableComponent from "./pages/admin/franchisee/StoreManage";
 import AdminPage from "./pages/admin/AdminPage";
+import MyReviewPage from "./pages/user/userInfo/myReviewPage";
 
 const WriteReview = lazy(() => import("./pages/user/userInfo/WriteReview"));
 const IndexPage = lazy(() => import("./pages/IndexPage"));
@@ -116,6 +117,14 @@ const App = (): JSX.Element => {
                 element={
                   <UserLayout>
                     <EditInfoPage />
+                  </UserLayout>
+                }
+              />
+              <Route
+                path="myReview"
+                element={
+                  <UserLayout>
+                    <MyReviewPage />
                   </UserLayout>
                 }
               />

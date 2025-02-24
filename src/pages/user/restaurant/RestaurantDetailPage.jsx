@@ -3,6 +3,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { BsFillTelephoneFill } from "react-icons/bs";
 import { IoMdArrowBack, IoMdClose } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
+import { FaStar } from "react-icons/fa";
 import { LuMapPin } from "react-icons/lu";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
@@ -27,7 +29,9 @@ const BackDiv = styled.div`
 
 const TitleDiv = styled.div`
   padding: 15px 25px;
-  div {
+  display: flex;
+  justify-content: space-between;
+  div > div {
     font-size: 10px;
     color: #bababa;
     margin-bottom: 5px;
@@ -38,6 +42,7 @@ const TitleDiv = styled.div`
   }
   h1 {
     margin-bottom: 5px;
+    font-size: 1.25rem;
   }
   h2 {
     display: flex;
@@ -266,20 +271,41 @@ function StoreDetailPage() {
       </BackDiv>
       <TitleDiv onClick={() => console.log(menu)}>
         <div>
-          {formData?.restaurantAddress?.match(/^(?:대구광역시|대구)\s*(.+)/)[1]}{" "}
-          <span>I</span> {cateName()}
+          <div>
+            {
+              formData?.restaurantAddress?.match(
+                /^(?:대구광역시|대구)\s*(.+)/,
+              )[1]
+            }{" "}
+            <span>I</span> {cateName()}
+          </div>
+          <section className="flex w-full justify-between items-center">
+            <h1>{formData?.restaurantName}</h1>
+            <div className="flex w-1/3 h-full items-center gap-2">
+              <div className="flex items-center gap-1 pointer-events-none">
+                <FaStar className="text-yellow text-lg drop-shadow-sm mb-0.5" />
+                <p className="tracking-wide text-black text-base">4.8</p>
+              </div>
+              <p className="text-3xl text-darkGray pb-1.5 pointer-events-none">
+                ·
+              </p>
+              <div className="flex text-nowrap text-base gap-1.5 items-center cursor-pointer">
+                <p className="text-black text-base">리뷰</p>
+                <p className="text-black text-base">120 개</p>
+                <IoIosArrowForward className="text-black text-base" />
+              </div>
+            </div>
+          </section>
+          <div>{formData?.restaurantDescription}</div>
+          <h2>
+            <LuMapPin />
+            {formData?.restaurantAddress}
+          </h2>
+          <h2 style={{ marginTop: 10 }}>
+            <BsFillTelephoneFill />
+            매장 연락처 : {formData?.restaurantNumber}
+          </h2>
         </div>
-        <h1>{formData?.restaurantName}</h1>
-        <div>{formData?.restaurantDescription}</div>
-
-        <h2>
-          <LuMapPin />
-          {formData?.restaurantAddress}
-        </h2>
-        <h2 style={{ marginTop: 10 }}>
-          <BsFillTelephoneFill />
-          매장 연락처 : {formData?.restaurantNumber}
-        </h2>
       </TitleDiv>
       <LineDiv />
       <ContentDiv>

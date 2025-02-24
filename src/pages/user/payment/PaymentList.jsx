@@ -68,7 +68,7 @@ const OrderList = () => {
   console.log(activeList);
 
   return (
-    <div className="w-full h-dvh flex flex-col justify-between overflow-hidden overflow-y-scroll scrollbar-hide mb-32 bg-white">
+    <div className="w-full h-dvh flex flex-col justify-between overflow-x-hidden overflow-y-scroll scrollbar-hide  bg-white">
       <div className="absolute top-0 left-0 w-full flex justify-between border-b-2 border-gray border-opacity-70 bg-white">
         <div
           onClick={() => setIsTap(!isTap)}

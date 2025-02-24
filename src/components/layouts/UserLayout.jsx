@@ -8,7 +8,7 @@ const UserLayout = ({ children }) => {
   }, []);
 
   return (
-    <div className="user-layout w-full block outline outline-black">
+    <div className="user-layout w-full block outline outline-black bg-white overflow-y-scroll overflow-x-hidden scrollbar-hide">
       {children}
     </div>
   );

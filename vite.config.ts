@@ -21,6 +21,7 @@ export default defineConfig({
     },
     watch: {
       usePolling: true,
+      interval: 100,
     },
   },
   // webSocket 연결을 위한 설정
