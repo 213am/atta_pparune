@@ -7,26 +7,27 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}", // Vite 프로젝트에 맞는 파일 확장자 추가
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "#6F4CDB",
+        primaryFocus: "#4825b6",
+        secondary: "#C4B6F0",
+        third: "#9176e4",
+        white: "#ffffff",
+        black: "#333333",
+        darkGray: "#929292",
+        gray: "#eeeeee",
+        red: "#E44B58",
+        blue: "#79BAF2",
+        yellow: "#FFD400",
+      },
+    },
     screens: {
       mw: "320px",
       sm: "640px",
       md: "768px",
       lg: "1024px",
       tb: "1400px",
-    },
-    colors: {
-      primary: "#6F4CDB",
-      primaryFocus: "#4825b6",
-      secondary: "#C4B6F0",
-      third: "#9176e4",
-      white: "#ffffff",
-      black: "#333333",
-      darkGray: "#929292",
-      gray: "#eeeeee",
-      red: "#E44B58",
-      blue: "#79BAF2",
-      yellow: "#FFD400",
     },
     border: {
       1: 1,
