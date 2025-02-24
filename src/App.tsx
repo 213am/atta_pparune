@@ -12,6 +12,8 @@ import {
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
 import TableComponent from "./pages/admin/franchisee/StoreManage";
+import AdminPage from "./pages/admin/AdminPage";
+
 const WriteReview = lazy(() => import("./pages/user/userInfo/WriteReview"));
 const IndexPage = lazy(() => import("./pages/IndexPage"));
 const EditPwPage = lazy(() => import("./pages/auth/EditPwPage"));
@@ -268,6 +270,10 @@ const App = (): JSX.Element => {
           </Route>
           <Route path="/service" element={<ServiceMainPage />}></Route>
           <Route path="/storeManage" element={<TableComponent />}></Route>
+
+          <Route path="/admin">
+            <Route index element={<AdminPage />} />
+          </Route>
 
           <Route path="*" element={<NotFound />} />
         </Routes>
