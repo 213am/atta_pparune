@@ -16,6 +16,7 @@ import AdminPage from "./pages/admin/AdminPage";
 import { PaymentCheckoutPage } from "./pages/company/toss/PaymentCheckoutPage";
 import { WidgetSuccessPage } from "./pages/company/toss/WidgetSuccess";
 import Layout from "./components/layouts/Layout";
+import MyReviewPage from "./pages/user/userInfo/myReviewPage";
 
 const WriteReview = lazy(() => import("./pages/user/userInfo/WriteReview"));
 const IndexPage = lazy(() => import("./pages/IndexPage"));
@@ -119,6 +120,14 @@ const App = (): JSX.Element => {
                 element={
                   <UserLayout>
                     <EditInfoPage />
+                  </UserLayout>
+                }
+              />
+              <Route
+                path="myReview"
+                element={
+                  <UserLayout>
+                    <MyReviewPage />
                   </UserLayout>
                 }
               />

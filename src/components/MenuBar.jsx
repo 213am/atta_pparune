@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FiHome } from "react-icons/fi";
 import { GoMilestone } from "react-icons/go";
-import { LuClipboardList } from "react-icons/lu";
-import { LuCircleUserRound } from "react-icons/lu";
+import { LuClipboardList, LuCircleUserRound } from "react-icons/lu";
 import { useRecoilState } from "recoil";
 import { loginAtom } from "../atoms/userAtom";
 import { isClickIcon } from "../atoms/noticeAtom";
@@ -11,10 +10,10 @@ import Swal from "sweetalert2";
 import { getCookie } from "./cookie";
 
 const MenuBar = () => {
-  const [activeMenu, setActiveMenu] = useState("home"); // 현재 선택된 메뉴 상태
   const [isLogin, setIsLogin] = useRecoilState(loginAtom);
   const [isClick, setIsClick] = useRecoilState(isClickIcon);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
     { id: "", label: "홈", icon: FiHome },
@@ -24,23 +23,26 @@ const MenuBar = () => {
   ];
 
   useEffect(() => {
-    const isLoginHandler = () => {
-      const userId = sessionStorage.getItem("userId");
-      const accessToken = getCookie();
-      if (userId && accessToken) {
-        setIsLogin(true);
-      }
-    };
-    isLoginHandler();
+    const userId = sessionStorage.getItem("userId");
+    const accessToken = getCookie();
+    if (userId && accessToken) {
+      setIsLogin(true);
+    }
   }, []);
 
-  const isLoginNav = Id => {
-    if (isLogin === false) {
-      if (Id === "") {
-        navigate(`/user/${Id}`);
-        setIsClick(false);
-      } else if (Id === "restaurant") {
-        navigate(`/user/${Id}`);
+  // 현재 URL 경로에 따라 activeMenu 결정
+  // 예를 들어 URL이 /user/restaurant라면, activeMenu는 "restaurant"가 되어야 함
+  const currentMenuId = (() => {
+    // location.pathname 예시: "/user/restaurant"
+    const segments = location.pathname.split("/");
+    // segments[0]은 빈 문자열, segments[1]이 "user"라고 가정
+    return segments[2] ? segments[2] : "";
+  })();
+
+  const isLoginNav = id => {
+    if (!isLogin) {
+      if (id === "" || id === "restaurant") {
+        navigate(`/user/${id}`);
         setIsClick(false);
       } else {
         Swal.fire({
@@ -48,8 +50,8 @@ const MenuBar = () => {
           text: "확인을 누르면 로그인으로 이동합니다.",
           icon: "error",
           confirmButtonText: "확인",
-          showConfirmButton: true, // ok 버튼 노출 여부
-          allowOutsideClick: false, // 외부 영역 클릭 방지
+          showConfirmButton: true,
+          allowOutsideClick: false,
           customClass: {
             popup: "flex w-[90%]",
             title: "text-xl",
@@ -62,7 +64,7 @@ const MenuBar = () => {
         });
       }
     } else {
-      navigate(`/user/${Id}`);
+      navigate(`/user/${id}`);
       setIsClick(false);
     }
   };
@@ -72,15 +74,13 @@ const MenuBar = () => {
       <div className="w-[430px] h-20 flex bg-white border-t-2 border-gray items-center">
         {menuItems.map(menu => {
           const Icon = menu.icon;
-          const isActive = activeMenu === menu.id;
+          // currentMenuId와 menu.id가 일치하면 활성화된 것으로 판단
+          const isActive = currentMenuId === menu.id;
           return (
             <div
               key={menu.id}
-              onClick={() => {
-                setActiveMenu(menu.id);
-                isLoginNav(menu.id);
-              }}
-              className={`w-1/4 flex flex-col items-center justify-center cursor-pointer`}
+              onClick={() => isLoginNav(menu.id)}
+              className="w-1/4 flex flex-col items-center justify-center cursor-pointer"
             >
               <Icon
                 className={`text-3xl ${isActive ? "text-primary" : "text-darkGray"}`}

@@ -86,7 +86,7 @@ function IndexPage() {
       <div className="absolute top-0 left-0 w-full flex justify-between items-center px-3 py-5 border-b-2 border-gray border-opacity-70 bg-white">
         <IoMdArrowBack
           className="text-3xl cursor-pointer"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/user")}
         />
         <span className="text-xl font-semibold pointer-events-none">
           내 정보
@@ -116,20 +116,29 @@ function IndexPage() {
             <MdOutlineMail className="text-xl" />
             {userData.email}
           </span>
-          <div className="flex items-center gap-1 cursor-pointer">
+          <div
+            onClick={() => navigate("/user/userInfo/myreview")}
+            className="flex items-center gap-1 cursor-pointer"
+          >
             <span className="text-lg font-semibold">내가 작성한 리뷰</span>
             <IoIosArrowForward className="text-xl font-semibold" />
           </div>
         </div>
         <div className="h-[40%] flex justify-center items-center pointer-events-none">
-          <div className="flex gap-5 items-center">
-            <div className="flex flex-col gap-6 font-thin text-lg h-full text-darkGray">
+          <div className="flex w-1/2 gap-5 items-center">
+            <div className="flex flex-col w-[20%] gap-6 font-thin text-lg h-full text-darkGray text-nowrap">
+              <span>닉네임</span>
               <span>이름</span>
               <span>아이디</span>
               <span>소속</span>
               <span>휴대폰</span>
             </div>
-            <div className="flex flex-col gap-6 font-medium text-lg h-full">
+            <div className="flex flex-col w-[80%] gap-6 font-medium text-lg h-full text-no">
+              {userData?.nickName ? (
+                <span>{userData.nickName}</span>
+              ) : (
+                <span className="text-darkGray">닉네임 없음</span>
+              )}
               <span>{userData.name}</span>
               <span>{userData.uid}</span>
               <span>{userData.companyName}</span>
@@ -138,12 +147,11 @@ function IndexPage() {
           </div>
         </div>
         <div className="flex h-[20%] justify-center gap-5 mb-32">
-          {/* <div
-            onClick={() => navigate("/user/userInfo/edit")}
-            className="px-3 py-1 bg-primary rounded-lg text-white font-semibold text-center cursor-pointer"
-          >
-            회원정보 수정
-          </div> */}
+          <div onClick={() => navigate("/user/userInfo/edit")}>
+            <span className="flex px-3 py-1 bg-primary rounded-lg text-white font-semibold text-center cursor-pointer">
+              회원정보 수정
+            </span>
+          </div>
           <div onClick={() => navigate("/auth/editpw")}>
             <span className="flex px-3 py-1 bg-primary rounded-lg text-white font-semibold text-center cursor-pointer">
               비밀번호 변경

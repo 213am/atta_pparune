@@ -112,7 +112,7 @@ const UserMainPage = (): JSX.Element => {
   };
 
   return (
-    <div className="relative w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
+    <div className="relative w-full h-dvh">
       <Notification />
       <div className="flex justify-center w-full h-[40%] ">
         <Swiper
@@ -202,7 +202,7 @@ const UserMainPage = (): JSX.Element => {
               onChange={e => filterChangeHandler(e)}
               className="text-base tracking-wide bg-white px-6 py-1 appearance-none w-[90px] outline-none cursor-pointer"
             >
-              <option value="기본순">기본순</option>
+              <option value="빠른순">빠른순</option>
               <option value="별점순">별점순</option>
               <option value="리뷰순">리뷰순</option>
             </select>
@@ -237,7 +237,7 @@ const UserMainPage = (): JSX.Element => {
             </p>
           </div>
         </div>
-        <div className="w-full px-4 py-4 flex flex-wrap justify-between">
+        <div className="w-full px-4 py-4 flex flex-wrap justify-between pb-32">
           {restaurantList.map((data, index) => (
             <div
               className="w-[calc(50%_-_0.5rem)] pb-3 cursor-pointer"
