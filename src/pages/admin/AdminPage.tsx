@@ -1,6 +1,11 @@
 import AdminSideBar from "../../components/AdminSideBar";
 
 const AdminPage = (): JSX.Element => {
-  return <AdminSideBar />;
+  return (
+    <div className="flex">
+      <AdminSideBar />
+      <div></div>
+    </div>
+  );
 };
 export default AdminPage;

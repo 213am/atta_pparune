@@ -11,6 +11,8 @@ import {
   subscribeStoreLogin,
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
+import { PaymentCheckoutPage } from "./pages/company/toss/PaymentCheckoutPage";
+import { WidgetSuccessPage } from "./pages/company/toss/WidgetSuccess";
 
 const TableComponent = lazy(
   () => import("./pages/admin/franchisee/StoreManage"),
@@ -296,6 +298,12 @@ const App = (): JSX.Element => {
           <Route path="/admin">
             <Route index element={<AdminPage />} />
           </Route>
+          <Route path="/company">
+            <Route index element={<PaymentCheckoutPage />} />
+          </Route>
+
+          {/* 결제 성공 */}
+          <Route path="/success" element={<WidgetSuccessPage />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
