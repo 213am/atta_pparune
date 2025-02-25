@@ -9,6 +9,7 @@ import { MdOutlineCancel } from "react-icons/md";
 import useModal from "../../../components/useModal";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { Quill } from "react-quill";
 
 const infoEditSchema = yup.object({
   restaurantName: yup.string().required("매장명은 필수입력 항목입니다"),
@@ -120,6 +121,7 @@ const StoreInfo = () => {
     // 상태 업데이트
     setImgFile(newImgFiles);
     setImgPreview(newImgPreview);
+    console.log(imgFile);
   };
 
   // 주소를 위도, 경도로 변환
@@ -237,8 +239,8 @@ const StoreInfo = () => {
     <div className="flex w-[calc(100%_-_11rem)] h-full bg-gray justify-center items-center">
       <div className="flex w-[96.5%] h-[calc(100%_-_4rem)] bg-white rounded-lg overflow-hidden overflow-y-scroll scrollbar-hide">
         <form onSubmit={handleSubmit(formSubmitHandler)}>
-          <div className="flex flex-col w-full h-full p-6 gap-6">
-            <span className="text-xl">매장정보 수정</span>
+          <div className="flex flex-col w-full h-full p-10 gap-6">
+            <span className="text-2xl">매장정보 수정</span>
             <div className="flex w-full gap-2">
               <label
                 htmlFor="inputImg"
@@ -256,24 +258,19 @@ const StoreInfo = () => {
                 accept="image/png, image/jpeg"
                 className="hidden"
               />
-              <div className="flex w-[90%] gap-2 justify-start">
+              <div className="flex w-[80%] gap-2 justify-start">
                 {imgPreview.map((data, index) => (
                   <div key={index} className="relative">
                     <MdOutlineCancel
                       className="absolute flex p-1 text-3xl right-0.5 text-black cursor-pointer"
                       onClick={() => deleteImgHandler(data)}
                     />
-                    <img
-                      src={data}
-                      alt=""
-                      className="border border-darkGray w-32 h-32"
-                    />
+                    <img src={data} alt="" className="w-32 h-32" />
                   </div>
                 ))}
               </div>
             </div>
-
-            <div className="flex gap-9 items-center">
+            <div className="flex gap-11 items-center">
               <span className="text-darkGray">가게 이름</span>
               <input
                 type="text"
@@ -281,7 +278,7 @@ const StoreInfo = () => {
                 {...register("restaurantName")}
               />
             </div>
-            <div className="flex gap-9 items-center">
+            <div className="flex gap-11 items-center">
               <span className="text-darkGray">가게 설명</span>
               <input
                 type="text"
@@ -290,7 +287,7 @@ const StoreInfo = () => {
               />
             </div>
             <div className="flex flex-col w-[45%] gap-2">
-              <div className="flex gap-9">
+              <div className="flex gap-11">
                 <label htmlFor="" className="text-nowrap text-darkGray">
                   전화 번호
                 </label>
@@ -306,7 +303,7 @@ const StoreInfo = () => {
                 {errors.restaurantNumber?.message}
               </p>
             </div>
-            <div className="flex w-[45%] gap-2">
+            <div className="flex w-[45%] gap-4">
               <label htmlFor="" className="text-nowrap text-darkGray">
                 최대 수용인원
               </label>
@@ -337,7 +334,6 @@ const StoreInfo = () => {
                   주소찾기
                 </button>
               </div>
-
               {open ? (
                 <Modal>
                   <DaumPostcodeEmbed onComplete={e => addressHandler(e)} />
@@ -352,17 +348,19 @@ const StoreInfo = () => {
                 영업 시간
               </label>
               <div className="flex gap-[15px] w-60">
-                <span>오픈시간</span>
+                <label htmlFor="openTime">오픈시간</label>
                 <input
                   type="time"
+                  id="openTime"
                   className="w-[130px] border px-2 rounded-md"
                   {...register("startTime")}
                 />
               </div>
               <div className="flex gap-[15px] w-60">
-                <span>마감시간</span>
+                <label htmlFor="closedTime">마감시간</label>
                 <input
                   type="time"
+                  id="closedTime"
                   className="w-[130px] border px-2 rounded-md"
                   {...register("endTime")}
                 />
@@ -375,33 +373,36 @@ const StoreInfo = () => {
               <div className="flex gap-2">
                 <input
                   type="radio"
+                  id="open"
                   className="border px-2 rounded-md"
                   value={0}
                   {...register("status")}
                 />
-                <label htmlFor="" className="w-16">
+                <label htmlFor="open" className="w-16">
                   영업중
                 </label>
               </div>
               <div className="flex gap-2">
                 <input
                   type="radio"
+                  id="break"
                   className="border px-2 rounded-md"
                   value={1}
                   {...register("status")}
                 />
-                <label htmlFor="" className="w-28">
+                <label htmlFor="break" className="w-28">
                   브레이크타임
                 </label>
               </div>
               <div className="flex gap-2">
                 <input
                   type="radio"
+                  id="closed"
                   className="border px-2 rounded-md"
                   value={2}
                   {...register("status")}
                 />
-                <label htmlFor="" className="w-20">
+                <label htmlFor="closed" className="w-20">
                   영업종료
                 </label>
               </div>
