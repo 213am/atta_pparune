@@ -13,6 +13,9 @@ import {
 } from "./components/notification/StompComponent";
 import TableComponent from "./pages/admin/franchisee/StoreManage";
 import AdminPage from "./pages/admin/AdminPage";
+import { PaymentCheckoutPage } from "./pages/company/toss/PaymentCheckoutPage";
+import { WidgetSuccessPage } from "./pages/company/toss/WidgetSuccess";
+import Layout from "./components/layouts/Layout";
 import MyReviewPage from "./pages/user/userInfo/myReviewPage";
 
 const WriteReview = lazy(() => import("./pages/user/userInfo/WriteReview"));
@@ -283,6 +286,12 @@ const App = (): JSX.Element => {
           <Route path="/admin">
             <Route index element={<AdminPage />} />
           </Route>
+          <Route path="/company">
+            <Route index element={<PaymentCheckoutPage />} />
+          </Route>
+
+          {/* 결제 성공 */}
+          <Route path="/success" element={<WidgetSuccessPage />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
