@@ -149,7 +149,10 @@ const OrderList = () => {
                 </div>
               </div>
               <div className="flex justify-center h-1/4">
-                <button className="w-1/4 h-2/3 flex px-4 py-1 border border-darkGray rounded-sm text-nowrap items-center justify-center hover:bg-primary hover:text-white">
+                <button
+                  onClick={() => navigate("/user/review")}
+                  className="w-1/4 h-2/3 flex px-4 py-1 border border-darkGray rounded-sm text-nowrap items-center justify-center hover:bg-primary hover:text-white"
+                >
                   리뷰 작성
                 </button>
               </div>

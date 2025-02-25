@@ -11,10 +11,15 @@ import {
   subscribeStoreLogin,
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
-import TableComponent from "./pages/admin/franchisee/StoreManage";
-import AdminPage from "./pages/admin/AdminPage";
-import MyReviewPage from "./pages/user/userInfo/myReviewPage";
 
+const TableComponent = lazy(
+  () => import("./pages/admin/franchisee/StoreManage"),
+);
+const AdminPage = lazy(() => import("./pages/admin/AdminPage"));
+const MyReviewPage = lazy(() => import("./pages/user/userInfo/MyReviewPage"));
+const RestaurantReviewPage = lazy(
+  () => import("./pages/user/restaurant/RestaurantReviewPage"),
+);
 const WriteReview = lazy(() => import("./pages/user/userInfo/WriteReview"));
 const IndexPage = lazy(() => import("./pages/IndexPage"));
 const EditPwPage = lazy(() => import("./pages/auth/EditPwPage"));
@@ -212,6 +217,14 @@ const App = (): JSX.Element => {
                   element={
                     <UserLayout>
                       <MenuSelectPage />
+                    </UserLayout>
+                  }
+                />
+                <Route
+                  path="review/:id"
+                  element={
+                    <UserLayout>
+                      <RestaurantReviewPage />
                     </UserLayout>
                   }
                 />

@@ -289,7 +289,14 @@ function StoreDetailPage() {
               <p className="text-3xl text-darkGray pb-1.5 pointer-events-none">
                 ·
               </p>
-              <div className="flex text-nowrap text-base gap-1.5 items-center cursor-pointer">
+              <div
+                className="flex text-nowrap text-base gap-1.5 items-center cursor-pointer"
+                onClick={() =>
+                  navigate(
+                    `/user/restaurant/detail/review/${formData.restaurantId}`,
+                  )
+                }
+              >
                 <p className="text-black text-base">리뷰</p>
                 <p className="text-black text-base">120 개</p>
                 <IoIosArrowForward className="text-black text-base" />
