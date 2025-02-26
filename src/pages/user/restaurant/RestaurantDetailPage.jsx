@@ -270,7 +270,7 @@ function StoreDetailPage() {
         />
       </BackDiv>
       <TitleDiv onClick={() => console.log(menu)}>
-        <div>
+        <div className="w-full">
           <div>
             {
               formData?.restaurantAddress?.match(
@@ -279,7 +279,7 @@ function StoreDetailPage() {
             }{" "}
             <span>I</span> {cateName()}
           </div>
-          <section className="flex w-full justify-between items-center">
+          <section className="flex w-full justify-between items-center pr-16">
             <h1>{formData?.restaurantName}</h1>
             <div className="flex w-1/3 h-full items-center gap-2">
               <div className="flex items-center gap-1 pointer-events-none">

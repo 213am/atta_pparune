@@ -8,7 +8,7 @@ import { IoMdArrowBack } from "react-icons/io";
 import { LuMapPin } from "react-icons/lu";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { orderIdAtom, reserveState } from "../../atoms/restaurantAtom";
+import { orderIdAtom, reserveState } from "../../../atoms/restaurantAtom";
 import dayjs from "dayjs";
 import { userDataAtom } from "../../../atoms/userAtom";
 import Swal from "sweetalert2";

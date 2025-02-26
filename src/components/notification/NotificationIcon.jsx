@@ -43,7 +43,6 @@ const Notification = () => {
     const params = {
       userId: sessionId,
     };
-    console.log(isLogin);
 
     const getAlert = async () => {
       if (isLogin === true) {

@@ -10,6 +10,7 @@ import useModal from "../../../components/useModal";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { Quill } from "react-quill";
+import QuillEditer from "./QuillEditer";
 
 const infoEditSchema = yup.object({
   restaurantName: yup.string().required("매장명은 필수입력 항목입니다"),
@@ -78,7 +79,6 @@ const StoreInfo = () => {
       const [startTime, endTime] = getData.operatingHours
         .split("~")
         .map(time => time.trim());
-      console.log(startTime, "TTTTTTTT", endTime);
       setValue("startTime", startTime);
       setValue("endTime", endTime);
     }
@@ -238,13 +238,16 @@ const StoreInfo = () => {
   return (
     <div className="flex w-[calc(100%_-_11rem)] h-full bg-gray justify-center items-center">
       <div className="flex w-[96.5%] h-[calc(100%_-_4rem)] bg-white rounded-lg overflow-hidden overflow-y-scroll scrollbar-hide">
-        <form onSubmit={handleSubmit(formSubmitHandler)}>
+        <form
+          className="flex w-full justify-evenly"
+          onSubmit={handleSubmit(formSubmitHandler)}
+        >
           <div className="flex flex-col w-full h-full p-10 gap-6">
             <span className="text-2xl">매장정보 수정</span>
             <div className="flex w-full gap-2">
               <label
                 htmlFor="inputImg"
-                className="flex flex-col w-48 h-32 border border-darkGray items-center justify-center gap-2 cursor-pointer"
+                className="flex flex-col w-36 h-32 border border-darkGray items-center justify-center gap-2 cursor-pointer"
               >
                 <GrUpload className="w-6 h-6" />
                 <span className="text-lg">이미지 업로드</span>
@@ -270,22 +273,24 @@ const StoreInfo = () => {
                 ))}
               </div>
             </div>
-            <div className="flex gap-11 items-center">
+            <div className="flex w-1/2 gap-11 items-center">
               <span className="text-darkGray">가게 이름</span>
               <input
                 type="text"
-                className="border px-2 rounded-md w-28"
+                className="border-b px-2 max-w-48 outline-none"
                 {...register("restaurantName")}
               />
             </div>
-            <div className="flex gap-11 items-center">
+            <div className="flex w-full h-full gap-11 items-center">
               <span className="text-darkGray">가게 설명</span>
-              <input
+              <QuillEditer value={getData.restaurantDescription} />
+              {/* <input
                 type="text"
                 className="border px-2 rounded-md"
                 {...register("restaurantDescription")}
-              />
+              /> */}
             </div>
+
             <div className="flex flex-col w-[45%] gap-2">
               <div className="flex gap-11">
                 <label htmlFor="" className="text-nowrap text-darkGray">
@@ -294,7 +299,7 @@ const StoreInfo = () => {
                 <input
                   type="tel"
                   maxLength={12}
-                  className="border px-2 rounded-md w-40"
+                  className="border-b px-2 w-40 outline-none"
                   placeholder="00(0)-000(0)-0000"
                   {...register("restaurantNumber")}
                 />
@@ -302,19 +307,6 @@ const StoreInfo = () => {
               <p className="text-red w-60">
                 {errors.restaurantNumber?.message}
               </p>
-            </div>
-            <div className="flex w-[45%] gap-4">
-              <label htmlFor="" className="text-nowrap text-darkGray">
-                최대 수용인원
-              </label>
-              <div className="flex gap-1 items-center">
-                <input
-                  type="number"
-                  className="border px-2 rounded-md w-12 text-end"
-                  {...register("maxCapacity")}
-                />
-                <span>명</span>
-              </div>
             </div>
             <div className="flex flex-col w-full gap-2">
               <label className="text-darkGray block">주소</label>
@@ -342,71 +334,88 @@ const StoreInfo = () => {
                 <></>
               )}
             </div>
-
-            <div className="flex flex-col w-[45%] gap-2">
-              <label htmlFor="" className="w-[15%] text-nowrap text-darkGray">
-                영업 시간
+            <div className="flex w-[45%] gap-4">
+              <label htmlFor="" className="text-nowrap text-darkGray">
+                최대 수용인원
               </label>
-              <div className="flex gap-[15px] w-60">
-                <label htmlFor="openTime">오픈시간</label>
+              <div className="flex gap-1 items-center">
                 <input
-                  type="time"
-                  id="openTime"
-                  className="w-[130px] border px-2 rounded-md"
-                  {...register("startTime")}
+                  type="number"
+                  className="border px-2 rounded-md w-12 text-end"
+                  {...register("maxCapacity")}
                 />
-              </div>
-              <div className="flex gap-[15px] w-60">
-                <label htmlFor="closedTime">마감시간</label>
-                <input
-                  type="time"
-                  id="closedTime"
-                  className="w-[130px] border px-2 rounded-md"
-                  {...register("endTime")}
-                />
+                <span>명</span>
               </div>
             </div>
-            <fieldset className="flex w-[45%]">
-              <legend htmlFor="" className="w-[15%] text-nowrap text-darkGray">
-                영업 상태
-              </legend>
-              <div className="flex gap-2">
-                <input
-                  type="radio"
-                  id="open"
-                  className="border px-2 rounded-md"
-                  value={0}
-                  {...register("status")}
-                />
-                <label htmlFor="open" className="w-16">
-                  영업중
+            <div className="flex w-full">
+              <div className="flex flex-col w-1/2 gap-2">
+                <label htmlFor="" className="w-[15%] text-nowrap text-darkGray">
+                  영업 시간
                 </label>
+                <div className="flex gap-[15px] w-60">
+                  <label htmlFor="openTime">오픈시간</label>
+                  <input
+                    type="time"
+                    id="openTime"
+                    className="w-[130px] border px-2 rounded-md"
+                    {...register("startTime")}
+                  />
+                </div>
+                <div className="flex gap-[15px] w-60">
+                  <label htmlFor="closedTime">마감시간</label>
+                  <input
+                    type="time"
+                    id="closedTime"
+                    className="w-[130px] border px-2 rounded-md"
+                    {...register("endTime")}
+                  />
+                </div>
               </div>
-              <div className="flex gap-2">
-                <input
-                  type="radio"
-                  id="break"
-                  className="border px-2 rounded-md"
-                  value={1}
-                  {...register("status")}
-                />
-                <label htmlFor="break" className="w-28">
-                  브레이크타임
-                </label>
-              </div>
-              <div className="flex gap-2">
-                <input
-                  type="radio"
-                  id="closed"
-                  className="border px-2 rounded-md"
-                  value={2}
-                  {...register("status")}
-                />
-                <label htmlFor="closed" className="w-20">
-                  영업종료
-                </label>
-              </div>
-            </fieldset>
+              <fieldset className="flex w-1/2">
+                <legend
+                  htmlFor=""
+                  className="w-[15%] text-nowrap text-darkGray"
+                >
+                  영업 상태
+                </legend>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    id="open"
+                    className="border px-2 rounded-md"
+                    value={0}
+                    {...register("status")}
+                  />
+                  <label htmlFor="open" className="w-16">
+                    영업중
+                  </label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    id="break"
+                    className="border px-2 rounded-md"
+                    value={1}
+                    {...register("status")}
+                  />
+                  <label htmlFor="break" className="w-28">
+                    브레이크타임
+                  </label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    id="closed"
+                    className="border px-2 rounded-md"
+                    value={2}
+                    {...register("status")}
+                  />
+                  <label htmlFor="closed" className="w-20">
+                    영업종료
+                  </label>
+                </div>
+              </fieldset>
+            </div>
             {/* <div className="flex flex-col w-[45%] gap-2">
             <label htmlFor="" className="w-[15%] text-nowrap">
               휴무일

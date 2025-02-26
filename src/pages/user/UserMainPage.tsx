@@ -202,7 +202,7 @@ const UserMainPage = (): JSX.Element => {
               onChange={e => filterChangeHandler(e)}
               className="text-base tracking-wide bg-white px-6 py-1 appearance-none w-[90px] outline-none cursor-pointer"
             >
-              <option value="빠른순">빠른순</option>
+              <option value="빠른순">기본순</option>
               <option value="별점순">별점순</option>
               <option value="리뷰순">리뷰순</option>
             </select>

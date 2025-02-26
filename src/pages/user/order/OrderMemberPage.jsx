@@ -14,7 +14,7 @@ import { getCookie } from "../../../components/cookie";
 
 const Seatmate = () => {
   const [userData, setUserData] = useRecoilState(userDataAtom);
-  const [paymentMember, setPaymentMember] = useRecoilState(memberDataAtom);
+  // const [paymentMember, setPaymentMember] = useRecoilState(memberDataAtom);
   const [memberData, setMemberData] = useRecoilState(paymentMemberAtom);
   const [newOrderId, setNewOrderId] = useRecoilState(orderIdAtom);
   const [isSearch, setIsSearch] = useState(true);
@@ -24,6 +24,13 @@ const Seatmate = () => {
   const navigate = useNavigate();
   const userId = sessionStorage.getItem("userId");
   const accessToken = getCookie();
+
+  // 임시
+  const [paymentMember, setPaymentMember] = useState({
+    name: null,
+    uid: null,
+    userId: null,
+  });
 
   useEffect(() => {
     const params = {
@@ -75,7 +82,6 @@ const Seatmate = () => {
         size: 30,
         name: name,
       };
-      console.log(params);
 
       try {
         const res = await axios.get(
@@ -87,7 +93,10 @@ const Seatmate = () => {
             },
           },
         );
-        const result = res.data.resultData.memberList;
+
+        const result = res.data.resultData.memberList.filter(
+          item => item.userId !== userData.userId,
+        );
         setSearchResult([...result]);
       } catch (error) {
         console.log(error);
@@ -116,7 +125,9 @@ const Seatmate = () => {
           },
         },
       );
-      const result = res.data.resultData.memberList;
+      const result = res.data.resultData.memberList.filter(
+        data => data.userId !== userData.userId,
+      );
       setSearchResult([...result]);
     } catch (error) {
       console.log(error);
@@ -130,9 +141,6 @@ const Seatmate = () => {
   };
 
   const onKeyDownHandler = e => {
-    console.log(e);
-    console.log(inputValue);
-
     if (e.code === "Enter") {
       searchMember();
     }
@@ -163,13 +171,11 @@ const Seatmate = () => {
     });
   };
 
-  console.log(paymentMember);
-  console.log(memberData);
-
   const nextBtnHandler = () => {
     navigate(`/user/placetoorder/price/${newOrderId}`, {
       state: {
         orderId: newOrderId,
+        paymentMember: paymentMember,
       },
     });
   };
@@ -178,7 +184,7 @@ const Seatmate = () => {
     <div className="w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
       <div className="flex w-full justify-between py-6 items-center border-b border-gray">
         <div
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/user")}
           className="flex w-[15%] justify-center"
         >
           <IoMdArrowBack className="text-3xl" />
@@ -193,22 +199,8 @@ const Seatmate = () => {
           </span>
         </div>
       </div>
-      <div className="flex w-full justify-between p-4">
-        <div className="flex">
-          <span
-            className={`${isSearch ? "bg-gray text-darkGray text-opacity-60" : "bg-darkGray text-black"} px-2 py-1 rounded-s-md font-semibold`}
-            onClick={() => setIsSearch(false)}
-          >
-            최근
-          </span>
-          <span
-            className={`${isSearch ? "bg-darkGray text-black" : "bg-gray text-darkGray text-opacity-60"} px-2 py-1 rounded-e-md font-semibold`}
-            onClick={() => setIsSearch(true)}
-          >
-            검색
-          </span>
-        </div>
-        <div>총 {paymentMember.userId.length}명 선택 중</div>
+      <div className="flex w-full justify-end p-4">
+        <div>총 {paymentMember?.userId?.length}명 선택 중</div>
       </div>
       <div className="w-full h-dvh ">
         <div className="flex w-full h-[6%] items-center px-6 border-b border-gray">
@@ -218,49 +210,44 @@ const Seatmate = () => {
               {userData.name}({userData.uid})
             </label>
           </div>
-          <span className="w-[20%] text-darkGray">필수선택</span>
+          <span className="w-[20%] text-darkGray">본인</span>
         </div>
-        {isSearch ? (
-          <div className="flex flex-col w-full h-dvh">
-            <div className="flex p-6 items-center gap-1">
-              <input
-                type="text"
-                className="w-[90%] border border-darkGray rounded-md px-2"
-                placeholder="회사 내 인원을 이름으로 검색해보세요"
-                onChange={e => changeInputHandler(e)}
-                onKeyDown={e => onKeyDownHandler(e)}
-                value={inputValue}
-              />
-              <IoMdSearch
-                onClick={() => searchMember()}
-                className="flex w-[10%] text-2xl"
-              />
-            </div>
-            <div className="flex flex-col w-full h-dvh">
-              {searchResult.map(item => (
-                <div
-                  key={item.userId}
-                  className="flex w-full h-[6%] items-center gap-4 px-6 border-b border-gray"
-                >
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5"
-                    id={item.userId}
-                    value={item.userId}
-                    onChange={() => changeCheckHandler(item)}
-                  />
-                  <label className="text-xl" htmlFor={item.userId}>
-                    {item.name}({item.uid})
-                  </label>
-                </div>
-              ))}
-            </div>
+
+        <div className="flex flex-col w-full h-dvh">
+          <div className="flex p-6 items-center gap-1">
+            <input
+              type="text"
+              className="w-[90%] border border-darkGray rounded-md px-2"
+              placeholder="회사 내 인원을 이름으로 검색해보세요"
+              onChange={e => changeInputHandler(e)}
+              onKeyDown={e => onKeyDownHandler(e)}
+              value={inputValue}
+            />
+            <IoMdSearch
+              onClick={() => searchMember()}
+              className="flex w-[10%] text-2xl"
+            />
           </div>
-        ) : (
-          <div className="flex flex-col w-full h-dvh">
-            <span className="p-5 text-xl">최근 함께한 사용자가 없습니다</span>
+          <div className="flex flex-col w-full h-full">
+            {searchResult.map(item => (
+              <div
+                key={item.userId}
+                className="flex w-full h-[10%] items-center gap-4 px-6 py-2 border-b border-gray"
+              >
+                <input
+                  type="checkbox"
+                  className="w-5 h-5"
+                  id={item.userId}
+                  value={item.userId}
+                  onChange={() => changeCheckHandler(item)}
+                />
+                <label className="text-xl" htmlFor={item.userId}>
+                  {item.name}({item.uid})
+                </label>
+              </div>
+            ))}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

@@ -187,7 +187,6 @@ const OrderRequestPage = () => {
     setIsCompleted(!isCompleted);
     console.log(sessionUserId);
   };
-  console.log(priceList);
 
   return (
     <div className="w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">

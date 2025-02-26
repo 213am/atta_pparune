@@ -12,6 +12,7 @@ import {
 } from "../../../atoms/restaurantAtom";
 import { userDataAtom } from "../../../atoms/userAtom";
 import { getCookie } from "../../../components/cookie";
+import Swal from "sweetalert2";
 
 const PriceOrderPage = () => {
   const [priceList, setPriceList] = useState({});
@@ -20,12 +21,22 @@ const PriceOrderPage = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [newOrderId, setNewOrderId] = useRecoilState(orderIdAtom);
   const [userData, setUserData] = useRecoilState(userDataAtom);
-  const [memberData, setMemberData] = useRecoilState(memberDataAtom);
+  // const [memberData, setMemberData] = useRecoilState(memberDataAtom);
   const [paymentMemberData, setPaymentMemberData] =
     useRecoilState(paymentMemberAtom);
   const navigate = useNavigate();
   const userId = sessionStorage.getItem("userId");
   const accessToken = getCookie();
+  const { state } = useLocation();
+
+  // 수정용
+  const [memberData, setMemberData] = useState({
+    orderId: 0,
+    userId: state.paymentMember.userId,
+    point: [],
+  });
+
+  console.log(state.paymentMember);
 
   useEffect(() => {
     const params = {
@@ -107,8 +118,6 @@ const PriceOrderPage = () => {
       [userId]: value,
     }));
   };
-  console.log("금액 : ", inputValues);
-  console.log("사람 : ", memberData);
 
   const inputApprovalHandler = userId => {
     setIsCompleted(prev => {
@@ -138,9 +147,24 @@ const PriceOrderPage = () => {
   };
 
   const backArrow = () => {
-    setMemberData(prev => ({ ...prev, point: [], userId: [parseInt(userId)] }));
-    setPaymentMemberData(prev => [...prev]);
-    navigate(-1);
+    Swal.fire({
+      icon: "warning",
+      title: "다시 시작하시겠습니까?",
+      text: "확인을 누를 시, 인원 선택을 다시 해야합니다",
+      showCancelButton: true,
+      confirmButtonText: "확인",
+      cancelButtonText: "취소",
+    }).then(result => {
+      if (result.isConfirmed) {
+        setMemberData(prev => ({
+          ...prev,
+          point: [],
+          userId: [parseInt(userId)],
+        }));
+        setPaymentMemberData([]);
+        navigate(-1);
+      }
+    });
   };
 
   console.log(paymentMemberData);
@@ -214,10 +238,7 @@ const PriceOrderPage = () => {
             </div>
           ))}
         <div className="flex w-full h-[5%] justify-center items-center">
-          <IoMdAddCircleOutline
-            onClick={addMemberHandler}
-            className="text-3xl"
-          />
+          <IoMdAddCircleOutline onClick={backArrow} className="text-3xl" />
         </div>
         <div className="flex w-full justify-center">
           <span
