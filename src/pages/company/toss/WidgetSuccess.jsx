@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
@@ -6,33 +7,38 @@ export function WidgetSuccessPage() {
   const [searchParams] = useSearchParams();
   const [responseData, setResponseData] = useState(null);
 
-  // axio로 변경
-  // useEffect(() => {
-  //     const postPayInfo = async () => {
-  //     try {
-  //         const requestData = {
-  //         orderId: searchParams.get("orderId"),
-  //         amount: searchParams.get("amount"),
-  //         paymentKey: searchParams.get("paymentKey"),
-  //         adminId: 0,
-  //         };
+  // axios로 변경
+  useEffect(() => {
+    const postPayInfo = async () => {
+      try {
+        const requestData = {
+          orderId: searchParams.get("orderId"),
+          amount: searchParams.get("amount"),
+          paymentKey: searchParams.get("paymentKey"),
+        };
 
-  //         const response = await axios.post("/api/confirm/widget", requestData, {
-  //         headers: {
-  //             "Content-Type": "application/json",
-  //         },
-  //         });
+        const response = await axios.post(
+          "/api/admin/company/v3/point",
+          requestData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        );
 
-  //         setResponseData(response.data);
-  //     } catch (error) {
-  //         const errorCode = error.response?.data?.code || "unknown_error";
-  //         const errorMessage =
-  //         error.response?.data?.message || "An error occurred";
-  //         navigate(`/fail?code=${errorCode}&message=${errorMessage}`);
-  //     }
-  //     };
-  //     postPayInfo();
-  // }, [searchParams]);
+        setResponseData(response.data);
+      } catch (error) {
+        const errorCode = error.response?.data?.code || "unknown_error";
+        const errorMessage =
+          error.response?.data?.message || "An error occurred";
+        navigate(`/fail?code=${errorCode}&message=${errorMessage}`);
+
+        console.log(error);
+      }
+    };
+    postPayInfo();
+  }, [searchParams]);
 
   // 원래코드
   // useEffect(() => {
