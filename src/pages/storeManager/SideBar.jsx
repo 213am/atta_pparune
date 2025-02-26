@@ -1,32 +1,28 @@
+import styled from "@emotion/styled";
+import { useEffect, useState } from "react";
+import { BiSolidCommentDetail } from "react-icons/bi";
+import { FaSortDown, FaSortUp } from "react-icons/fa";
 import { FaBowlFood } from "react-icons/fa6";
+import { IoStorefront } from "react-icons/io5";
 import { MdTableBar } from "react-icons/md";
 import { PiMoneyWavyFill } from "react-icons/pi";
-import { IoStorefront } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { FaSortDown, FaSortUp } from "react-icons/fa";
-import styled from "@emotion/styled";
 import { useRecoilState } from "recoil";
-import { roleAtom } from "../../atoms/roleAtom";
-import { STORE } from "../../constants/Role";
-import { removeCookie, removeCookieRefresh } from "../../components/cookie";
 import Swal from "sweetalert2";
+import { roleAtom } from "../../atoms/roleAtom";
+import { removeCookie, removeCookieRefresh } from "../../components/cookie";
+import { STORE } from "../../constants/Role";
 
 const SubMenuDiv = styled.div`
   padding: 5px 10px;
   margin-left: 60px;
   margin-top: 10px;
   cursor: pointer;
+  color: #fff;
 `;
 
 const SideBar = () => {
   const navigate = useNavigate();
-  const [menuClick, setMenuClick] = useState({
-    table: false,
-    menu: false,
-    sales: false,
-    store: false,
-  });
   const [activeMenu, setActiveMenu] = useState("");
   const [subMenuClick, setSubMenuClick] = useState(false);
   const [role, setRole] = useRecoilState(roleAtom);
@@ -39,6 +35,9 @@ const SideBar = () => {
       "/store/info": "store",
     };
     setActiveMenu(pathToMenuMap[location.pathname] || "");
+    if (location.pathname === "/store/info") {
+      setSubMenuClick(true);
+    }
   }, [location.pathname]);
 
   const handleMenuClick = (menu, path) => {
@@ -52,7 +51,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className="flex flex-col w-44 h-dvh justify-between items-center bg-white border-r border-r-gray drop-shadow-md">
+    <div className="flex flex-col w-44 h-dvh justify-between items-center bg-primaryFocus">
       <div className="w-full mt-8">
         <div className="flex mb-6 px-4 w-44 justify-center items-center">
           <img src={"/logo.png"} className="flex w-full h-full pb-6" />
@@ -63,64 +62,79 @@ const SideBar = () => {
           <div
             className={`flex gap-3 pl-8 py-4 items-center cursor-pointer ${
               activeMenu === "table"
-                ? "bg-primary text-white ml-6 rounded-l-full"
-                : ""
+                ? "bg-gray text-black ml-6 rounded-l-full shadow-lg"
+                : "text-white"
             }`}
             onClick={() => handleMenuClick("table", "/store")}
           >
             <MdTableBar className="text-2xl" />
-            <span className="text-lg font-semibold">테이블</span>
+            <span className="text-lg">테이블</span>
           </div>
           {/* 메뉴 */}
           <div
             className={`flex gap-3 pl-8 py-4 items-center cursor-pointer ${
               activeMenu === "menu"
-                ? "bg-primary text-white ml-6 rounded-l-full"
-                : ""
+                ? "bg-gray text-black ml-6 rounded-l-full shadow-[var(--tw-ring-offset-shadow,0_0_#0000),var(--tw-ring-shadow,0_0_#0000),var(--tw-shadow)]"
+                : "text-white"
             }`}
             onClick={() => handleMenuClick("menu", "/store/menu")}
           >
             <FaBowlFood className="text-2xl" />
-            <div className="text-lg font-semibold">메뉴</div>
+            <div className="text-lg">메뉴</div>
           </div>
 
           {/* 매출확인 */}
           <div
             className={`flex gap-3 pl-8 py-4 items-center cursor-pointer ${
               activeMenu === "sales"
-                ? "bg-primary text-white ml-6 rounded-l-full"
-                : ""
+                ? "bg-gray text-black ml-6 rounded-l-full shadow-lg"
+                : "text-white"
             }`}
             onClick={() => handleMenuClick("sales", "/store/sales")}
           >
             <PiMoneyWavyFill className="text-2xl" />
-            <div className="text-lg font-semibold">매출확인</div>
+            <div className="text-lg">매출확인</div>
+          </div>
+          {/* 리뷰관리 */}
+          <div
+            className={`flex gap-3 pl-8 py-4 items-center cursor-pointer ${
+              activeMenu === "sales"
+                ? "bg-gray text-black ml-6 rounded-l-full shadow-lg"
+                : "text-white"
+            }`}
+            onClick={() => handleMenuClick("sales", "/store/sales")}
+          >
+            <BiSolidCommentDetail className="text-2xl" />
+            <div className="text-lg">리뷰관리</div>
           </div>
         </div>
 
         {/* 내 매장 메뉴 */}
         <div
-          // ${ menuClick.store ? "bg-primary text-white" : ""}
-          className={`flex gap-3 pl-8 items-center mt-3 cursor-pointer`}
-          onClick={() =>
-            setMenuClick({ ...menuClick, store: !menuClick.store })
-          }
+          className={`flex gap-3 pl-8 items-center mt-3 cursor-pointer text-white`}
+          onClick={() => {
+            setActiveMenu("store");
+          }}
         >
           <IoStorefront className="text-2xl" />
-          <div className="text-lg font-semibold">내 매장</div>
-          {menuClick.store ? (
+          <div className="text-lg">내 매장</div>
+          {activeMenu === "store" ? (
             <FaSortUp className="w-6 h-6 mt-3" />
           ) : (
             <FaSortDown className="w-6 h-6 mb-3" />
           )}
         </div>
-        {menuClick.store && (
+        {activeMenu === "store" && (
           <>
             <SubMenuDiv
-              onClick={() => editHandler()}
+              onClick={() => handleMenuClick("store", "/store/info")}
               style={{
-                backgroundColor: subMenuClick ? "#6f4cd8" : "#fff",
-                color: subMenuClick ? "#fff" : "#333",
+                backgroundColor: subMenuClick ? "#eee" : "#4825b6",
+                color: subMenuClick ? "#333" : "#fff",
+                boxShadow:
+                  subMenuClick &&
+                  "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                borderRadius: "2px 0 0 2px",
               }}
             >
               정보수정
@@ -155,7 +169,7 @@ const SideBar = () => {
             }
           });
         }}
-        className="rounded-md bg-primary text-white font-bold tracking-wider px-6 py-2 mb-16 cursor-pointer hover:bg-primaryFocus"
+        className="rounded-md bg-secondary text-white font-bold tracking-wider px-6 py-2 mb-16 cursor-pointer shadow-lg"
       >
         로그아웃
       </div>

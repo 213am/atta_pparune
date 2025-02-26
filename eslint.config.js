@@ -23,11 +23,6 @@ export default tseslint.config(
       react,
     },
     rules: {
-<<<<<<< HEAD
-      ...react.configs.recommended.rules,
-      ...react.configs["jsx-runtime"].rules,
-=======
->>>>>>> 3cf4eebd5cab5826abc51aee2747fe1cd71ff691
       ...reactHooks.configs.recommended.rules,
       "react/jsx-no-target-blank": "off",
       "react-refresh/only-export-components": [
