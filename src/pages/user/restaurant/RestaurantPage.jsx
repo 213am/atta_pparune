@@ -149,7 +149,7 @@ function RestaurantPage() {
   const [search, setSearch] = useState();
 
   // 전체, 거리순 등등 정렬
-  const [sort, setSort] = useState(0);
+  const [sort, setSort] = useState(1);
 
   const navigate = useNavigate();
 
@@ -416,18 +416,26 @@ function RestaurantPage() {
         >
           <BarDiv />
         </div>
+
+        {/* 정렬조건 */}
         <FlexDiv style={{ gap: 10, marginBottom: 10 }}>
           <SortDiv
-            style={{ backgroundColor: sort === 0 && "#6f4cdb" }}
-            onClick={() => setSort(0)}
-          >
-            전체
-          </SortDiv>
-          <SortDiv
-            style={{ backgroundColor: sort !== 0 && "#6f4cdb" }}
+            style={{ backgroundColor: sort === 1 && "#6f4cdb" }}
             onClick={() => setSort(1)}
           >
             거리순
+          </SortDiv>
+          <SortDiv
+            style={{ backgroundColor: sort === 2 && "#6f4cdb" }}
+            onClick={() => setSort(2)}
+          >
+            별점순
+          </SortDiv>
+          <SortDiv
+            style={{ backgroundColor: sort === 3 && "#6f4cdb" }}
+            onClick={() => setSort(3)}
+          >
+            빠른식사순
           </SortDiv>
         </FlexDiv>
 

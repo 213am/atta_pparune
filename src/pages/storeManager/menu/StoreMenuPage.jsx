@@ -26,40 +26,42 @@ const LayoutDiv = styled.div`
 
 const ContentDiv = styled.div`
   flex-wrap: wrap;
-  padding: 30px 30px;
+  padding: 20px 0;
   padding-bottom: 30px;
-  background-color: #fff;
   border-radius: 10px;
-  width: 750px;
+  width: 830px;
   max-height: calc(100vh - 60px);
   overflow-y: auto;
-  box-shadow:
-    0px 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0px 10px 10px -5px rgba(0, 0, 0, 0.04);
 `;
 
 const TitleDiv = styled.div`
+  padding-left: 10px;
   font-size: 24px;
   font-weight: 700;
+  margin-bottom: 20px;
 `;
 
 const SideBarRightDiv = styled.div`
   box-shadow:
     0px 20px 25px -5px rgba(0, 0, 0, 0.1),
     0px 10px 10px -5px rgba(0, 0, 0, 0.04);
-  width: 320px;
+  width: 350px;
   background-color: #fff;
 `;
 
 const MenuDiv = styled.div`
+  background-color: #fff;
   margin: 10px 0;
-  width: calc(33.33% - 26.66px);
-  height: 260px;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow:
+    0px 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0px 10px 10px -5px rgba(0, 0, 0, 0.04);
 `;
 
 const MenuImg = styled.img`
-  width: 200px;
-  height: 200px;
+  width: 210px;
+  height: 210px;
   border-radius: 5px;
   background-color: #eee;
 `;
@@ -432,20 +434,23 @@ function StoreMenuPage() {
         </div>
         <SideBarRightDiv>
           <div
-            style={{ display: "flex", justifyContent: "center", marginTop: 50 }}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
           >
-            <MenuImg
+            {/* <MenuImg
               style={{ borderRadius: 100 }}
               src={`${DOCKER_URL}/pic/restaurant/${getData.restaurantId}/${getData.restaurantPics?.filePath}`}
               alt="없음"
-            />
+            /> */}
           </div>
           <TitleDiv
             style={{
               color: "#B3A1EC",
-              marginLeft: 0,
               textAlign: "center",
-              marginBottom: 40,
+              marginBottom: 250,
+              marginTop: 40,
             }}
           >
             {getData.restaurantName}
