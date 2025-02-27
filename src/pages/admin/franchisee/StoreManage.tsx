@@ -1,40 +1,48 @@
-interface StoreManageProps {
-  children?: React.ReactNode;
+import {
+  AllCommunityModule,
+  ColDef,
+  ColGroupDef,
+  GridApi,
+  GridOptions,
+  ModuleRegistry,
+  createGrid,
+} from "ag-grid-community";
+
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+// Row Data Interface
+export interface IRow {
+  make: string;
+  model: string;
+  price: number;
+  electric: boolean;
 }
 
-const StoreManage = (props: StoreManageProps): JSX.Element => {
-  return (
-    <div className="flex w-full h-dvh bg-white items-start">
-      <table className="flex flex-col w-[70%] border border-collapse">
-        <thead>
-          <tr className="flex w-full justify-between">
-            <th className="flex border w-[10%] justify-center">순번</th>
-            <th className="flex border w-[20%] justify-center">가맹점명</th>
-            <th className="flex border w-[20%] justify-center">이메일</th>
-            <th className="flex border w-[15%] justify-center">전화번호</th>
-            <th className="flex border w-[25%] justify-center">주소</th>
-            <th className="flex border w-[10%] justify-center">제휴상태</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="flex w-full justify-between">
-            <td className="flex border w-[10%] justify-center">1</td>
-            <td className="flex border w-[20%] justify-center">후라토식당</td>
-            <td className="flex border w-[20%] justify-center">
-              hurato12@naver.com
-            </td>
-            <td className="flex border w-[15%] justify-center">
-              010-1234-5678
-            </td>
-            <td className="flex border w-[25%] justify-center">
-              대구광역시 어쩌구 한교동
-            </td>
-            <td className="flex border w-[10%] justify-center">제휴</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  );
+// Grid Options: Defines the grid configuration
+const StoreManage: GridOptions<IRow> = {
+  rowData: [
+    { make: "Tesla", model: "Model Y", price: 64950, electric: true },
+    { make: "Ford", model: "F-Series", price: 33850, electric: false },
+    { make: "Toyota", model: "Corolla", price: 29600, electric: false },
+    { make: "Mercedes", model: "EQA", price: 48890, electric: true },
+    { make: "Fiat", model: "500", price: 15774, electric: false },
+    { make: "Nissan", model: "Juke", price: 20675, electric: false },
+  ],
+  columnDefs: [
+    { field: "make" },
+    { field: "model" },
+    { field: "price" },
+    { field: "electric" },
+  ],
+  defaultColDef: {
+    flex: 1,
+  },
 };
+
+// Create Grid and assign API reference
+const gridApi: GridApi = createGrid(
+  document.querySelector<HTMLElement>("#myGrid")!,
+  StoreManage,
+);
 
 export default StoreManage;
