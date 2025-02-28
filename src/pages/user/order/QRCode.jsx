@@ -110,7 +110,7 @@ const QRCode = () => {
   useEffect(() => {
     const intervalId = setInterval(async () => {
       const params = {
-        ticketId: 19,
+        ticketId: newTicketId,
       };
       try {
         const res = await axios.get("/api/order/ticket", {
