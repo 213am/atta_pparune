@@ -122,10 +122,10 @@ const RestaurantReviewPage = () => {
             <RiDeleteBin6Fill />
             <span>삭제</span>
           </div> */}
-          <div className="flex items-center cursor-pointer gap-1">
+          {/* <div className="flex items-center cursor-pointer gap-1">
             <PiSirenFill />
             <span>신고하기</span>
-          </div>
+          </div> */}
         </div>
         {/* 식당 리뷰 답글 */}
         <div className="flex w-full gap-3">

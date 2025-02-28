@@ -3,6 +3,7 @@ import { IoMdArrowDropleft } from "react-icons/io";
 import { IoMdArrowDropright } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { JSX, useState } from "react";
+import PasswordInput from "../components/PwKeyboard";
 
 const NotFound = (): JSX.Element => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const NotFound = (): JSX.Element => {
   };
 
   return (
-    <div className="flex flex-col w-full h-full justify-center items-center gap-20 overflow-hidden scrollbar-hide mt-28">
+    <div className="flex flex-col w-full h-dvh justify-center items-center gap-20 overflow-hidden scrollbar-hide bg-white">
       <div className="flex flex-col items-center">
         <TbMoodSadDizzy className="text-9xl text-darkGray" />
         <div className="flex flex-col w-full items-center">
@@ -40,6 +41,7 @@ const NotFound = (): JSX.Element => {
             요청하신 페이지의 주소가 변경, 삭제되어 찾을 수 없습니다
           </span>
         </div>
+
         <div className="flex w-full justify-center gap-12">
           <div
             onClick={MovePrevPageHandler}
