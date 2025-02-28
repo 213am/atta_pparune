@@ -7,7 +7,11 @@ const StoreLayout = ({ children }) => {
     return () => document.body.classList.remove("store-layout");
   }, []);
 
-  return <div className="store-container bg-white">{children}</div>;
+  return (
+    <div className="store-layout w-full block bg-white overflow-y-scroll overflow-x-hidden scrollbar-hide">
+      {children}
+    </div>
+  );
 };
 
 export default StoreLayout;

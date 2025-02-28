@@ -70,7 +70,7 @@ export function PaymentCheckoutPage() {
         });
       }
     } catch (error) {
-      console.log(err);
+      console.log(error);
     }
   }
   return (

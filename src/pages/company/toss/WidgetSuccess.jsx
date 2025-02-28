@@ -28,6 +28,8 @@ export function WidgetSuccessPage() {
         );
 
         setResponseData(response.data);
+        localStorage.removeItem("@tosspayments/merchant-browser-id");
+        sessionStorage.removeItem("@tosspayments/session-id");
       } catch (error) {
         const errorCode = error.response?.data?.code || "unknown_error";
         const errorMessage =
