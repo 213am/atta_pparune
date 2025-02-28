@@ -84,18 +84,6 @@ const SideBar = () => {
             <div className="text-lg">메뉴</div>
           </div>
 
-          {/* 매출확인 */}
-          <div
-            className={`flex gap-3 pl-8 py-4 items-center cursor-pointer ${
-              activeMenu === "sales"
-                ? "bg-gray text-black ml-6 rounded-l-full shadow-lg"
-                : "text-white"
-            }`}
-            onClick={() => handleMenuClick("sales", "/store/sales")}
-          >
-            <PiMoneyWavyFill className="text-2xl" />
-            <div className="text-lg">매출확인</div>
-          </div>
           {/* 리뷰관리 */}
           <div
             className={`flex gap-3 pl-8 py-4 items-center cursor-pointer ${
@@ -108,6 +96,19 @@ const SideBar = () => {
             <BiSolidCommentDetail className="text-2xl" />
             <div className="text-lg">리뷰관리</div>
           </div>
+        </div>
+
+        {/* 매출확인 */}
+        <div
+          className={`flex gap-3 pl-8 py-4 items-center cursor-pointer ${
+            activeMenu === "sales"
+              ? "bg-gray text-black ml-6 rounded-l-full shadow-lg"
+              : "text-white"
+          }`}
+          onClick={() => handleMenuClick("sales", "/store/sales")}
+        >
+          <PiMoneyWavyFill className="text-2xl" />
+          <div className="text-lg">매출확인</div>
         </div>
 
         {/* 내 매장 메뉴 */}

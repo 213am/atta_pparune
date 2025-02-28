@@ -9,7 +9,6 @@ import { MdOutlineCancel } from "react-icons/md";
 import useModal from "../../../components/useModal";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import { Quill } from "react-quill";
 import QuillEditer from "./QuillEditer";
 
 const infoEditSchema = yup.object({
