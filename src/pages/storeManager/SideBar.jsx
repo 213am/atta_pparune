@@ -33,6 +33,7 @@ const SideBar = () => {
       "/store/menu": "menu",
       "/store/sales": "sales",
       "/store/info": "store",
+      "/store/review": "review",
     };
     setActiveMenu(pathToMenuMap[location.pathname] || "");
     if (location.pathname === "/store/info") {
@@ -74,7 +75,7 @@ const SideBar = () => {
           <div
             className={`flex gap-3 pl-8 py-4 items-center cursor-pointer ${
               activeMenu === "menu"
-                ? "bg-gray text-black ml-6 rounded-l-full shadow-[var(--tw-ring-offset-shadow,0_0_#0000),var(--tw-ring-shadow,0_0_#0000),var(--tw-shadow)]"
+                ? "bg-gray text-black ml-6 rounded-l-full shadow-[-3px_5px_0_rgba(0,0,0,0.08)]"
                 : "text-white"
             }`}
             onClick={() => handleMenuClick("menu", "/store/menu")}
@@ -98,11 +99,11 @@ const SideBar = () => {
           {/* 리뷰관리 */}
           <div
             className={`flex gap-3 pl-8 py-4 items-center cursor-pointer ${
-              activeMenu === "sales"
-                ? "bg-gray text-black ml-6 rounded-l-full shadow-lg"
+              activeMenu === "review"
+                ? "bg-gray text-black ml-6 rounded-l-full shadow-[-3px_5px_0_rgba(0,0,0,0.08)]"
                 : "text-white"
             }`}
-            onClick={() => handleMenuClick("sales", "/store/sales")}
+            onClick={() => handleMenuClick("review", "/store/review")}
           >
             <BiSolidCommentDetail className="text-2xl" />
             <div className="text-lg">리뷰관리</div>

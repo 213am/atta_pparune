@@ -41,33 +41,36 @@ export function PaymentCheckoutPage() {
     // requestPayment 호출 전에 백으로 post
     // 성공하면 requestPayment 호출
     // 아니면 alert 창으로 막기
+    try {
+      const orderId = crypto.randomUUID();
 
-    const orderId = crypto.randomUUID();
-
-    const res = await axios.post("/api/admin/company/v3/payment/temp", {
-      amount: amount.value,
-      orderId: orderId,
-    });
-    console.log(res);
-    if (res.data.statusCode === "200") {
-      await payment.requestPayment({
-        method: "CARD", // 카드 및 간편결제
-        amount: amount,
-        orderId: orderId, // 고유 주문번호
-        orderName: "토스 티셔츠 외 2건",
-        successUrl: window.location.origin + "/success", // 결제 요청이 성공하면 리다이렉트되는 URL
-        failUrl: window.location.origin + "/fail", // 결제 요청이 실패하면 리다이렉트되는 URL
-        customerEmail: "customer123@gmail.com",
-        customerName: "김토스",
-        customerMobilePhone: "01012341234",
-        // 카드 결제에 필요한 정보
-        card: {
-          useEscrow: false,
-          flowMode: "DEFAULT", // 통합결제창 여는 옵션
-          useCardPoint: false,
-          useAppCardOnly: false,
-        },
+      const res = await axios.post("/api/admin/company/v3/payment/temp", {
+        amount: amount.value,
+        orderId: orderId,
       });
+      console.log(res);
+      if (res.data.statusCode === "200") {
+        await payment.requestPayment({
+          method: "CARD", // 카드 및 간편결제
+          amount: amount,
+          orderId: orderId, // 고유 주문번호
+          orderName: "포인트 구매",
+          successUrl: window.location.origin + "/success", // 결제 요청이 성공하면 리다이렉트되는 URL
+          failUrl: window.location.origin + "/fail", // 결제 요청이 실패하면 리다이렉트되는 URL
+          customerEmail: "customer123@gmail.com",
+          customerName: "김토스",
+          customerMobilePhone: "01012341234",
+          // 카드 결제에 필요한 정보
+          card: {
+            useEscrow: false,
+            flowMode: "DEFAULT", // 통합결제창 여는 옵션
+            useCardPoint: false,
+            useAppCardOnly: false,
+          },
+        });
+      }
+    } catch (error) {
+      console.log(err);
     }
   }
   return (

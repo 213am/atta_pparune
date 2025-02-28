@@ -11,8 +11,19 @@ import {
   subscribeStoreLogin,
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
-import { PaymentCheckoutPage } from "./pages/company/toss/PaymentCheckoutPage";
-import { WidgetSuccessPage } from "./pages/company/toss/WidgetSuccess";
+import StoreReviewPage from "./pages/storeManager/review/StoreReviewPage";
+
+// 타입스크립트 lazy Loading
+const PaymentCheckoutPage = lazy(() =>
+  import("./pages/company/toss/PaymentCheckoutPage").then(module => ({
+    default: module.PaymentCheckoutPage,
+  })),
+);
+const WidgetSuccessPage = lazy(() =>
+  import("./pages/company/toss/WidgetSuccess").then(module => ({
+    default: module.WidgetSuccessPage,
+  })),
+);
 
 const TableComponent = lazy(
   () => import("./pages/admin/franchisee/StoreManage"),
@@ -101,6 +112,7 @@ const App = (): JSX.Element => {
             </Route>
           </Route>
 
+          {/* 사용자 */}
           <Route path="/user">
             <Route
               index
@@ -250,6 +262,8 @@ const App = (): JSX.Element => {
               </StoreLayout>
             }
           />
+
+          {/* 식당 */}
           <Route path="/store">
             <Route
               index
@@ -288,6 +302,14 @@ const App = (): JSX.Element => {
               element={
                 <StoreLayout>
                   <StoreInfoPage />
+                </StoreLayout>
+              }
+            />
+            <Route
+              path="review"
+              element={
+                <StoreLayout>
+                  <StoreReviewPage />
                 </StoreLayout>
               }
             />
