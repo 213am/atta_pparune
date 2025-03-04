@@ -27,6 +27,8 @@ const SignBtn = styled.button`
   color: #fff;
   border-radius: 5px;
   width: 120px;
+  padding: 15px 0;
+  font-size: 20px;
 
   @media (max-width: 430px) {
     font-size: 14px;
@@ -44,6 +46,10 @@ const SignBtn = styled.button`
 const EmailInput = styled.input`
   border-bottom: 1px solid #bababa;
   color: #bababa;
+  margin-right: 30px;
+  width: 350px;
+  font-size: 24px;
+  padding: 15px 0;
   @media (max-width: 430px) {
     margin-right: 20px;
     max-width: 220px;
@@ -85,7 +91,6 @@ const TimeDiv = styled.div`
 `;
 
 const storeSchema = yup.object({
-  adminId: yup.number(),
   restaurantName: yup
     .string()
     .required("가게이름은 필수입니다.")
@@ -103,7 +108,7 @@ const storeSchema = yup.object({
   categoryId: yup.number(),
   operatingHours: yup.string(),
   restaurantDescription: yup.string().required("상세 설명은 필수입니다."),
-  maxCapacity: yup.number().min(1, "가게 규모는 1 이상이어야 합니다."),
+  maxCapacity: yup.number().min(1, "최대 수용 인원은 1 이상이어야 합니다."),
   lat: yup.number(),
   lng: yup.number(),
 });
@@ -172,8 +177,8 @@ function AddStorePage() {
     }
   };
 
-  const idVal = watch("adminId");
   const nameVal = watch("restaurantName");
+  const emailVal = watch("email");
   const addressVal = watch("restaurantAddress");
   const bnoVal = watch("businessNumber");
   const rnoVal = watch("restaurantNumber");
@@ -186,8 +191,8 @@ function AddStorePage() {
 
   // 모두 입력됐을 때  true
   const hasVal =
-    idVal &&
     nameVal &&
+    emailVal &&
     addressVal &&
     bnoVal &&
     rnoVal &&
@@ -269,10 +274,7 @@ function AddStorePage() {
     console.log("운영시간 ", watch("operatingHours"));
   }, [operTime]);
 
-  const adminId = sessionStorage.getItem("adminId");
-
   useEffect(() => {
-    setValue("adminId", adminId);
     setValue("categoryId", 1);
   }, []);
 
@@ -283,47 +285,33 @@ function AddStorePage() {
   }, [addressVal]);
 
   return (
-    <div>
+    <div className="bg-white h-[100vh] overflow-y-auto scrollbar-hide">
       <LayoutDiv style={{ position: "relative" }}>
         <HeaderDiv>
           <CloseDiv>
             <IoMdArrowBack
-              style={{ width: "100%", height: "100%", cursor: "pointer" }}
-              onClick={() => navigate("/")}
+              className="w-full h-full cursor-pointer"
+              onClick={() => navigate(-1)}
             />
           </CloseDiv>
         </HeaderDiv>
         <FormDiv>
           <form onSubmit={handleSubmit(handleSubmitForm)}>
-            {/* adminId 보낼 input */}
-            <input
-              type="tel"
-              style={{ position: "absolute", left: "-5000px" }}
-              {...register("adminId")}
-            />
-
             {/* 위도, 경도 보낼 input */}
             <input
               type="tel"
+              className="absolute left-[-5000px]"
               {...register("lat")}
-              style={{ position: "absolute", left: "-5000px" }}
             />
             <input
               type="tel"
+              className="absolute left-[-5000px]"
               {...register("lng")}
-              style={{ position: "absolute", left: "-5000px" }}
             />
 
-            <TitleDiv>온라인 입점신청서</TitleDiv>
+            <TitleDiv>매장 입점 신청서</TitleDiv>
             <InputYupDiv>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: 500,
-                }}
-              >
+              <div className="flex justify-between items-center w-[500px]">
                 <EmailInput
                   type="text"
                   placeholder="사업자등록번호"
@@ -384,14 +372,7 @@ function AddStorePage() {
             </InputYupDiv>
 
             <InputYupDiv>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: 500,
-                }}
-              >
+              <div className="flex justify-between items-center w-[500px]">
                 <EmailInput
                   type="text"
                   placeholder="가게 주소"
@@ -420,20 +401,12 @@ function AddStorePage() {
               <YupDiv>{errors.restaurantDescription?.message}</YupDiv>
             </InputYupDiv>
             <InputYupDiv>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  width: 500,
-                  fontSize: 24,
-                }}
-              >
-                <div style={{ fontSize: 24 }}>가게 규모 : </div>
+              <div className="flex items-center justify-between w-[500px] text-[24px]">
+                <div>최대 수용 인원 : </div>
                 <EmailInput
                   type="number"
                   placeholder="0"
-                  style={{ width: 300, textAlign: "right", paddingRight: 20 }}
+                  style={{ width: 280, textAlign: "right", paddingRight: 10 }}
                   {...register("maxCapacity", {
                     setValueAs: value => (value === "" ? 0 : value),
                   })}
@@ -443,15 +416,7 @@ function AddStorePage() {
               <YupDiv>{errors.maxCapacity?.message}</YupDiv>
             </InputYupDiv>
             <InputYupDiv>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginTop: 20,
-                  width: 500,
-                }}
-              >
+              <div className="flex justify-between items-center w-[500px] mt-[20px]">
                 <div style={{ fontSize: 24 }}>카테고리 선택</div>
                 <div style={{ display: "flex", gap: 20 }}>
                   <CateDiv
@@ -476,16 +441,8 @@ function AddStorePage() {
               </div>
             </InputYupDiv>
             <InputYupDiv>
-              <div style={{ fontSize: 24, textAlign: "left" }}>운영시간</div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginTop: 20,
-                  width: 500,
-                }}
-              >
+              <div className="text-[24px] text-left">운영시간</div>
+              <div className="flex items-center justify-between w-[500px] mt-[20px]">
                 <TimeDiv>
                   <span>오픈시간</span>
                   <input
@@ -514,7 +471,7 @@ function AddStorePage() {
                 </TimeDiv>
               </div>
             </InputYupDiv>
-            <div style={{ marginLeft: 20, marginRight: 20, marginTop: 40 }}>
+            <div className="mx-[20px]">
               <LoginBtn
                 type="submit"
                 style={{
@@ -530,9 +487,7 @@ function AddStorePage() {
       </LayoutDiv>
       {open ? (
         <Modal>
-          {/* <div className="absolute w-[50%] border"> */}
           <DaumPostcodeEmbed onComplete={e => addressHandler(e)} />
-          {/* </div> */}
         </Modal>
       ) : (
         <></>
