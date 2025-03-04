@@ -2,8 +2,8 @@ import styled from "@emotion/styled";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { FaCameraRetro, FaCheckCircle, FaStar } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
-import ReactQuill from "react-quill-new";
-import "react-quill-new/dist/quill.snow.css";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 
 interface Size {

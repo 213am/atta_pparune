@@ -12,6 +12,11 @@ import {
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
 import StoreReviewPage from "./pages/storeManager/review/StoreReviewPage";
+import EnrollServicePage from "./pages/service/EnrollServicePage";
+import AboutPage from "./pages/service/AboutPage";
+import ServiceMainPage from "./pages/service/IndexPage";
+import AddCompanyPage from "./pages/service/AddCompanyPage";
+import NoticePage from "./pages/service/notice/NoticePage";
 
 // 타입스크립트 lazy Loading
 const PaymentCheckoutPage = lazy(() =>
@@ -63,7 +68,7 @@ const UserMainPage = lazy(() => import("./pages/user/UserMainPage"));
 const RestaurantDetailPage = lazy(
   () => import("./pages/user/restaurant/RestaurantDetailPage"),
 );
-const AddStorePage = lazy(() => import("./pages/storeManager/AddStorePage"));
+const AddStorePage = lazy(() => import("./pages/service/AddStorePage"));
 const OrderMemberPage = lazy(
   () => import("./pages/user/order/OrderMemberPage"),
 );
@@ -75,7 +80,6 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const OrderRequestPage = lazy(
   () => import("./pages/user/order/OrderRequestPage"),
 );
-const ServiceMainPage = lazy(() => import("./pages/admin/IndexPage"));
 
 const App = (): JSX.Element => {
   const sessionRestaurant = sessionStorage.getItem("restaurantId");
@@ -254,15 +258,6 @@ const App = (): JSX.Element => {
             />
           </Route>
 
-          <Route
-            path="/addstore"
-            element={
-              <StoreLayout>
-                <AddStorePage />
-              </StoreLayout>
-            }
-          />
-
           {/* 식당 */}
           <Route path="/store">
             <Route
@@ -314,12 +309,24 @@ const App = (): JSX.Element => {
               }
             />
           </Route>
-          <Route path="/service" element={<ServiceMainPage />}></Route>
+          {/* 서비스 소개 페이지 */}
+          <Route path="/service">
+            <Route index element={<ServiceMainPage />} />
+            <Route path="about" element={<AboutPage />} />
+            <Route path="enroll">
+              <Route index element={<EnrollServicePage />} />
+              <Route path="addstore" element={<AddStorePage />} />
+              <Route path="addcompany" element={<AddCompanyPage />} />
+            </Route>
+            <Route path="notice" element={<NoticePage />} />
+          </Route>
           <Route path="/storeManage" element={<TableComponent />}></Route>
 
           <Route path="/admin">
             <Route index element={<AdminPage />} />
           </Route>
+
+          {/* 회사 */}
           <Route path="/company">
             <Route index element={<PaymentCheckoutPage />} />
           </Route>
