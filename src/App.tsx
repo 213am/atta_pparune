@@ -17,6 +17,8 @@ import AboutPage from "./pages/service/AboutPage";
 import ServiceMainPage from "./pages/service/IndexPage";
 import AddCompanyPage from "./pages/service/AddCompanyPage";
 import NoticePage from "./pages/service/notice/NoticePage";
+import Test from "./pages/admin/test";
+import Enquiry from "./pages/admin/enquiry/Enquiry";
 
 // 타입스크립트 lazy Loading
 const PaymentCheckoutPage = lazy(() =>
@@ -324,6 +326,7 @@ const App = (): JSX.Element => {
 
           <Route path="/admin">
             <Route index element={<AdminPage />} />
+            <Route path="enquiry" element={<Enquiry />} />
           </Route>
 
           {/* 회사 */}

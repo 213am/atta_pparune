@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 interface AdminSideBarProps {
   children?: ReactNode;
+  onMenuClick: (menu: number) => void;
 }
 
 interface Size {
@@ -32,7 +33,10 @@ const IconDiv = styled.div<Size>`
   height: ${({ height }) => (height ? `${height}px` : "25px")};
 `;
 
-const AdminSideBar = ({ children }: AdminSideBarProps): JSX.Element => {
+const AdminSideBar = ({
+  children,
+  onMenuClick,
+}: AdminSideBarProps): JSX.Element => {
   const navigate = useNavigate();
 
   // 메인 메뉴 클릭 State
@@ -49,6 +53,9 @@ const AdminSideBar = ({ children }: AdminSideBarProps): JSX.Element => {
 
   // 메인 메뉴 클릭 함수
   const handleClick = (menu: number) => {
+    if (onMenuClick) {
+      onMenuClick(menu);
+    }
     switch (menu) {
       case 1:
         setIsClick({
