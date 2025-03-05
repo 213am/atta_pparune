@@ -11,14 +11,10 @@ import {
   subscribeStoreLogin,
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
-import StoreReviewPage from "./pages/storeManager/review/StoreReviewPage";
-import EnrollServicePage from "./pages/service/EnrollServicePage";
-import AboutPage from "./pages/service/AboutPage";
-import ServiceMainPage from "./pages/service/IndexPage";
-import AddCompanyPage from "./pages/service/AddCompanyPage";
-import NoticePage from "./pages/service/notice/NoticePage";
-import Test from "./pages/admin/test";
 import Enquiry from "./pages/admin/enquiry/Enquiry";
+import Transaction from "./pages/admin/transaction/Transaction";
+import Franchisee from "./pages/admin/franchisee/Franchisee";
+import Refund from "./pages/admin/refund/Refund";
 import WritePostPage from "./pages/service/notice/WritePostPage";
 
 const StoreReviewPage = lazy(
@@ -44,7 +40,7 @@ const WidgetSuccessPage = lazy(() =>
 );
 
 const TableComponent = lazy(
-  () => import("./pages/admin/franchisee/StoreManage"),
+  () => import("./pages/admin/franchisee/Franchisee"),
 );
 const AdminPage = lazy(() => import("./pages/admin/AdminPage"));
 const MyReviewPage = lazy(() => import("./pages/user/userInfo/MyReviewPage"));
@@ -342,6 +338,9 @@ const App = (): JSX.Element => {
           <Route path="/admin">
             <Route index element={<AdminPage />} />
             <Route path="enquiry" element={<Enquiry />} />
+            <Route path="transaction" element={<Transaction />} />
+            <Route path="franchisee" element={<Franchisee />} />
+            <Route path="refund" element={<Refund />} />
           </Route>
 
           {/* 회사 */}
