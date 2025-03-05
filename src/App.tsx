@@ -19,7 +19,18 @@ import AddCompanyPage from "./pages/service/AddCompanyPage";
 import NoticePage from "./pages/service/notice/NoticePage";
 import Test from "./pages/admin/test";
 import Enquiry from "./pages/admin/enquiry/Enquiry";
+import WritePostPage from "./pages/service/notice/WritePostPage";
 
+const StoreReviewPage = lazy(
+  () => import("./pages/storeManager/review/StoreReviewPage"),
+);
+const EnrollServicePage = lazy(
+  () => import("./pages/service/EnrollServicePage"),
+);
+const AboutPage = lazy(() => import("./pages/service/AboutPage"));
+const ServiceMainPage = lazy(() => import("./pages/service/IndexPage"));
+const AddCompanyPage = lazy(() => import("./pages/service/AddCompanyPage"));
+const NoticePage = lazy(() => import("./pages/service/notice/NoticePage"));
 // 타입스크립트 lazy Loading
 const PaymentCheckoutPage = lazy(() =>
   import("./pages/company/toss/PaymentCheckoutPage").then(module => ({
@@ -311,6 +322,7 @@ const App = (): JSX.Element => {
               }
             />
           </Route>
+
           {/* 서비스 소개 페이지 */}
           <Route path="/service">
             <Route index element={<ServiceMainPage />} />
@@ -320,7 +332,10 @@ const App = (): JSX.Element => {
               <Route path="addstore" element={<AddStorePage />} />
               <Route path="addcompany" element={<AddCompanyPage />} />
             </Route>
-            <Route path="notice" element={<NoticePage />} />
+            <Route path="notice">
+              <Route index element={<NoticePage />} />
+              <Route path="writepost" element={<WritePostPage />} />
+            </Route>
           </Route>
           <Route path="/storeManage" element={<TableComponent />}></Route>
 
