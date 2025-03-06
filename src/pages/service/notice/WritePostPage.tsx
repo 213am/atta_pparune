@@ -7,11 +7,13 @@ import "react-quill/dist/quill.snow.css";
 import ServiceFooter from "../../../components/ServiceFooter";
 import ServiceHeader from "../../../components/ServiceHeader";
 import "./notice.css";
+import { useNavigate } from "react-router-dom";
 
 const WritePostPage = (): JSX.Element => {
   // 구분 (질의응답, 불편사항)
   const [cate, setCate] = useState("구분");
   const [isClick, setIsClick] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="relative w-full h-dvh bg-white overflow-y-auto scrollbar-hide z-10 flex flex-col">
@@ -94,7 +96,10 @@ const WritePostPage = (): JSX.Element => {
             <button className="py-1 px-4 bg-gray border border-black rounded-[5px]">
               작성완료
             </button>
-            <button className="py-1 px-4 border border-black rounded-[5px]">
+            <button
+              onClick={() => navigate(-1)}
+              className="py-1 px-4 border border-black rounded-[5px]"
+            >
               취소
             </button>
           </div>

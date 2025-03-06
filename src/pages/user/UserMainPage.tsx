@@ -30,10 +30,9 @@ const UserMainPage = (): JSX.Element => {
   const [restaurantList, setRestaurantList] = useState<IRestaurantList[]>([]);
   const [pagenation, setPagenation] = useState<number>(1);
   const [categoryId, setCategoryId] = useState<number>(1);
-  const [isSelect, setIsSelect] = useState<boolean>(false);
   const navigate = useNavigate();
-  const [isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
-  const [isLogin, setIsLogin] = useRecoilState(loginAtom);
+  const [_isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
+  const [_isLogin, setIsLogin] = useRecoilState(loginAtom);
   // 알림 아이콘 흰색
 
   useEffect(() => {

@@ -26,7 +26,12 @@ const Board = (): JSX.Element => {
             <div className="w-[10%] flex justify-center">
               <IoVolumeMediumOutline />
             </div>
-            <div className="w-[60%] text-left">[공지] 공지사항입니다.</div>
+            <div
+              className={"w-[60%] text-left cursor-pointer"}
+              onClick={() => navigate(`/service/notice/detail`)}
+            >
+              [공지] 공지사항입니다.
+            </div>
             <div className="w-[10%]">관리자</div>
             <div className="w-[20%]">2025-02-17</div>
           </div>
