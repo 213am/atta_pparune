@@ -190,6 +190,7 @@ const DepositHistory = (): JSX.Element => {
             paginationPageSize={10}
             domLayout="print"
             modules={[ClientSideRowModelModule]}
+            theme={"legacy"}
           />
         </div>
       </div>

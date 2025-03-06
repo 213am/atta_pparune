@@ -29,6 +29,7 @@ const UserMainPage = (): JSX.Element => {
   const [restaurantList, setRestaurantList] = useState<IRestaurantList[]>([]);
   const [pagenation, setPagenation] = useState<number>(1);
   const [categoryId, setCategoryId] = useState<number>(1);
+  const [filter, setFilter] = useState<null | number>(null);
   const navigate = useNavigate();
   const [_isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
   const [_isLogin, setIsLogin] = useRecoilState(loginAtom);
@@ -51,12 +52,26 @@ const UserMainPage = (): JSX.Element => {
     threshold: 0.7, // 화면의 70%가 보일 때 감지
   });
 
+  // 스와이퍼 불러오기 - 작업중
+  useEffect(() => {
+    const getSwiperList = async () => {
+      try {
+        const res = await axios.get("/api/restaurant/v3/main/recommend");
+        console.log("스와이퍼 데이터", res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getSwiperList();
+  }, []);
+
   useEffect(() => {
     setPagenation(1);
     const getRestaurantList = async () => {
       const params = {
         categoryId: categoryId,
         page: pagenation,
+        filterType: filter,
         size: 20,
       };
       try {
@@ -70,7 +85,7 @@ const UserMainPage = (): JSX.Element => {
       }
     };
     getRestaurantList();
-  }, [categoryId]);
+  }, [categoryId, filter]);
 
   useEffect(() => {
     if (inView === true) {
@@ -107,6 +122,17 @@ const UserMainPage = (): JSX.Element => {
 
   const filterChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     console.log(e.target.value);
+    switch (e.target.value) {
+      case "기본순":
+        setFilter(null);
+        break;
+      case "별점순":
+        setFilter(0);
+        break;
+      case "리뷰순":
+        setFilter(1);
+        break;
+    }
   };
 
   return (
@@ -131,7 +157,7 @@ const UserMainPage = (): JSX.Element => {
             className="relative cursor-pointer"
             onClick={() => navigate("/user/restaurant/detail/1")}
           >
-            <img src="/swiper1.jpg" alt="" />
+            <img src="/swiper1.webp" alt="" />
             <div className="absolute left-2 bottom-8 font-bold">
               <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap ">
                 추천식당
@@ -151,7 +177,7 @@ const UserMainPage = (): JSX.Element => {
             className="relative cursor-pointer"
             onClick={() => navigate("/user/restaurant/detail/14")}
           >
-            <img src="/swiper2.jpg" alt="" />
+            <img src="/swiper2.webp" alt="" />
             <div className="absolute left-2 bottom-8 font-bold">
               <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap ">
                 추천식당
@@ -171,7 +197,7 @@ const UserMainPage = (): JSX.Element => {
             className="relative cursor-pointer"
             onClick={() => navigate("/user/restaurant/detail/11")}
           >
-            <img src="/swiper3.jpg" alt="" />
+            <img src="/swiper3.webp" alt="" />
             <div className="absolute left-2 bottom-8 font-bold">
               <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap ">
                 추천식당

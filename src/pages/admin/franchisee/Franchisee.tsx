@@ -1,9 +1,8 @@
-import AdminHeader from "../../../components/AdminHeader";
-import { AgGridReact } from "ag-grid-react";
-import { ClientSideRowModelModule } from "ag-grid-community";
+import { ClientSideRowModelModule, ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { provideGlobalGridOptions } from "ag-grid-community";
+import { AgGridReact } from "ag-grid-react";
+import AdminHeader from "../../../components/AdminHeader";
 
 export interface RowDataT {
   id: number;
@@ -103,7 +102,7 @@ const Franchisee = (): JSX.Element => {
       ? [...tableData, ...emptyRows.slice(tableData.length)]
       : tableData;
 
-  const columnDefs = [
+  const columnDefs: ColDef<RowDataT>[] = [
     {
       headerName: "순번",
       field: "id",
@@ -191,7 +190,7 @@ const Franchisee = (): JSX.Element => {
             paginationPageSize={10}
             domLayout="print"
             modules={[ClientSideRowModelModule]}
-            gridOptions={provideGlobalGridOptions({ theme: "legacy" })}
+            theme={"legacy"}
           />
         </div>
       </div>

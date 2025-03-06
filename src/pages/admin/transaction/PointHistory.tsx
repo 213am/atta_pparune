@@ -1,8 +1,4 @@
-import {
-  ClientSideRowModelModule,
-  ColDef,
-  provideGlobalGridOptions,
-} from "ag-grid-community";
+import { ClientSideRowModelModule, ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { AgGridReact } from "ag-grid-react";
@@ -196,7 +192,7 @@ const PointHistory = (): JSX.Element => {
             paginationPageSize={10}
             domLayout="print"
             modules={[ClientSideRowModelModule]}
-            gridOptions={provideGlobalGridOptions({ theme: "legacy" })}
+            theme={"legacy"}
           />
         </div>
       </div>

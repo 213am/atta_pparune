@@ -8,7 +8,7 @@ import { COMPANY } from "../constants/Role";
 
 const ServiceHeader = (): JSX.Element => {
   const [menu, setMenu] = useRecoilState(menuState);
-  const [role, setRole] = useRecoilState(roleAtom);
+  const [_role, setRole] = useRecoilState(roleAtom);
   const location = useLocation();
   const navigate = useNavigate();
 
