@@ -75,11 +75,7 @@ export const data = {
   ],
 };
 
-interface BarChartProps {
-  children?: React.ReactNode;
-}
-
-const BarChart = (props: BarChartProps): JSX.Element => {
+const BarChart = (): JSX.Element => {
   return <Bar options={options} data={data} />;
 };
 

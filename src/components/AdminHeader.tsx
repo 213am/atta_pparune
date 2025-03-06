@@ -6,7 +6,9 @@ const AdminHeader = ({ title }: AdminHeaderI) => {
   return (
     <div className="abosolute top-0 left-0 flex w-full h-[8%] border-b justify-between items-center px-10">
       <div>
-        <span className="text-lg pointer-events-none">{title}</span>
+        <span className="text-2xl pointer-events-none font-semibold tracking-widest">
+          {title}
+        </span>
       </div>
       <div>
         <img

@@ -33,10 +33,7 @@ const IconDiv = styled.div<Size>`
   height: ${({ height }) => (height ? `${height}px` : "25px")};
 `;
 
-const AdminSideBar = ({
-  children,
-  onMenuClick,
-}: AdminSideBarProps): JSX.Element => {
+const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
   const navigate = useNavigate();
 
   // 메인 메뉴 클릭 State
@@ -66,7 +63,7 @@ const AdminSideBar = ({
           fifth: false,
         });
         setSubMenu(0);
-        // navigate("/");
+        navigate("/admin");
         break;
       case 2:
         setIsClick({
@@ -76,6 +73,7 @@ const AdminSideBar = ({
           forth: isClick.forth,
           fifth: isClick.fifth,
         });
+        navigate("/admin/transaction");
         break;
       case 3:
         setIsClick({
@@ -85,7 +83,7 @@ const AdminSideBar = ({
           forth: isClick.forth,
           fifth: isClick.fifth,
         });
-        // navigate("/");
+        navigate("/admin/franchisee");
         break;
       case 4:
         setIsClick({
@@ -96,7 +94,7 @@ const AdminSideBar = ({
           fifth: false,
         });
         setSubMenu(0);
-        // navigate("/");
+        navigate("/admin/enquiry");
         break;
       case 5:
         setIsClick({
@@ -107,7 +105,7 @@ const AdminSideBar = ({
           fifth: true,
         });
         setSubMenu(0);
-        // navigate("/");
+        navigate("/admin/refund");
         break;
     }
   };
@@ -170,6 +168,7 @@ const AdminSideBar = ({
               className="ml-7 mr-[20px] cursor-pointer"
               onClick={() => {
                 handleSubClick(1);
+                navigate("/admin/transaction/point");
               }}
             >
               <div
@@ -182,6 +181,7 @@ const AdminSideBar = ({
               className="ml-7 mr-[20px] cursor-pointer"
               onClick={() => {
                 handleSubClick(2);
+                navigate("/admin/transaction/deposit");
               }}
             >
               <div

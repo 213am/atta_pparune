@@ -6,11 +6,7 @@ import { useEffect } from "react";
 import { roleAtom } from "../atoms/roleAtom";
 import { COMPANY } from "../constants/Role";
 
-interface ServiceHeaderProps {
-  children?: React.ReactNode;
-}
-
-const ServiceHeader = (props: ServiceHeaderProps): JSX.Element => {
+const ServiceHeader = (): JSX.Element => {
   const [menu, setMenu] = useRecoilState(menuState);
   const [role, setRole] = useRecoilState(roleAtom);
   const location = useLocation();

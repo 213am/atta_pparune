@@ -1,13 +1,11 @@
-import { TbMoodSadDizzy } from "react-icons/tb";
-import { IoMdArrowDropleft } from "react-icons/io";
-import { IoMdArrowDropright } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
 import { JSX, useState } from "react";
-import PasswordInput from "../components/PwKeyboard";
+import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
+import { TbMoodSadDizzy } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
 
 const NotFound = (): JSX.Element => {
   const navigate = useNavigate();
-  const [isUser, setIsUser] = useState(true);
+  const [isUser, _setIsUser] = useState(true);
 
   const MovePrevPageHandler = () => {
     navigate(-1);

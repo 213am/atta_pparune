@@ -11,11 +11,11 @@ import {
   subscribeStoreLogin,
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
-import Enquiry from "./pages/admin/enquiry/Enquiry";
-import Franchisee from "./pages/admin/franchisee/Franchisee";
-import Refund from "./pages/admin/refund/Refund";
-import Transaction from "./pages/admin/transaction/Transaction";
-import DetailPage from "./pages/service/notice/DetailPage";
+import EnquiryPage from "./pages/admin/enquiry/EnquiryPage";
+import FranchiseePage from "./pages/admin/franchisee/FranchiseePage";
+import RefundPage from "./pages/admin/refund/RefundPage";
+import TransactionPage from "./pages/admin/transaction/TransactionPage";
+import WritePostPage from "./pages/service/notice/WritePostPage";
 
 const WritePostPage = lazy(
   () => import("./pages/service/notice/WritePostPage"),
@@ -96,8 +96,8 @@ const OrderRequestPage = lazy(
 const App = (): JSX.Element => {
   const sessionRestaurant = sessionStorage.getItem("restaurantId");
   const sessionUser = sessionStorage.getItem("userId");
-  const isLogin = useRecoilValue(loginAtom);
-  const isLoginStore = useRecoilValue(isLoginStoreAtom);
+  const [isLogin] = useRecoilState(loginAtom);
+  const [isLoginStore] = useRecoilState(isLoginStoreAtom);
 
   useEffect(() => {
     initializeSocket();
@@ -341,10 +341,12 @@ const App = (): JSX.Element => {
 
           <Route path="/admin">
             <Route index element={<AdminPage />} />
-            <Route path="enquiry" element={<Enquiry />} />
-            <Route path="transaction" element={<Transaction />} />
-            <Route path="franchisee" element={<Franchisee />} />
-            <Route path="refund" element={<Refund />} />
+            <Route path="enquiry" element={<EnquiryPage />} />
+            <Route path="franchisee" element={<FranchiseePage />} />
+            <Route path="refund" element={<RefundPage />} />
+            <Route path="transaction">
+              <Route index element={<TransactionPage />} />
+            </Route>
           </Route>
 
           {/* 회사 */}

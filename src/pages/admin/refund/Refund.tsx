@@ -1,87 +1,83 @@
 import AdminHeader from "../../../components/AdminHeader";
 import { AgGridReact } from "ag-grid-react";
-import { ClientSideRowModelModule } from "ag-grid-community";
+import { ClientSideRowModelModule, ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { provideGlobalGridOptions } from "ag-grid-community";
 
-interface CalculationProps {
-  children?: React.ReactNode;
-}
-
 export interface RowDataT {
   id: number;
-  salesPeriod: string;
-  restaurantName: string;
-  sales: string;
-  depositStatus: string;
-  endDate: string;
+  companyName: string;
+  refundAmount: string;
+  refundReason: string;
+  refundStatus: string;
+  refundDate: string;
   isCompleted: string;
 }
 
-const Refund = (props: CalculationProps): JSX.Element => {
+const Refund = (): JSX.Element => {
   const tableData = [
     {
       id: 1,
-      salesPeriod: "2025-02-14 ~ 2025-02-20",
-      restaurantName: "동양백반",
-      sales: "900,000 원",
-      depositStatus: "미입금",
-      endDate: "2025-02-20",
+      companyName: "그린컴퓨터아트학원",
+      refundAmount: "900,000 원",
+      refundReason: "제휴중지",
+      refundStatus: "미환불",
+      refundDate: "2025-02-20",
       isCompleted: "입금처리",
     },
     {
       id: 2,
-      salesPeriod: "2025-02-14 ~ 2025-02-20",
-      restaurantName: "멘지",
-      sales: "2,100,000 원",
-      depositStatus: "미입금",
-      endDate: "2025-02-20",
+      companyName: "그린컴퓨터아트학원",
+      refundAmount: "2,100,000 원",
+      refundReason: "제휴중지",
+      refundStatus: "미환불",
+      refundDate: "2025-02-20",
       isCompleted: "입금처리",
     },
     {
       id: 3,
-      salesPeriod: "2025-02-14 ~ 2025-02-20",
-      restaurantName: "미분당",
-      sales: "1,200,000 원",
-      depositStatus: "미입금",
-      endDate: "2025-02-20",
+      companyName: "그린컴퓨터아트학원",
+      refundAmount: "1,200,000 원",
+      refundReason: "제휴중지",
+      refundStatus: "미환불",
+      refundDate: "2025-02-20",
       isCompleted: "입금처리",
     },
     {
       id: 4,
-      salesPeriod: "2025-02-14 ~ 2025-02-20",
-      restaurantName: "장어죽집",
-      sales: "1,000,000 원",
-      depositStatus: "미입금",
-      endDate: "2025-02-20",
+      companyName: "그린컴퓨터아트학원",
+      refundAmount: "1,000,000 원",
+      refundReason: "제휴중지",
+      refundStatus: "미환불",
+      refundDate: "2025-02-20",
       isCompleted: "입금처리",
     },
     {
       id: 5,
-      salesPeriod: "2025-02-14 ~ 2025-02-20",
-      restaurantName: "맥도날드",
-      sales: "1,500,000 원",
-      depositStatus: "미입금",
-      endDate: "2025-02-20",
+      companyName: "그린컴퓨터아트학원",
+      refundAmount: "1,500,000 원",
+      refundReason: "제휴중지",
+      refundStatus: "미환불",
+      refundDate: "2025-02-20",
       isCompleted: "입금처리",
     },
     {
       id: 6,
-      salesPeriod: "2025-02-14 ~ 2025-02-20",
-      restaurantName: "시골집",
-      sales: "2,000,000 원",
-      depositStatus: "미입금",
-      endDate: "2025-02-20",
+      companyName: "그린컴퓨터아트학원",
+      refundAmount: "2,000,000 원",
+      refundReason: "제휴중지",
+      refundStatus: "미환불",
+      refundDate: "2025-02-20",
       isCompleted: "입금처리",
     },
     {
       id: 7,
-      salesPeriod: "2025-02-14 ~ 2025-02-20",
-      restaurantName: "빽다방",
-      sales: "1,000,000 원",
-      depositStatus: "미입금",
-      endDate: "2025-02-20",
+      companyName: "그린컴퓨터아트학원",
+      refundAmount: "1,000,000 원",
+      refundReason: "제휴중지",
+      refundStatus: "미환불",
+      refundDate: "2025-02-20",
       isCompleted: "입금처리",
     },
   ];
@@ -93,11 +89,11 @@ const Refund = (props: CalculationProps): JSX.Element => {
     { length: EMPTY_ROW_COUNT },
     (_, index) => ({
       id: index + 1,
-      salesPeriod: "",
-      restaurantName: "",
-      sales: "",
-      depositStatus: "",
-      endDate: "",
+      companyName: "",
+      refundAmount: "",
+      refundReason: "",
+      refundStatus: "",
+      refundDate: "",
       isCompleted: "",
     }),
   );
@@ -107,7 +103,7 @@ const Refund = (props: CalculationProps): JSX.Element => {
       ? [...tableData, ...emptyRows.slice(tableData.length)]
       : tableData;
 
-  const columnDefs = [
+  const columnDefs: ColDef<RowDataT>[] = [
     {
       headerName: "순번",
       field: "id",
@@ -116,36 +112,36 @@ const Refund = (props: CalculationProps): JSX.Element => {
       width: 100,
     },
     {
-      headerName: "매출기간",
-      field: "salesPeriod",
+      headerName: "회사명",
+      field: "companyName",
+      sortable: true,
+      filter: true,
+      width: 200,
+    },
+    {
+      headerName: "환불금액",
+      field: "refundAmount",
       sortable: true,
       filter: true,
       width: 250,
     },
     {
-      headerName: "식당명",
-      field: "restaurantName",
+      headerName: "환불사유",
+      field: "refundReason",
       sortable: true,
       filter: true,
       width: 200,
     },
     {
-      headerName: "매출액",
-      field: "sales",
-      sortable: true,
-      filter: true,
-      width: 200,
-    },
-    {
-      headerName: "입금 상태",
-      field: "depositStatus",
+      headerName: "환불 상태",
+      field: "refundStatus",
       sortable: true,
       filter: true,
       width: 120,
     },
     {
-      headerName: "최종 결제일",
-      field: "endDate",
+      headerName: "환불 일자",
+      field: "refundDate",
       sortable: true,
       filter: true,
       width: 150,
@@ -155,39 +151,66 @@ const Refund = (props: CalculationProps): JSX.Element => {
       field: "isCompleted",
       sortable: true,
       filter: true,
-      width: 120,
-      cellRenderer: params => {
-        const buttonClass =
-          params.value === "입금처리"
-            ? "flex w-full h-[80%] justify-center items-center bg-blue text-white rounded-md"
+      width: 200,
+      cellRenderer: (params: any) => {
+        const acceptClass =
+          params.data.companyName !== ""
+            ? "flex w-full h-[80%] justify-center items-center bg-blue text-white rounded-md px-2"
+            : "";
+
+        const rejectClass =
+          params.data.companyName !== ""
+            ? "flex w-full h-[80%] justify-center items-center bg-red text-white rounded-md px-2"
             : "";
 
         return (
-          <div className="flex w-full h-full items-center">
-            <button
-              onClick={() => handleButtonClick(params)}
-              className={buttonClass}
-            >
-              {params.value || ""}
-            </button>
-          </div>
+          <>
+            {params.data.companyName !== "" ? (
+              <div className="flex w-full h-full items-center gap-4">
+                <button
+                  onClick={() => acceptHandler(params)}
+                  className={acceptClass}
+                >
+                  환불수락
+                </button>
+                <button
+                  onClick={() => rejectHandler(params)}
+                  className={rejectClass}
+                >
+                  환불거절
+                </button>
+              </div>
+            ) : (
+              <></>
+            )}
+          </>
         );
       },
     },
   ];
 
-  const handleButtonClick = params => {
-    console.log(`Button clicked for ${params.data.restaurantName}`);
+  const acceptHandler = (params: any) => {
+    console.log(`환불수락 : ${params.data.companyName}`);
   };
 
+  const rejectHandler = (params: any) => {
+    console.log(`환불거절 : ${params.data.companyName}`);
+  };
+
+  const gridOptions = {
+    ...provideGlobalGridOptions({ theme: "legacy" }),
+    columnDefs: columnDefs,
+    rowData: rowDefs,
+    pagination: true,
+    paginationPageSize: 10,
+    domLayout: "print",
+    modules: [ClientSideRowModelModule],
+  };
   return (
     <div className="relative flex flex-col w-full h-dvh bg-white">
-      <AdminHeader title={"정기정산"} />
+      <AdminHeader title={"환불내역"} />
       <div className="flex flex-col w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
-        <div className="flex flex-col w-[100%] h-[10%] px-10 pt-10 bg-white items-start pointer-events-none">
-          이번 주 정산 내역
-        </div>
-        <div className="flex ag-theme-alpine w-full h-full justify-start px-10">
+        <div className="flex ag-theme-alpine w-full h-full justify-start px-10 pt-10">
           <AgGridReact
             columnDefs={columnDefs}
             rowData={rowDefs}

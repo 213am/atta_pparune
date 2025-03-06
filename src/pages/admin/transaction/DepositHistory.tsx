@@ -1,9 +1,8 @@
-import AdminHeader from "../../../components/AdminHeader";
-import { AgGridReact } from "ag-grid-react";
-import { ClientSideRowModelModule } from "ag-grid-community";
+import { ClientSideRowModelModule, ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { provideGlobalGridOptions } from "ag-grid-community";
+import { AgGridReact } from "ag-grid-react";
+import AdminHeader from "../../../components/AdminHeader";
 
 export interface RowDataT {
   id: number;
@@ -15,7 +14,7 @@ export interface RowDataT {
   isCompleted: string;
 }
 
-const Franchisee = (): JSX.Element => {
+const DepositHistory = (): JSX.Element => {
   const tableData = [
     {
       id: 1,
@@ -103,7 +102,7 @@ const Franchisee = (): JSX.Element => {
       ? [...tableData, ...emptyRows.slice(tableData.length)]
       : tableData;
 
-  const columnDefs = [
+  const columnDefs: ColDef<RowDataT>[] = [
     {
       headerName: "순번",
       field: "id",
@@ -178,10 +177,10 @@ const Franchisee = (): JSX.Element => {
 
   return (
     <div className="relative flex flex-col w-full h-dvh bg-white">
-      <AdminHeader title={"가맹점 관리"} />
+      <AdminHeader title={"거래내역"} />
       <div className="flex flex-col w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
         <div className="flex flex-col w-[100%] h-[10%] px-10 pt-10 bg-white items-start pointer-events-none">
-          제휴 식당
+          식당 입금내역
         </div>
         <div className="flex ag-theme-alpine w-full h-full justify-start px-10">
           <AgGridReact
@@ -191,7 +190,6 @@ const Franchisee = (): JSX.Element => {
             paginationPageSize={10}
             domLayout="print"
             modules={[ClientSideRowModelModule]}
-            gridOptions={provideGlobalGridOptions({ theme: "legacy" })}
           />
         </div>
       </div>
@@ -199,4 +197,4 @@ const Franchisee = (): JSX.Element => {
   );
 };
 
-export default Franchisee;
+export default DepositHistory;
