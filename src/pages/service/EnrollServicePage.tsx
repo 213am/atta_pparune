@@ -4,11 +4,7 @@ import { RiStore2Line } from "react-icons/ri";
 import ServiceFooter from "../../components/ServiceFooter";
 import { useNavigate } from "react-router-dom";
 
-interface EnrollServicePageProps {
-  children?: React.ReactNode;
-}
-
-const EnrollServicePage = (props: EnrollServicePageProps): JSX.Element => {
+const EnrollServicePage = (): JSX.Element => {
   const navigate = useNavigate();
   return (
     <div className="relative w-full h-dvh bg-white overflow-y-auto z-10 scrollbar-hide">

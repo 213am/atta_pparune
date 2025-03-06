@@ -51,7 +51,7 @@ function StoreReviewPage(): JSX.Element {
   // 댓글쓰기 버튼
   const [isClick, setIsClick] = useState(false);
   // 댓글 정보
-  const [coment, setComent] = useState("");
+  const [_coment, setComent] = useState("");
   // 수정하기 버튼
   const [edit, setEdit] = useState(false);
 

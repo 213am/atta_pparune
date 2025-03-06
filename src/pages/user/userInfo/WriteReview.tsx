@@ -33,7 +33,7 @@ const IconDiv = styled.div<Size>`
 function WriteReview() {
   const navigate = useNavigate();
   // 리뷰
-  const [review, setReview] = useState("");
+  const [_review, setReview] = useState("");
   // 이미지 미리보기 state
   const [preview, setPreview] = useState<string[]>([]);
   // 이미지 파일 state

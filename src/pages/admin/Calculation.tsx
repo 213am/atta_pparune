@@ -1,13 +1,11 @@
-import AdminHeader from "../../components/AdminHeader";
-import { AgGridReact } from "ag-grid-react";
-import { ClientSideRowModelModule } from "ag-grid-community";
+import {
+  ClientSideRowModelModule,
+  provideGlobalGridOptions,
+} from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { provideGlobalGridOptions } from "ag-grid-community";
-
-interface CalculationProps {
-  children?: React.ReactNode;
-}
+import { AgGridReact } from "ag-grid-react";
+import AdminHeader from "../../components/AdminHeader";
 
 export interface RowDataT {
   id: number;
@@ -19,7 +17,7 @@ export interface RowDataT {
   isCompleted: string;
 }
 
-const Calculation = (props: CalculationProps): JSX.Element => {
+const Calculation = (): JSX.Element => {
   const tableData = [
     {
       id: 1,
@@ -151,12 +149,12 @@ const Calculation = (props: CalculationProps): JSX.Element => {
       width: 150,
     },
     {
-      headerName: "처리 상태",
+      headerName: "비고",
       field: "isCompleted",
       sortable: true,
       filter: true,
       width: 120,
-      cellRenderer: params => {
+      cellRenderer: (params: any) => {
         const buttonClass =
           params.value === "입금처리"
             ? "flex w-full h-[80%] justify-center items-center bg-blue text-white rounded-md"
@@ -176,7 +174,7 @@ const Calculation = (props: CalculationProps): JSX.Element => {
     },
   ];
 
-  const handleButtonClick = params => {
+  const handleButtonClick = (params: any) => {
     console.log(`Button clicked for ${params.data.restaurantName}`);
   };
 

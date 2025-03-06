@@ -1,8 +1,4 @@
-interface ServiceFooterProps {
-  children?: React.ReactNode;
-}
-
-const ServiceFooter = (props: ServiceFooterProps): JSX.Element => {
+const ServiceFooter = (): JSX.Element => {
   return (
     <div className="w-[100vw] z-20 bg-darkGray text-white pt-[30px] bottom-0 mt-[100px]">
       <div className="w-[150px] mx-[250px] text-center">

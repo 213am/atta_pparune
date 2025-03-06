@@ -1,5 +1,3 @@
-interface BuyPointProps {}
-
 const BuyPoint = (): JSX.Element => {
   return <div>BuyPoint</div>;
 };

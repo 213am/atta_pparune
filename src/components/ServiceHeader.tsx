@@ -4,11 +4,7 @@ import { useRecoilState } from "recoil";
 import { menuState } from "../atoms/service";
 import { useEffect } from "react";
 
-interface ServiceHeaderProps {
-  children?: React.ReactNode;
-}
-
-const ServiceHeader = (props: ServiceHeaderProps): JSX.Element => {
+const ServiceHeader = (): JSX.Element => {
   const [menu, setMenu] = useRecoilState(menuState);
   const location = useLocation();
   const navigate = useNavigate();

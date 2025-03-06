@@ -5,8 +5,7 @@ import { LuArrowDownUp } from "react-icons/lu";
 import { useInView } from "react-intersection-observer";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import "swiper/css";
-import "swiper/css/pagination";
+import "swiper/swiper-bundle.css";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { isWhiteIcon } from "../../atoms/noticeAtom";
@@ -30,10 +29,9 @@ const UserMainPage = (): JSX.Element => {
   const [restaurantList, setRestaurantList] = useState<IRestaurantList[]>([]);
   const [pagenation, setPagenation] = useState<number>(1);
   const [categoryId, setCategoryId] = useState<number>(1);
-  const [isSelect, setIsSelect] = useState<boolean>(false);
   const navigate = useNavigate();
-  const [isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
-  const [isLogin, setIsLogin] = useRecoilState(loginAtom);
+  const [_isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
+  const [_isLogin, setIsLogin] = useRecoilState(loginAtom);
   // 알림 아이콘 흰색
 
   useEffect(() => {
@@ -117,7 +115,6 @@ const UserMainPage = (): JSX.Element => {
       <div className="flex justify-center w-full h-[40%] ">
         <Swiper
           slidesPerView={1}
-          // spaceBetween={30}
           loop={true}
           pagination={{
             clickable: true,

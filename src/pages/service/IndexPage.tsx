@@ -1,10 +1,6 @@
 import ServiceHeader from "../../components/ServiceHeader";
 
-interface IndexPageProps {
-  children?: React.ReactNode;
-}
-
-const IndexPage = (props: IndexPageProps): JSX.Element => {
+const IndexPage = (): JSX.Element => {
   return (
     <div className="relative w-full h-dvh bg-white overflow-hidden z-10">
       <ServiceHeader />

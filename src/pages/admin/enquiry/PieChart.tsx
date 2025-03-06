@@ -42,11 +42,7 @@ export const options = {
   },
 };
 
-interface PieChartProps {
-  children?: React.ReactNode;
-}
-
-const PieChart = (props: PieChartProps): JSX.Element => {
+const PieChart = (): JSX.Element => {
   return <Pie data={data} options={options} />;
 };
 
