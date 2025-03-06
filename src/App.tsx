@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { isLoginStoreAtom } from "./atoms/restaurantAtom";
 import { loginAtom } from "./atoms/userAtom";
 import StoreLayout from "./components/layouts/StoreLayout";
@@ -12,11 +12,14 @@ import {
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
 import Enquiry from "./pages/admin/enquiry/Enquiry";
-import Transaction from "./pages/admin/transaction/Transaction";
 import Franchisee from "./pages/admin/franchisee/Franchisee";
 import Refund from "./pages/admin/refund/Refund";
-import WritePostPage from "./pages/service/notice/WritePostPage";
+import Transaction from "./pages/admin/transaction/Transaction";
+import DetailPage from "./pages/service/notice/DetailPage";
 
+const WritePostPage = lazy(
+  () => import("./pages/service/notice/WritePostPage"),
+);
 const StoreReviewPage = lazy(
   () => import("./pages/storeManager/review/StoreReviewPage"),
 );
@@ -93,8 +96,8 @@ const OrderRequestPage = lazy(
 const App = (): JSX.Element => {
   const sessionRestaurant = sessionStorage.getItem("restaurantId");
   const sessionUser = sessionStorage.getItem("userId");
-  const [isLogin, setIsLogin] = useRecoilState(loginAtom);
-  const [isLoginStore, setIsLoginStore] = useRecoilState(isLoginStoreAtom);
+  const isLogin = useRecoilValue(loginAtom);
+  const isLoginStore = useRecoilValue(isLoginStoreAtom);
 
   useEffect(() => {
     initializeSocket();
@@ -331,6 +334,7 @@ const App = (): JSX.Element => {
             <Route path="notice">
               <Route index element={<NoticePage />} />
               <Route path="writepost" element={<WritePostPage />} />
+              <Route path="detail" element={<DetailPage />} />
             </Route>
           </Route>
           <Route path="/storeManage" element={<TableComponent />}></Route>

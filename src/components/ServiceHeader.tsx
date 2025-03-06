@@ -1,8 +1,10 @@
 import { IoMdLogIn } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { menuState } from "../atoms/service";
+import { menuState } from "../atoms/serviceAtom";
 import { useEffect } from "react";
+import { roleAtom } from "../atoms/roleAtom";
+import { COMPANY } from "../constants/Role";
 
 interface ServiceHeaderProps {
   children?: React.ReactNode;
@@ -10,6 +12,7 @@ interface ServiceHeaderProps {
 
 const ServiceHeader = (props: ServiceHeaderProps): JSX.Element => {
   const [menu, setMenu] = useRecoilState(menuState);
+  const [role, setRole] = useRecoilState(roleAtom);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -35,7 +38,10 @@ const ServiceHeader = (props: ServiceHeaderProps): JSX.Element => {
   }, [location]);
   return (
     <div className="flex w-[90%] justify-between items-center absolute z-20 left-24">
-      <div className="w-[12%] cursor-pointer">
+      <div
+        className={"w-[12%] cursor-pointer"}
+        onClick={() => navigate("/service")}
+      >
         <img src="/logo.png" alt="" />
       </div>
       <ul className="flex px-10 py-4 gap-4 text-xl font-bold">
@@ -57,7 +63,13 @@ const ServiceHeader = (props: ServiceHeaderProps): JSX.Element => {
         >
           공지 / 문의
         </li>
-        <li className="flex items-center gap-1.5 px-4 py-1 cursor-pointer">
+        <li
+          onClick={() => {
+            setRole(COMPANY);
+            navigate("/auth");
+          }}
+          className="flex items-center gap-1.5 px-4 py-1 cursor-pointer"
+        >
           <span>로그인</span>
           <IoMdLogIn />
         </li>
