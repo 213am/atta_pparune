@@ -9,7 +9,7 @@ import { isLoginStoreAtom } from "../../atoms/restaurantAtom";
 import { roleAtom } from "../../atoms/roleAtom";
 import { loginAtom, userDataAtom } from "../../atoms/userAtom";
 import { setCookie } from "../../components/cookie";
-import { STORE, USER } from "../../constants/Role";
+import { COMPANY, STORE, USER } from "../../constants/Role";
 import {
   CloseDiv,
   FormDiv,
@@ -124,7 +124,13 @@ function LoginPage() {
       <TitleDiv>
         <LogoImg src="/logo.png" alt="로고" />
         <RoleDiv>
-          {role === USER ? "사용자" : role === STORE ? "사장님" : ""}
+          {role === USER
+            ? "사용자"
+            : role === STORE
+              ? "사장님"
+              : role === COMPANY
+                ? "회사"
+                : ""}
         </RoleDiv>
       </TitleDiv>
       <FormDiv>

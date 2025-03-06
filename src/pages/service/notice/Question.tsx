@@ -26,7 +26,12 @@ const Question = (): JSX.Element => {
             <div className="w-[10%] flex justify-center">
               <AiOutlineQuestionCircle />
             </div>
-            <div className="w-[60%] text-left">개선 요구사항이 있어요!</div>
+            <div
+              className={"w-[60%] text-left cursor-pointer"}
+              onClick={() => navigate(`/service/notice/detail`)}
+            >
+              개선 요구사항이 있어요!
+            </div>
             <div className="w-[10%]">관리자</div>
             <div className="w-[20%]">2025-02-17</div>
           </div>

@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { boardState } from "../../../atoms/serviceAtom";
 import ServiceFooter from "../../../components/ServiceFooter";
 import ServiceHeader from "../../../components/ServiceHeader";
-import Question from "./Question";
 import Board from "./Board";
+import Question from "./Question";
 
 const NoticePage = (): JSX.Element => {
-  const [board, setBoard] = useState("공지 및 게시판");
+  const [board, setBoard] = useRecoilState(boardState);
   return (
     <div className="relative w-full h-dvh bg-white overflow-y-auto scrollbar-hide z-10 flex flex-col">
       <ServiceHeader />

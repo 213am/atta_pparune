@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { isLoginStoreAtom } from "./atoms/restaurantAtom";
 import { loginAtom } from "./atoms/userAtom";
 import StoreLayout from "./components/layouts/StoreLayout";
@@ -17,6 +17,9 @@ import RefundPage from "./pages/admin/refund/RefundPage";
 import TransactionPage from "./pages/admin/transaction/TransactionPage";
 import WritePostPage from "./pages/service/notice/WritePostPage";
 
+const WritePostPage = lazy(
+  () => import("./pages/service/notice/WritePostPage"),
+);
 const StoreReviewPage = lazy(
   () => import("./pages/storeManager/review/StoreReviewPage"),
 );
@@ -331,6 +334,7 @@ const App = (): JSX.Element => {
             <Route path="notice">
               <Route index element={<NoticePage />} />
               <Route path="writepost" element={<WritePostPage />} />
+              <Route path="detail" element={<DetailPage />} />
             </Route>
           </Route>
           <Route path="/storeManage" element={<TableComponent />}></Route>

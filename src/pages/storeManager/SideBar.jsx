@@ -55,7 +55,7 @@ const SideBar = () => {
     <div className="flex flex-col w-44 h-dvh justify-between items-center bg-primaryFocus">
       <div className="w-full mt-8">
         <div className="flex mb-6 px-4 w-44 justify-center items-center">
-          <img src={"/logo.png"} className="flex w-full h-full pb-6" />
+          <img src={"/adminLogo.png"} className="flex w-full h-full pb-6" />
         </div>
 
         <div className="flex flex-col justify-between">
