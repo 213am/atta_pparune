@@ -1,10 +1,9 @@
 import AdminHeader from "../../components/AdminHeader";
 import { AgGridReact } from "ag-grid-react";
-import { CellClickedEvent } from "ag-grid-community";
+import { ClientSideRowModelModule } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { provideGlobalGridOptions } from "ag-grid-community";
-import { ClientSideRowModelModule } from "ag-grid-community";
 
 interface CalculationProps {
   children?: React.ReactNode;
@@ -89,6 +88,7 @@ const Calculation = (props: CalculationProps): JSX.Element => {
 
   const EMPTY_ROW_COUNT = 10;
 
+  // 빈 row를 생성
   const emptyRows: RowDataT[] = Array.from(
     { length: EMPTY_ROW_COUNT },
     (_, index) => ({
@@ -102,17 +102,10 @@ const Calculation = (props: CalculationProps): JSX.Element => {
     }),
   );
 
-  emptyRows.push({
-    id: 1,
-    salesPeriod: "2025-02-14 ~ 2025-02-20",
-    restaurantName: "동양백반",
-    sales: "900,000 원",
-    depositStatus: "미입금",
-    endDate: "2025-02-20",
-    isCompleted: "입금처리",
-  });
-
-  const rowDefs = tableData.length > 10 ? tableData : emptyRows;
+  const rowDefs =
+    tableData.length < EMPTY_ROW_COUNT
+      ? [...tableData, ...emptyRows.slice(tableData.length)]
+      : tableData;
 
   const columnDefs = [
     {
@@ -163,14 +156,35 @@ const Calculation = (props: CalculationProps): JSX.Element => {
       sortable: true,
       filter: true,
       width: 120,
+      cellRenderer: params => {
+        const buttonClass =
+          params.value === "입금처리"
+            ? "flex w-full h-[80%] justify-center items-center bg-blue text-white rounded-md"
+            : "";
+
+        return (
+          <div className="flex w-full h-full items-center">
+            <button
+              onClick={() => handleButtonClick(params)}
+              className={buttonClass}
+            >
+              {params.value || ""}
+            </button>
+          </div>
+        );
+      },
     },
   ];
+
+  const handleButtonClick = params => {
+    console.log(`Button clicked for ${params.data.restaurantName}`);
+  };
 
   return (
     <div className="relative flex flex-col w-full h-dvh bg-white">
       <AdminHeader title={"정기정산"} />
       <div className="flex flex-col w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
-        <div className="flex flex-col w-[100%] h-[10%] px-10 pt-10 bg-white items-start">
+        <div className="flex flex-col w-[100%] h-[10%] px-10 pt-10 bg-white items-start pointer-events-none">
           이번 주 정산 내역
         </div>
         <div className="flex ag-theme-alpine w-full h-full justify-start px-10">
@@ -183,7 +197,6 @@ const Calculation = (props: CalculationProps): JSX.Element => {
             modules={[ClientSideRowModelModule]}
             gridOptions={provideGlobalGridOptions({ theme: "legacy" })}
           />
-          <div className="absolute top-0 right-0">입금처리</div>
         </div>
       </div>
     </div>

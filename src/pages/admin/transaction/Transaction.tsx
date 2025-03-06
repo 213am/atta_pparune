@@ -19,7 +19,7 @@ export interface RowDataT {
   isCompleted: string;
 }
 
-const Franchisee = (props: CalculationProps): JSX.Element => {
+const Transaction = (props: CalculationProps): JSX.Element => {
   const tableData = [
     {
       id: 1,
@@ -203,4 +203,4 @@ const Franchisee = (props: CalculationProps): JSX.Element => {
   );
 };
 
-export default Franchisee;
+export default Transaction;

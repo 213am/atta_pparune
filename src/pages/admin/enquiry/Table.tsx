@@ -160,8 +160,10 @@ const Table = (props: StoreManageProps): JSX.Element => {
       isCompleted: "",
     }),
   );
-
-  const rowDataWithEmpty = tableData.length < 10 ? emptyRows : tableData;
+  const rowDefs =
+    tableData.length < EMPTY_ROW_COUNT
+      ? [...tableData, ...emptyRows.slice(tableData.length)]
+      : tableData;
 
   const enquiryDetailHandler = (e: RowClickedEvent<RowDataT>) => {
     if (e.data) {
@@ -201,7 +203,7 @@ const Table = (props: StoreManageProps): JSX.Element => {
           <div className="flex ag-theme-alpine w-full h-full justify-center">
             <AgGridReact
               columnDefs={columnDefs}
-              rowData={rowDataWithEmpty}
+              rowData={rowDefs}
               pagination={true}
               paginationPageSize={10}
               domLayout="print"
