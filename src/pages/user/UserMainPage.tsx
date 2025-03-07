@@ -45,7 +45,6 @@ const UserMainPage = (): JSX.Element => {
   const navigate = useNavigate();
   const [_isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
   const [_isLogin, setIsLogin] = useRecoilState(loginAtom);
-  // 알림 아이콘 흰색
 
   useEffect(() => {
     setIsWhite(true);
@@ -64,7 +63,6 @@ const UserMainPage = (): JSX.Element => {
     threshold: 0.7, // 화면의 70%가 보일 때 감지
   });
 
-  // 스와이퍼 불러오기 - 작업중
   useEffect(() => {
     const getSwiperList = async () => {
       try {
@@ -91,7 +89,6 @@ const UserMainPage = (): JSX.Element => {
       try {
         const res = await axios.get("/api/restaurant/main", { params });
         const result = res.data.resultData;
-        console.log(result);
 
         setRestaurantList([...result]);
       } catch (error) {
