@@ -1,6 +1,5 @@
 import { Suspense, lazy, useEffect } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 import { isLoginStoreAtom } from "./atoms/restaurantAtom";
 import { loginAtom } from "./atoms/userAtom";
 import StoreLayout from "./components/layouts/StoreLayout";
@@ -11,11 +10,12 @@ import {
   subscribeStoreLogin,
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
+import { useRecoilState } from "recoil";
 import EnquiryPage from "./pages/admin/enquiry/EnquiryPage";
 import FranchiseePage from "./pages/admin/franchisee/FranchiseePage";
 import RefundPage from "./pages/admin/refund/RefundPage";
 import TransactionPage from "./pages/admin/transaction/TransactionPage";
-import WritePostPage from "./pages/service/notice/WritePostPage";
+import DetailPage from "./pages/service/notice/DetailPage";
 
 const WritePostPage = lazy(
   () => import("./pages/service/notice/WritePostPage"),

@@ -8,7 +8,7 @@ const IndexPage = () => {
   const [role, setRole] = useRecoilState(roleAtom);
 
   return (
-    <div className="relative min-h-dvh bg-[url('/startingPage.png')] bg-cover bg-center flex flex-col justify-evenly items-center">
+    <div className="relative min-h-dvh bg-[url('/startingPage.webp')] bg-cover bg-center flex flex-col justify-evenly items-center">
       <div className="w-full h-1/3 flex flex-col justify-center items-center">
         <span className="w-4/5 h-full text-primary font-bold text-3xl pl-6 tracking-wide sm:w-2/3 sm:text-4xl lg:text-5xl drop-shadow-[1px_2px_1px_rgba(0,0,0,0.8)] italic">
           예약부터 결제까지

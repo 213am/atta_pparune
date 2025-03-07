@@ -1,16 +1,15 @@
-import React from "react";
+import { faker } from "@faker-js/faker";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
   BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  ChartOptions,
+  Legend,
+  LinearScale,
   Title,
   Tooltip,
-  Legend,
-  ChartOptions,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { faker } from "@faker-js/faker";
 
 ChartJS.register(
   CategoryScale,
@@ -23,7 +22,6 @@ ChartJS.register(
 
 export const options: ChartOptions<"bar"> = {
   responsive: true,
-
   plugins: {
     legend: {
       position: "bottom" as const,
@@ -51,7 +49,7 @@ export const options: ChartOptions<"bar"> = {
     },
     y: {
       grid: {
-        borderDash: [2, 4],
+        ...({ borderDash: [2, 4] } as any), // ✅ 강제 타입 변환
       },
     },
   },

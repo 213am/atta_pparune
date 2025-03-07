@@ -1,9 +1,8 @@
-import AdminHeader from "../../../components/AdminHeader";
-import { AgGridReact } from "ag-grid-react";
 import { ClientSideRowModelModule, ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { provideGlobalGridOptions } from "ag-grid-community";
+import { AgGridReact } from "ag-grid-react";
+import AdminHeader from "../../../components/AdminHeader";
 
 export interface RowDataT {
   id: number;
@@ -197,15 +196,6 @@ const Refund = (): JSX.Element => {
     console.log(`환불거절 : ${params.data.companyName}`);
   };
 
-  const gridOptions = {
-    ...provideGlobalGridOptions({ theme: "legacy" }),
-    columnDefs: columnDefs,
-    rowData: rowDefs,
-    pagination: true,
-    paginationPageSize: 10,
-    domLayout: "print",
-    modules: [ClientSideRowModelModule],
-  };
   return (
     <div className="relative flex flex-col w-full h-dvh bg-white">
       <AdminHeader title={"환불내역"} />
@@ -218,7 +208,7 @@ const Refund = (): JSX.Element => {
             paginationPageSize={10}
             domLayout="print"
             modules={[ClientSideRowModelModule]}
-            gridOptions={provideGlobalGridOptions({ theme: "legacy" })}
+            theme={"legacy"}
           />
         </div>
       </div>

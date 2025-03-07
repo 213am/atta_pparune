@@ -1,20 +1,15 @@
 import {
   ClientSideRowModelModule,
-  provideGlobalGridOptions,
+  ColDef,
   RowClickedEvent,
 } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { AgGridReact } from "ag-grid-react";
-import React from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import AdminHeader from "../../../components/AdminHeader";
 import BarChart from "./BarChart";
 import PieChart from "./PieChart";
-
-interface StoreManageProps {
-  children?: React.ReactNode;
-}
 
 export type RowDataT = {
   id: number;
@@ -26,7 +21,7 @@ export type RowDataT = {
   isCompleted: string;
 };
 
-const Enquiry = (props: StoreManageProps): JSX.Element => {
+const Enquiry = (): JSX.Element => {
   // const navigate = useNavigate();
 
   const tableData = [
@@ -95,7 +90,7 @@ const Enquiry = (props: StoreManageProps): JSX.Element => {
     },
   ];
 
-  const columnDefs = [
+  const columnDefs: ColDef<RowDataT>[] = [
     {
       headerName: "순번",
       field: "id",
@@ -209,7 +204,7 @@ const Enquiry = (props: StoreManageProps): JSX.Element => {
               paginationPageSize={10}
               domLayout="print"
               modules={[ClientSideRowModelModule]}
-              gridOptions={provideGlobalGridOptions({ theme: "legacy" })}
+              theme={"legacy"}
               onRowClicked={e => enquiryDetailHandler(e)}
             />
           </div>
