@@ -12,7 +12,7 @@ import { isWhiteIcon } from "../../atoms/noticeAtom";
 import { loginAtom } from "../../atoms/userAtom";
 import MenuBar from "../../components/MenuBar";
 import Notification from "../../components/notification/NotificationIcon";
-import { DOCKER_URL } from "../../constants/url";
+import { DOCKER_URL, STORE_IMAGE_URL } from "../../constants/url";
 import { getCookie } from "../../components/cookie";
 
 interface IRestaurantList {
@@ -25,11 +25,23 @@ interface IRestaurantList {
   restaurantName: string;
 }
 
+interface ISwiperData {
+  restaurantDescription: string;
+  restaurantId: number;
+  restaurantName: string;
+  restaurantPic: {
+    filePath: string;
+    picId: number;
+    restaurantId: number;
+  };
+}
+
 const UserMainPage = (): JSX.Element => {
   const [restaurantList, setRestaurantList] = useState<IRestaurantList[]>([]);
   const [pagenation, setPagenation] = useState<number>(1);
   const [categoryId, setCategoryId] = useState<number>(1);
   const [filter, setFilter] = useState<null | number>(null);
+  const [swiperData, setSwiperData] = useState<ISwiperData[]>([]);
   const navigate = useNavigate();
   const [_isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
   const [_isLogin, setIsLogin] = useRecoilState(loginAtom);
@@ -57,7 +69,9 @@ const UserMainPage = (): JSX.Element => {
     const getSwiperList = async () => {
       try {
         const res = await axios.get("/api/restaurant/v3/main/recommend");
-        console.log("스와이퍼 데이터", res.data);
+        console.log("스와이퍼 데이터", res.data.resultData);
+        const result = res.data.resultData;
+        setSwiperData([...result]);
       } catch (error) {
         console.log(error);
       }
@@ -152,66 +166,33 @@ const UserMainPage = (): JSX.Element => {
           modules={[Pagination, Autoplay]}
           className="mySwiper"
         >
-          {/* Swiper 1 */}
-          <SwiperSlide
-            className="relative cursor-pointer"
-            onClick={() => navigate("/user/restaurant/detail/1")}
-          >
-            <img src="/swiper1.webp" alt="" />
-            <div className="absolute left-2 bottom-8 font-bold">
-              <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap ">
-                추천식당
-              </p>
-              <div className="flex flex-col ">
-                <span className="pl-2 text-white text-2xl text-nowrap ">
-                  여기 진짜 맛있어요!
-                </span>
-                <span className="pl-2 text-white text-2xl text-nowrap ">
-                  호불호 없을 누구나 좋아하는 맛
-                </span>
+          {swiperData.map((item, index) => (
+            <SwiperSlide
+              key={index}
+              className="relative cursor-pointer"
+              onClick={() =>
+                navigate(`/user/restaurant/detail/${item.restaurantId}`)
+              }
+            >
+              <img
+                src={`${STORE_IMAGE_URL}/${item.restaurantId}/${item.restaurantPic.filePath}`}
+                alt=""
+              />
+              <div className="absolute left-2 bottom-8 font-bold">
+                <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap ">
+                  추천식당
+                </p>
+                <div className="flex flex-col ">
+                  <span className="pl-2 text-white text-2xl text-nowrap ">
+                    {item.restaurantName}
+                  </span>
+                  <span className="pl-2 text-white text-2xl text-nowrap ">
+                    호불호 없을 누구나 좋아하는 맛
+                  </span>
+                </div>
               </div>
-            </div>
-          </SwiperSlide>
-          {/* Swiper 2 */}
-          <SwiperSlide
-            className="relative cursor-pointer"
-            onClick={() => navigate("/user/restaurant/detail/14")}
-          >
-            <img src="/swiper2.webp" alt="" />
-            <div className="absolute left-2 bottom-8 font-bold">
-              <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap ">
-                추천식당
-              </p>
-              <div className="flex flex-col ">
-                <span className="pl-2 text-white text-2xl text-nowrap ">
-                  여기 가성비 최고 식당이에요!
-                </span>
-                <span className="pl-2 text-white text-2xl text-nowrap ">
-                  집밥이 생각날 때 꼭 한번 올만한 곳
-                </span>
-              </div>
-            </div>
-          </SwiperSlide>
-          {/* Swiper 3 */}
-          <SwiperSlide
-            className="relative cursor-pointer"
-            onClick={() => navigate("/user/restaurant/detail/11")}
-          >
-            <img src="/swiper3.webp" alt="" />
-            <div className="absolute left-2 bottom-8 font-bold">
-              <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap ">
-                추천식당
-              </p>
-              <div className="flex flex-col ">
-                <span className="pl-2 text-white text-2xl text-nowrap ">
-                  분위기 맛집!
-                </span>
-                <span className="pl-2 text-white text-2xl text-nowrap ">
-                  특별한 날에 오기 좋은 곳
-                </span>
-              </div>
-            </div>
-          </SwiperSlide>
+            </SwiperSlide>
+          ))}
         </Swiper>
       </div>
       <div className="block h-full pt-2 pb-24 bg-white">
