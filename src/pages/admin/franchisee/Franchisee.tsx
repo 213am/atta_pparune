@@ -106,7 +106,7 @@ const Franchisee = (): JSX.Element => {
     {
       headerName: "순번",
       field: "id",
-      sortable: true,
+      sortable: false,
       filter: true,
       width: 100,
     },
@@ -154,7 +154,7 @@ const Franchisee = (): JSX.Element => {
       cellRenderer: (params: any) => {
         const buttonClass =
           params.value === "입금처리"
-            ? "flex w-full h-[80%] justify-center items-center bg-blue text-white rounded-md"
+            ? "flex h-[80%] justify-center items-center bg-blue text-white rounded-md px-3"
             : "";
 
         return (

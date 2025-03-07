@@ -106,7 +106,7 @@ const Refund = (): JSX.Element => {
     {
       headerName: "순번",
       field: "id",
-      sortable: true,
+      sortable: false,
       filter: true,
       width: 100,
     },
@@ -148,18 +148,18 @@ const Refund = (): JSX.Element => {
     {
       headerName: "처리 상태",
       field: "isCompleted",
-      sortable: true,
+      sortable: false,
       filter: true,
       width: 200,
       cellRenderer: (params: any) => {
         const acceptClass =
           params.data.companyName !== ""
-            ? "flex w-full h-[80%] justify-center items-center bg-blue text-white rounded-md px-2"
+            ? "flex h-[80%] justify-center items-center bg-blue text-white rounded-md px-3"
             : "";
 
         const rejectClass =
           params.data.companyName !== ""
-            ? "flex w-full h-[80%] justify-center items-center bg-red text-white rounded-md px-2"
+            ? "flex h-[80%] justify-center items-center bg-red text-white rounded-md px-3"
             : "";
 
         return (
@@ -209,6 +209,7 @@ const Refund = (): JSX.Element => {
             domLayout="print"
             modules={[ClientSideRowModelModule]}
             theme={"legacy"}
+            rowSelection={"multiple"}
           />
         </div>
       </div>
