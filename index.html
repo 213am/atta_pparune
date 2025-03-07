@@ -40,16 +40,9 @@
     <link rel="manifest" href="/manifest.json" />
     <title>atta pparune</title>
     <link rel="icon" type="image/png" href="/src/assets/favicon.png" />
-    <!-- css 및 script 비동기 -->
-    <link
-      rel="stylesheet"
-      href="styles.css"
-      media="print"
-      onload="this.onload=null;this.removeAttribute('media');"
-    />
+    <!-- script 비동기 제어 -->
     <script defer src="script.js"></script>
-    <!-- 스와이퍼 이미지 미리 로드. api 연결 후 삭제 예정 -->
-    <link rel="preload" as="image" href="/swiper1.webp" type="image/webp" />
+    <script defer src="swiper.js"></script>
   </head>
   <body>
     <div id="root"></div>
