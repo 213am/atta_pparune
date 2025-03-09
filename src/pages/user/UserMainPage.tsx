@@ -82,10 +82,13 @@ const UserMainPage = (): JSX.Element => {
     const getRestaurantList = async () => {
       const params = {
         categoryId: categoryId,
-        page: pagenation,
+        page: 1,
         filterType: filter,
         size: 20,
       };
+
+      console.log("params :", params);
+
       try {
         const res = await axios.get("/api/restaurant/main", { params });
         const result = res.data.resultData;
@@ -146,6 +149,8 @@ const UserMainPage = (): JSX.Element => {
     }
   };
 
+  console.log("목록 불러오기", restaurantList);
+
   return (
     <div className="relative w-full h-dvh">
       <Notification />
@@ -203,7 +208,7 @@ const UserMainPage = (): JSX.Element => {
               onChange={e => filterChangeHandler(e)}
               className="text-base tracking-wide bg-white px-6 py-1 appearance-none w-[90px] outline-none cursor-pointer"
             >
-              <option value="빠른순">기본순</option>
+              <option value="기본순">기본순</option>
               <option value="별점순">별점순</option>
               <option value="리뷰순">리뷰순</option>
             </select>
