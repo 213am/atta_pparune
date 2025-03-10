@@ -42,10 +42,10 @@ const IndexPage = (): JSX.Element => {
           </div>
           {/* <button className="w-[10%] bg-darkGray">제휴 신청</button> */}
         </div>
-        <div className="flex w-1/2 justify-center items-center gap-10">
-          <div className="flex flex-col text-4xl gap-5">
-            <span>예약부터</span>
-            <span>결제까지</span>
+        <div className="flex w-1/2 justify-center items-center gap-20">
+          <div className="flex flex-col text-4xl gap-5 text-center">
+            <span className="italic">예약부터 결제까지</span>
+            <span className="italic"></span>
             <span className="text-primary font-bold font-mono">
               atta pparune
             </span>
@@ -53,7 +53,7 @@ const IndexPage = (): JSX.Element => {
           <img
             src="/mobile_frame.jpg"
             alt=""
-            className="outline outline-white rounded-[5px]"
+            className="outline outline-black rounded-[5px]"
           />
         </div>
       </div>

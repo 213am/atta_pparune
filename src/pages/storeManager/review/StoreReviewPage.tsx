@@ -103,17 +103,17 @@ function StoreReviewPage(): JSX.Element {
                 <div>양도 많고 감자도 잘 튀겨졌어요~~~ 역시 최고 !!</div>
                 <div className="flex w-[300px] my-3 gap-1">
                   <img
-                    src="/swiper1.jpg"
+                    src="/swiper1.webp"
                     className="flex w-1/3 rounded-[5px]"
                     alt=""
                   />
                   <img
-                    src="/swiper2.jpg"
+                    src="/swiper2.webp"
                     className="flex w-1/3 rounded-[5px]"
                     alt=""
                   />
                   <img
-                    src="/swiper3.jpg"
+                    src="/swiper3.webp"
                     className="flex w-1/3 rounded-[5px]"
                     alt=""
                   />
