@@ -153,9 +153,9 @@ const NotificationPage = () => {
                 </>
               ) : (
                 <>
-                  <div className="flex gap-1 items-center cursor-pointer">
+                  <div className="flex gap-2 items-center cursor-pointer">
                     <span className="text-black text-xl">
-                      {item.restaurantName}{" "}
+                      {item.restaurantName}
                     </span>
                     <span className="text-darkGray">주문을 완성해주세요</span>
                   </div>

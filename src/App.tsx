@@ -156,7 +156,7 @@ const App = (): JSX.Element => {
                 }
               />
               <Route
-                path="myReview"
+                path="myreview"
                 element={
                   <UserLayout>
                     <MyReviewPage />

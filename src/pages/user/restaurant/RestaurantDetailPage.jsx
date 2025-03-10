@@ -284,7 +284,9 @@ function StoreDetailPage() {
             <div className="flex w-1/3 h-full items-center gap-2">
               <div className="flex items-center gap-1 pointer-events-none">
                 <FaStar className="text-yellow text-lg drop-shadow-sm mb-0.5" />
-                <p className="tracking-wide text-black text-base">4.8</p>
+                <p className="tracking-wide text-black text-base">
+                  {formData?.ratingAvg}
+                </p>
               </div>
               <p className="text-3xl text-darkGray pb-1.5 pointer-events-none">
                 ·
@@ -298,7 +300,7 @@ function StoreDetailPage() {
                 }
               >
                 <p className="text-black text-base">리뷰</p>
-                <p className="text-black text-base">120 개</p>
+                <p className="text-black text-base">{formData?.reviewCnt} 개</p>
                 <IoIosArrowForward className="text-black text-base" />
               </div>
             </div>

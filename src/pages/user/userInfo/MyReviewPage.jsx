@@ -1,13 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { FaStar } from "react-icons/fa";
+import { IoMdArrowBack } from "react-icons/io";
 import MenuBar from "../../../components/MenuBar";
 import ImgPreview from "../../../components/ImgPreview";
+import axios from "axios";
+import { getCookie } from "../../../components/cookie";
+import { useNavigate } from "react-router-dom";
 
 const MyReviewPage = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const rating = 4;
+  const id = sessionStorage.getItem("userId");
+  const accessToken = getCookie();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const params = {
+      page: 1,
+      size: 15,
+      userId: id,
+      startDate: "2025-01-01",
+      endDate: "2025-03-10",
+    };
+
+    try {
+      const getMyReviews = async () => {
+        const res = await axios.get("/api/user/v3/review", {
+          params,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        console.log(res.data);
+      };
+      getMyReviews();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const handleImageClick = src => {
     console.log(src);
@@ -17,8 +49,19 @@ const MyReviewPage = () => {
 
   return (
     <div className="flex flex-col w-full h-dvh">
-      <div className="flex w-full py-4 justify-center pointer-events-none">
-        <span className="text-lg">내가 쓴 리뷰</span>
+      <div className="flex w-full px-4 py-4 justify-between items-center">
+        <span
+          onClick={() => navigate("/user/userInfo")}
+          className="flex w-[10%] justify-center text-2xl cursor-pointer"
+        >
+          <IoMdArrowBack />
+        </span>
+        <span className="flex w-[80%] justify-center text-lg pointer-events-none">
+          내가 쓴 리뷰
+        </span>
+        <span className="flex w-[10%] justify-center text-lg pointer-events-none">
+          &nbsp;
+        </span>
       </div>
       {/* 리뷰 1개 */}
       <div className="flex flex-col px-10 py-4 gap-2">
@@ -39,22 +82,22 @@ const MyReviewPage = () => {
         </div>
         <div className="flex w-full cursor-pointer">
           <img
-            src="/swiper1.jpg"
+            src="/swiper1.webp"
             alt=""
             className="flex w-1/3"
-            onClick={() => handleImageClick("/swiper1.jpg")}
+            onClick={() => handleImageClick("/swiper1.webp")}
           />
           <img
-            src="/swiper2.jpg"
+            src="/swiper2.webp"
             alt=""
             className="flex w-1/3"
-            onClick={() => handleImageClick("/swiper2.jpg")}
+            onClick={() => handleImageClick("/swiper2.webp")}
           />
           <img
-            src="/swiper3.jpg"
+            src="/swiper3.webp"
             alt=""
             className="flex w-1/3"
-            onClick={() => handleImageClick("/swiper3.jpg")}
+            onClick={() => handleImageClick("/swiper3.webp")}
           />
         </div>
         <div className="flex w-full pointer-events-none">
