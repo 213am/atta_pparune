@@ -1,15 +1,16 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import DaumPostcodeEmbed from "react-daum-postcode";
+import { useForm } from "react-hook-form";
 import { GrUpload } from "react-icons/gr";
 import { MdOutlineCancel } from "react-icons/md";
-import useModal from "../../../components/useModal";
-import Swal from "sweetalert2";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
-import QuillEditer from "./QuillEditer";
+import Swal from "sweetalert2";
+import * as yup from "yup";
+import useModal from "../../../components/useModal";
 
 const infoEditSchema = yup.object({
   restaurantName: yup.string().required("매장명은 필수입력 항목입니다"),
@@ -90,7 +91,7 @@ const StoreInfo = () => {
     setValue("operatingHours", getData.operatingHours);
     setValue("maxCapacity", getData.maxCapacity);
     setValue("status", getData.status);
-    console.log(getData.status);
+    console.log("응?", getData);
   }, [getData]);
 
   const addImgHandler = e => {
@@ -172,7 +173,7 @@ const StoreInfo = () => {
 
   const patchStoreInfo = async data => {
     try {
-      await axios.patch("/api/restaurant", data);
+      await axios.patch("/api/admin/restaurant", data);
       Swal.fire({
         title: "매장 정보가 수정되었습니다.",
         icon: "success",
@@ -192,7 +193,7 @@ const StoreInfo = () => {
   const postImgFiles = async data => {
     try {
       await axios.post(
-        `/api/pic/restaurant?restaurantId=${sessionRestaurantId}`,
+        `/api/admin/restaurant/v3/pic?restaurantId=${sessionRestaurantId}`,
         data,
         { headers: { "Content-Type": "multipart/form-data" } },
       );
@@ -223,7 +224,7 @@ const StoreInfo = () => {
 
     const postImgData = new FormData();
     imgFile.map(file => {
-      postImgData.append("filePath", file);
+      postImgData.append("picName", file);
     });
     console.log("ImgData 확인:", [...postImgData.entries()]);
 
@@ -282,12 +283,22 @@ const StoreInfo = () => {
             </div>
             <div className="flex w-full h-full gap-11 items-center">
               <span className="text-darkGray">가게 설명</span>
-              <QuillEditer value={getData.restaurantDescription} />
               {/* <input
                 type="text"
                 className="border px-2 rounded-md"
                 {...register("restaurantDescription")}
               /> */}
+              <ReactQuill
+                value={getData.restaurantDescription}
+                onChange={e => {
+                  setValue("restaurantDescription", e);
+                }}
+                className="flex flex-col w-2/3 h-full"
+                readOnly={false}
+                modules={{
+                  toolbar: false,
+                }}
+              />
             </div>
 
             <div className="flex flex-col w-[45%] gap-2">

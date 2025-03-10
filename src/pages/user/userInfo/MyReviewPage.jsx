@@ -71,7 +71,7 @@ const MyReviewPage = () => {
             숙성회 모둠
           </span>
         </div>
-        <div className="flex w-full justify-end items-center ">
+        <div className="flex w-full justify-end items-center">
           <div className="flex items-center cursor-pointer gap-1">
             <RiDeleteBin6Fill />
             <span>삭제</span>

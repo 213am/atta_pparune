@@ -76,7 +76,7 @@ function LoginPage() {
         console.log(res.data.resultData);
         const result = res.data.resultData;
 
-        const restaurantId = result.restaurantId || sessionRestaurantId;
+        const restaurantId = result.divisionId || sessionRestaurantId;
         const adminId = result.adminId;
         const accessToken = result.accessToken;
         window.sessionStorage.setItem("adminId", adminId);

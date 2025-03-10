@@ -43,12 +43,9 @@ const IndexPage = (): JSX.Element => {
           {/* <button className="w-[10%] bg-darkGray">제휴 신청</button> */}
         </div>
         <div className="flex w-1/2 justify-center items-center gap-20">
-          <div className="flex flex-col text-4xl gap-5 text-center">
+          <div className="flex flex-col text-4xl gap-7 text-center">
             <span className="italic">예약부터 결제까지</span>
-            <span className="italic"></span>
-            <span className="text-primary font-bold font-mono">
-              atta pparune
-            </span>
+            <img src="/logo.png" alt="" className="w-[300px]" />
           </div>
           <img
             src="/mobile_frame.jpg"
