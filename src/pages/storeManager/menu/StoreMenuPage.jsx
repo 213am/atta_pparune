@@ -230,6 +230,7 @@ function StoreMenuPage() {
     }
   };
 
+  // 메뉴 이미지 수정
   const patchImg = async data => {
     try {
       await axios.patch("/api/admin/restaurant/v3/pic/menu", data, {
