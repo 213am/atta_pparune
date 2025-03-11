@@ -13,11 +13,11 @@ export const userDataAtom = atom({
     companyName: "",
     email: "",
     name: "",
+    nickName: "",
     phone: "",
-    pic: null,
     point: 0,
-    roleId: "",
     uid: "",
+    usePic: null,
     userId: 0,
   },
 });

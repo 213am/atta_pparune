@@ -296,6 +296,11 @@ function StoreDetailPage() {
                 onClick={() =>
                   navigate(
                     `/user/restaurant/detail/review/${formData.restaurantId}`,
+                    {
+                      state: {
+                        reviewCnt: formData?.reviewCnt,
+                      },
+                    },
                   )
                 }
               >

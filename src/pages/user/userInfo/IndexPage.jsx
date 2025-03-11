@@ -95,9 +95,9 @@ function IndexPage() {
       </div>
       <div className="flex flex-col h-dvh justify-around mt-24 gap-10">
         <div className="w-full h-[30%] flex flex-col items-center gap-4">
-          {userData.pic !== null ? (
+          {userData.usePic !== null ? (
             <img
-              src={userData.pic}
+              src={userData.usePic}
               alt="프로필 이미지"
               className="w-32 rounded-full bg-auto"
             />

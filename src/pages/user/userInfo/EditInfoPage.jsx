@@ -1,11 +1,11 @@
 import axios from "axios";
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaCameraRetro } from "react-icons/fa";
 import { IoIosArrowForward, IoMdArrowBack } from "react-icons/io";
 import { MdOutlineMail } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-
+import { debounce } from "lodash";
 import Swal from "sweetalert2";
 import { isWhiteIcon } from "../../../atoms/noticeAtom";
 import { loginAtom, userDataAtom } from "../../../atoms/userAtom";
@@ -16,7 +16,6 @@ import {
   removeCookieRefresh,
 } from "../../../components/cookie";
 import Notification from "../../../components/notification/NotificationIcon";
-import { debounce } from "lodash";
 
 function EditInfoPage() {
   const navigate = useNavigate();
@@ -62,7 +61,6 @@ function EditInfoPage() {
             .replace(/(-{1,2})$/g, "");
           const pointParse = resultData.point.toLocaleString("ko-KR");
           console.log(resultData);
-          console.log(res);
 
           setUserData({ ...resultData, phone: phoneNumber, point: pointParse });
         }
@@ -94,17 +92,24 @@ function EditInfoPage() {
 
   const editSubmitHandler = async e => {
     e.preventDefault();
-    const params = { userId: sessionUserId };
+
     try {
       const accessToken = getCookie();
-      const payload = {
+      const params = {
         nickName: inputNickName || userData.nickName,
         phone: inputPhone || userData.phone,
       };
-      const res = await axios.patch(`/api/user`, payload, {
+
+      const formData = new FormData();
+      formData.append("userPic", imageValue);
+
+      const res = await axios.patch(`/api/user/v3/userInfo`, formData, {
         params,
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
+
       Swal.fire({
         icon: "success",
         title: "수정이 완료되었습니다.",
@@ -161,12 +166,16 @@ function EditInfoPage() {
   };
 
   const changeImgHandler = e => {
-    console.log(e.target.files[0]);
-    const newProfile = e.target.files[0];
-    setImageValue(newProfile);
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setImageFile(file);
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewImage(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
   };
 
-  const displayImage = previewImage || userData?.pic || "/profile.jpeg";
+  const displayImage = previewImage || userData?.usePic || "/profile.jpeg";
 
   return (
     <div className="h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide bg-white">
@@ -183,12 +192,12 @@ function EditInfoPage() {
       </div>
       <div className="flex flex-col h-dvh justify-around mt-24 gap-10">
         <div className="w-full h-[30%] flex flex-col items-center gap-4">
-          {userData.pic !== null ? (
+          {userData.usePic !== null ? (
             <>
               <label htmlFor="profile">
                 <div className="relative cursor-pointer">
                   <img
-                    src={userData.pic}
+                    src={userData.usePic}
                     alt="프로필 이미지"
                     className="w-32 h-32 rounded-full object-cover"
                   />
@@ -251,7 +260,12 @@ function EditInfoPage() {
             <div className="flex flex-col w-[80%] gap-6 font-medium text-lg h-full text-nowrap">
               <div className="flex items-center gap-2 cursor-pointer">
                 {userData.nickName ? (
-                  <span>{userData.nickName}</span>
+                  <input
+                    type="text"
+                    onChange={changeNickName}
+                    className="flex w-48 border rounded-md px-2"
+                    defaultValue={userData.nickName}
+                  />
                 ) : (
                   <input
                     type="text"
