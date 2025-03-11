@@ -1,8 +1,7 @@
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
-import { debounce } from "lodash";
+import { useEffect, useState } from "react";
 import { IoMdArrowBack, IoMdSearch } from "react-icons/io";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import {
   memberDataAtom,
@@ -14,8 +13,9 @@ import { getCookie } from "../../../components/cookie";
 
 const Seatmate = () => {
   const [userData, setUserData] = useRecoilState(userDataAtom);
-  // const [paymentMember, setPaymentMember] = useRecoilState(memberDataAtom);
-  const [memberData, setMemberData] = useRecoilState(paymentMemberAtom);
+  const [paymentMemberData, setPaymentMemberData] =
+    useRecoilState(paymentMemberAtom);
+  const [memberData, setMemberData] = useRecoilState(memberDataAtom);
   const [newOrderId, setNewOrderId] = useRecoilState(orderIdAtom);
   const [isSearch, setIsSearch] = useState(true);
   const [searchResult, setSearchResult] = useState([]);
@@ -24,13 +24,8 @@ const Seatmate = () => {
   const navigate = useNavigate();
   const userId = sessionStorage.getItem("userId");
   const accessToken = getCookie();
-
-  // 임시
-  const [paymentMember, setPaymentMember] = useState({
-    name: null,
-    uid: null,
-    userId: null,
-  });
+  const { id } = useParams();
+  console.log(memberData);
 
   useEffect(() => {
     const params = {
@@ -47,16 +42,16 @@ const Seatmate = () => {
         console.log(res.data.resultData);
         const result = res.data.resultData;
         setUserData({ ...result });
-        setMemberData(prev => {
-          const loginMemberData = [...prev];
-          loginMemberData[0] = {
-            name: result.name,
-            uid: result.uid,
-            userId: result.userId,
-          };
-          return loginMemberData;
-        });
-        setPaymentMember(prev => {
+        setMemberData(prev => ({
+          ...prev,
+          orderId: parseInt(id),
+          data: [
+            { userId: result.userId, point: 0 },
+            ...prev.data.filter(m => m.userId !== result.userId),
+          ],
+        }));
+
+        setPaymentMemberData(prev => {
           const userIdList = prev.userId || [];
           const isSelected = userIdList.includes(result.userId);
           return {
@@ -147,37 +142,40 @@ const Seatmate = () => {
   };
 
   const changeCheckHandler = e => {
-    const userId = e.userId;
+    const userId = e?.userId;
+    if (!userId) return;
 
-    setPaymentMember(prev => {
-      const userIds = prev.userId || []; // 기본값으로 빈 배열 설정
+    setPaymentMemberData(prev => {
+      const userIds = prev.userId || [];
       const isSelected = userIds.includes(userId);
       return {
         ...prev,
         userId: isSelected
-          ? userIds.filter(id => id !== userId) // 선택 해제
-          : [...userIds, userId], // 선택 추가
+          ? userIds.filter(id => id !== userId)
+          : [...userIds, userId],
       };
     });
 
-    // setMemberData 업데이트
     setMemberData(prev => {
-      const updatedMembers = prev.filter(member => member.userId !== userId);
-      // userId가 없는 경우 새 멤버 추가
-      if (updatedMembers.length === prev.length) {
-        return [...prev, e];
+      const updatedMembers = prev.data.filter(
+        member => member.userId !== userId,
+      );
+
+      if (updatedMembers.length === prev.data.length) {
+        // 멤버 추가 (기본 포인트 0으로 설정)
+        return {
+          ...prev,
+          data: [...prev.data, { userId, point: 0 }],
+        };
       }
-      return updatedMembers;
+
+      // 멤버 삭제
+      return { ...prev, data: updatedMembers };
     });
   };
 
   const nextBtnHandler = () => {
-    navigate(`/user/placetoorder/price/${newOrderId}`, {
-      state: {
-        orderId: newOrderId,
-        paymentMember: paymentMember,
-      },
-    });
+    navigate(`/user/placetoorder/price/${newOrderId}`);
   };
 
   return (
@@ -200,7 +198,7 @@ const Seatmate = () => {
         </div>
       </div>
       <div className="flex w-full justify-end p-4">
-        <div>총 {paymentMember?.userId?.length}명 선택 중</div>
+        <div>총 {paymentMemberData?.userId?.length}명 선택 중</div>
       </div>
       <div className="w-full h-dvh ">
         <div className="flex w-full h-[6%] items-center px-6 border-b border-gray">
@@ -224,28 +222,36 @@ const Seatmate = () => {
               value={inputValue}
             />
             <IoMdSearch
-              onClick={() => searchMember()}
+              onClick={() => {
+                if (inputValue.trim()) searchMember(inputValue);
+              }}
               className="flex w-[10%] text-2xl"
             />
           </div>
-          <div className="flex flex-col w-full h-full">
-            {searchResult.map(item => (
-              <div
-                key={item.userId}
-                className="flex w-full h-[10%] items-center gap-4 px-6 py-2 border-b border-gray"
-              >
-                <input
-                  type="checkbox"
-                  className="w-5 h-5"
-                  id={item.userId}
-                  value={item.userId}
-                  onChange={() => changeCheckHandler(item)}
-                />
-                <label className="text-xl" htmlFor={item.userId}>
-                  {item.name}({item.uid})
-                </label>
+          <div className="flex flex-col w-full pb-20">
+            {searchResult.length > 0 ? (
+              searchResult.map(item => (
+                <div
+                  key={item.userId}
+                  className="flex w-full h-14 items-center gap-4 px-6 py-2 border-b border-gray"
+                >
+                  <input
+                    type="checkbox"
+                    className="w-5 h-5"
+                    id={item.userId}
+                    value={item.userId}
+                    onChange={() => changeCheckHandler(item)}
+                  />
+                  <label className="text-xl" htmlFor={item.userId}>
+                    {item.name}({item.uid})
+                  </label>
+                </div>
+              ))
+            ) : (
+              <div className="flex justify-center items-center h-40 text-gray-500 text-lg">
+                {inputValue}에 대한 검색 결과가 없습니다.
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>

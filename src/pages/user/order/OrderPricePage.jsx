@@ -5,76 +5,43 @@ import { useLocation } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import Swal from "sweetalert2";
-import { orderIdAtom, paymentMemberAtom } from "../../../atoms/restaurantAtom";
+import {
+  memberDataAtom,
+  orderIdAtom,
+  paymentMemberAtom,
+} from "../../../atoms/restaurantAtom";
 import { userDataAtom } from "../../../atoms/userAtom";
 import { getCookie } from "../../../components/cookie";
+import { useParams } from "react-router";
 
 const PriceOrderPage = () => {
   const [priceList, setPriceList] = useState({});
   const [inputValues, setInputValues] = useState({});
   const [isCompleted, setIsCompleted] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
-  const [newOrderId, setNewOrderId] = useRecoilState(orderIdAtom);
   const [userData, setUserData] = useRecoilState(userDataAtom);
-  // const [memberData, setMemberData] = useRecoilState(memberDataAtom);
+  const [memberData, setMemberData] = useRecoilState(memberDataAtom);
   const [paymentMemberData, setPaymentMemberData] =
     useRecoilState(paymentMemberAtom);
   const navigate = useNavigate();
   const userId = sessionStorage.getItem("userId");
   const accessToken = getCookie();
-  const { state } = useLocation();
-
-  // 수정용
-  const [memberData, setMemberData] = useState({
-    orderId: 0,
-    data: [
-      {
-        userId: state.paymentMember.userId,
-        point: 0,
-      },
-    ],
-  });
-
-  console.log(state.paymentMember);
-  console.log(memberData);
+  const { id } = useParams();
 
   useEffect(() => {
     const params = {
-      userId: userId,
-    };
-    const getOrderId = async () => {
-      try {
-        const res = await axios.get(`/api/user/orderId`, {
-          params,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        console.log(res.data.resultData);
-        const result = res.data.resultData;
-        setMemberData({ ...memberData, orderId: result });
-        setNewOrderId(result);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getOrderId();
-  }, [newOrderId]);
-
-  useEffect(() => {
-    const params = {
-      orderId: newOrderId,
+      orderId: memberData.orderId,
     };
     const getTotalPrice = async () => {
       try {
-        const res = await axios.get(`/api/order`, {
+        const res = await axios.get(`/api/user/activeOrderCheck`, {
           params,
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
         console.log(res.data.resultData);
-        const result = res.data.resultData.totalPrice;
+        const result = res.data.resultData.totalMenuCost;
         setTotalPrice(result);
       } catch (error) {
         console.log(error);
@@ -85,13 +52,8 @@ const PriceOrderPage = () => {
 
   const postPaymentApproval = async () => {
     const payload = {
-      orderId: newOrderId,
-      data: [
-        {
-          userId: memberData.userId || userId,
-          point: memberData.point,
-        },
-      ],
+      ...memberData,
+      orderId: id,
     };
     console.log(payload);
 
@@ -105,7 +67,7 @@ const PriceOrderPage = () => {
       const result = res.data.resultData;
       if (result >= 0) {
         console.log("결제 승인 요청을 보냈습니다");
-        navigate(`/user/placetoorder/request/${newOrderId}`);
+        navigate(`/user/placetoorder/request/${id}`);
       } else {
         console.log("요청에 실패했습니다. 다시 시도해주세요");
       }
@@ -124,30 +86,20 @@ const PriceOrderPage = () => {
   };
 
   const inputApprovalHandler = userId => {
-    setIsCompleted(prev => {
-      const updatedStatus = {
-        ...prev,
-        [userId]: !prev[userId],
-      };
+    setIsCompleted(prev => ({
+      ...prev,
+      [userId]: !prev[userId],
+    }));
 
-      if (prev[userId]) {
-        setTotalPrice(prevPrice => prevPrice + Number(inputValues[userId]));
-      } else {
-        setTotalPrice(prevPrice => prevPrice - Number(inputValues[userId]));
-      }
-      return updatedStatus;
-    });
-
-    const inputNUmber = parseInt(inputValues[userId]);
+    const inputNumber = parseInt(inputValues[userId], 10) || 0;
 
     setMemberData(prev => ({
       ...prev,
-      point: [...prev.point, inputNUmber],
+      data: [
+        ...prev.data.filter(item => item.userId !== userId), // 기존 userId 제거
+        { userId, point: inputNumber }, // 새로운 값 추가
+      ],
     }));
-  };
-
-  const addMemberHandler = () => {
-    navigate(`/user/placetoorder/member/${newOrderId}`);
   };
 
   const backArrow = () => {
@@ -172,6 +124,7 @@ const PriceOrderPage = () => {
   };
 
   console.log(paymentMemberData);
+  console.log(memberData);
 
   return (
     <div className="w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
@@ -192,7 +145,7 @@ const PriceOrderPage = () => {
           <span
             className={`text-end px-2 ${Math.sign(parseInt(totalPrice)) === -1 ? "text-red" : "text-black"}`}
           >
-            {totalPrice?.toLocaleString("ko-KR")}
+            {totalPrice?.toLocaleString("ko-KR")}원
           </span>
         </div>
         {Array.isArray(paymentMemberData) &&
