@@ -265,14 +265,11 @@ function MenuSelectPage() {
   }, []);
 
   useEffect(() => {
-    // console.log(isReserve);
-    // console.log("시간 : ", time, "인원 : ", count);
     const sessionUserId = window.sessionStorage.getItem("userId");
     if (isReserve) {
       const today = dayjs(new Date()).format("YYYY-MM-DD");
-      const reserveTime = `${today} ${time}`;
-      console.log("현재 시간", reserveTime);
-      console.log(postMenuList);
+      const reserveTime = `${today}T${time}`;
+
       setPostData({
         userId: parseInt(sessionUserId),
         restaurantId: parseInt(id),

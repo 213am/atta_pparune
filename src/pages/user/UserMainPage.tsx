@@ -166,7 +166,6 @@ const UserMainPage = (): JSX.Element => {
             disableOnInteraction: false,
           }}
           modules={[Pagination, Autoplay]}
-          className="mySwiper"
         >
           {swiperData.map((item, index) => (
             <SwiperSlide
@@ -243,7 +242,7 @@ const UserMainPage = (): JSX.Element => {
             </p>
           </div>
         </div>
-        <div className="w-full px-4 py-4 flex flex-wrap justify-between pb-32">
+        <div className="w-full px-4 py-4 flex flex-wrap pb-32 gap-4">
           {restaurantList.map((data, index) => (
             <div
               className="w-[calc(50%_-_0.5rem)] pb-3 cursor-pointer"

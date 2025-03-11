@@ -94,7 +94,7 @@ const Seatmate = () => {
           },
         );
 
-        const result = res.data.resultData.memberList.filter(
+        const result = res.data.resultData.filter(
           item => item.userId !== userData.userId,
         );
         setSearchResult([...result]);
@@ -111,9 +111,8 @@ const Seatmate = () => {
       companyId: userData.companyId,
       page: 1,
       size: 30,
-      name: name,
+      searchText: name,
     };
-    console.log(params);
 
     try {
       const res = await axios.get(
@@ -125,7 +124,8 @@ const Seatmate = () => {
           },
         },
       );
-      const result = res.data.resultData.memberList.filter(
+
+      const result = res.data.resultData.filter(
         data => data.userId !== userData.userId,
       );
       setSearchResult([...result]);

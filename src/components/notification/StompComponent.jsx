@@ -176,7 +176,7 @@ export const subscribeStoreLogin = restaurantId => {
         Swal.fire({
           title: "새로운 주문이 들어왔습니다!",
           icon: "question",
-          showCancelButton: true, //
+          showCancelButton: true,
           confirmButtonColor: "#79BAF2",
           cancelButtonColor: "#E44B58",
           confirmButtonText: "확인",

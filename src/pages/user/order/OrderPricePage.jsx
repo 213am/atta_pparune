@@ -1,18 +1,13 @@
 import axios from "axios";
-import { _ } from "lodash";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoMdAddCircleOutline, IoMdArrowBack } from "react-icons/io";
 import { useLocation } from "react-router";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useResetRecoilState } from "recoil";
-import {
-  memberDataAtom,
-  orderIdAtom,
-  paymentMemberAtom,
-} from "../../../atoms/restaurantAtom";
+import { useRecoilState } from "recoil";
+import Swal from "sweetalert2";
+import { orderIdAtom, paymentMemberAtom } from "../../../atoms/restaurantAtom";
 import { userDataAtom } from "../../../atoms/userAtom";
 import { getCookie } from "../../../components/cookie";
-import Swal from "sweetalert2";
 
 const PriceOrderPage = () => {
   const [priceList, setPriceList] = useState({});
@@ -32,11 +27,16 @@ const PriceOrderPage = () => {
   // 수정용
   const [memberData, setMemberData] = useState({
     orderId: 0,
-    userId: state.paymentMember.userId,
-    point: [],
+    data: [
+      {
+        userId: state.paymentMember.userId,
+        point: 0,
+      },
+    ],
   });
 
   console.log(state.paymentMember);
+  console.log(memberData);
 
   useEffect(() => {
     const params = {
@@ -86,8 +86,12 @@ const PriceOrderPage = () => {
   const postPaymentApproval = async () => {
     const payload = {
       orderId: newOrderId,
-      userId: memberData.userId || userId,
-      point: memberData.point,
+      data: [
+        {
+          userId: memberData.userId || userId,
+          point: memberData.point,
+        },
+      ],
     };
     console.log(payload);
 
