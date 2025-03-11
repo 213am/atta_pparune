@@ -151,7 +151,7 @@ function PolicyPage() {
   const { Modal, open, close } = useModal({ title: titleChange() });
 
   return (
-    <div style={{ textAlign: "center" }}>
+    <div className="text-center bg-white h-[100vh]">
       <HeaderDiv>
         <CloseDiv>
           <IoMdArrowBack

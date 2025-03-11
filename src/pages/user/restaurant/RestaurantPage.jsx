@@ -11,6 +11,8 @@ import {
 } from "react-kakao-maps-sdk";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper-bundle.css";
 import { locationAtom } from "../../../atoms/userAtom";
 import { DOCKER_URL } from "../../../constants/url";
 
@@ -440,7 +442,7 @@ function RestaurantPage() {
         </FlexDiv>
 
         <div
-          className="scrollable-content scrollbar-hide"
+          className="scrollable-content scrollbar-hide mt-3"
           style={{
             maxHeight: height === 250 ? 180 : 840,
             overflowY: "scroll",
@@ -453,6 +455,7 @@ function RestaurantPage() {
               onClick={() =>
                 navigate(`/user/restaurant/detail/${item.restaurantId}`)
               }
+              className="mb-5 cursor-pointer"
             >
               <FlexDiv>
                 <span>{item.restaurantName}</span>
@@ -477,36 +480,37 @@ function RestaurantPage() {
                 </span>
               </FlexDiv>
 
-              <FlexDiv
-                className="scrollbar-hide"
-                style={{ overflowX: "scroll", marginBottom: 20 }}
-              >
+              <Swiper slidesPerView={3} spaceBetween={30}>
                 {item.restaurantArroundPicList?.map((file, index) =>
                   file ? (
-                    <img
-                      key={index}
-                      src={`${DOCKER_URL}/pic/restaurant/${item.restaurantId}/${file?.filePath}`}
-                      style={{
-                        minWidth: 140,
-                        width: 140,
-                        height: 140,
-                        objectFit: "cover",
-                      }}
-                    />
+                    <SwiperSlide key={index}>
+                      <img
+                        key={index}
+                        src={`${DOCKER_URL}/pic/restaurant/${item.restaurantId}/${file?.filePath}`}
+                        style={{
+                          minWidth: 140,
+                          width: 140,
+                          height: 140,
+                          objectFit: "cover",
+                        }}
+                      />
+                    </SwiperSlide>
                   ) : (
-                    <img
-                      key={index}
-                      src={"/restaurant_default.png"}
-                      style={{
-                        minWidth: 140,
-                        width: 140,
-                        height: 140,
-                        objectFit: "cover",
-                      }}
-                    />
+                    <SwiperSlide key={index}>
+                      <img
+                        key={index}
+                        src={"/restaurant_default.png"}
+                        style={{
+                          minWidth: 140,
+                          width: 140,
+                          height: 140,
+                          objectFit: "cover",
+                        }}
+                      />
+                    </SwiperSlide>
                   ),
                 )}
-              </FlexDiv>
+              </Swiper>
             </div>
           ))}
         </div>

@@ -1,12 +1,14 @@
 import styled from "@emotion/styled";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { PiSirenFill } from "react-icons/pi";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import SideBar from "../SideBar";
+import axios from "axios";
+import { getCookie } from "../../../components/cookie";
 
 const LayoutDiv = styled.div`
   display: flex;
@@ -45,6 +47,18 @@ const SideBarRightDiv = styled.div`
   flex-direction: column;
 `;
 
+interface ReviewData {
+  nickName: string;
+  userPic: string;
+  rating: number;
+  reviewText: string;
+  createdAt: string;
+  reviewPic: string[];
+  menuName: string[];
+  commentText: string;
+  commentCreatedAt: string;
+}
+
 function StoreReviewPage(): JSX.Element {
   // 별점 상태
   const rating = 5;
@@ -54,9 +68,59 @@ function StoreReviewPage(): JSX.Element {
   const [_coment, setComent] = useState("");
   // 수정하기 버튼
   const [edit, setEdit] = useState(false);
+  const [review, setReview] = useState<ReviewData>();
 
   const today = dayjs().format("YYYY-MM-DD");
   const yesterday = dayjs(today).add(-1, "day").format("YYYY-MM-DD");
+
+  const accessToken = getCookie();
+  const adminId = sessionStorage.getItem("adminId");
+  const restaurantId = sessionStorage.getItem("restaurantId");
+
+  const getBlackList = async () => {
+    const params = {
+      adminId,
+      restaurantId,
+    };
+
+    try {
+      const res = await axios.get("/api/admin/restaurant/v3/black-list", {
+        params,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      console.log("블랙리스트 조회 완료", res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getReview = async () => {
+    const params = {
+      restaurantId,
+    };
+    try {
+      const res = await axios.get("/api/restaurant/v3/review", { params });
+      console.log("리뷰", res.data.resultData);
+      setReview(res.data.resultData.reviews);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getBlackList();
+    getReview();
+    console.log(accessToken);
+    console.log("admin", adminId);
+    console.log("rest", restaurantId);
+  }, []);
+
+  useEffect(() => {
+    console.log("가져온 데이터??", review);
+  }, [review]);
 
   return (
     <div>
@@ -79,6 +143,7 @@ function StoreReviewPage(): JSX.Element {
           </div>
 
           {/* map 사용하기 */}
+          {/* {review?.map((item, index) => <div key={index}>{item.nickName}</div>)} */}
           <div>
             <div className="flex gap-5">
               <div>

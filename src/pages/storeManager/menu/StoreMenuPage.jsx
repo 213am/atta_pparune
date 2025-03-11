@@ -1,17 +1,17 @@
 import styled from "@emotion/styled";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { IoMdClose } from "react-icons/io";
-import SideBar from "../SideBar";
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+import SideBar from "../SideBar";
 
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 import { getCookie } from "../../../components/cookie";
 import useModal from "../../../components/useModal";
-import Swal from "sweetalert2";
 import { DOCKER_URL } from "../../../constants/url";
 
 const LayoutDiv = styled.div`
@@ -28,7 +28,6 @@ const ContentDiv = styled.div`
   flex-wrap: wrap;
   padding: 20px 0;
   padding-bottom: 30px;
-  border-radius: 10px;
   width: 830px;
   max-height: calc(100vh - 60px);
   overflow-y: auto;
@@ -69,6 +68,10 @@ const MenuImg = styled.img`
 const MenuNameDiv = styled.div`
   margin-top: 5px;
   font-size: 20px;
+  overflow: hidden;
+  max-height: 30px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 const MenuCostDiv = styled.div`
   margin-top: 5px;
@@ -189,7 +192,7 @@ function StoreMenuPage() {
   const deleteMenu = async (cateId, menuId) => {
     try {
       await axios.delete(
-        `/api/restaurant/menu?categoryId=${cateId}&menuId=${menuId}`,
+        `/api/admin/restaurant/v3/menu?categoryId=${cateId}&menuId=${menuId}&restaurantId=${restaurantId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -197,8 +200,8 @@ function StoreMenuPage() {
           },
         },
       );
-
       getStoreInfo();
+      Swal.fire("메뉴가 삭제 되었습니다.", "", "success");
     } catch (error) {
       console.log(error);
     }
@@ -206,7 +209,7 @@ function StoreMenuPage() {
 
   const postMenu = async data => {
     try {
-      await axios.post("/api/restaurant/menu", data, {
+      await axios.post("/api/admin/restaurant/v3/menu", data, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "multipart/form-data",
@@ -229,7 +232,7 @@ function StoreMenuPage() {
 
   const patchImg = async data => {
     try {
-      await axios.patch("/api/pic/restaurant/menu", data, {
+      await axios.patch("/api/admin/restaurant/v3/pic/menu", data, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "multipart/form-data",
@@ -242,7 +245,7 @@ function StoreMenuPage() {
 
   const patchMenu = async data => {
     try {
-      await axios.patch("/api/restaurant/menu", data, {
+      await axios.patch("/api/admin/restaurant/menu", data, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -279,7 +282,6 @@ function StoreMenuPage() {
     }).then(result => {
       if (result.isConfirmed) {
         deleteMenu(cateId, menuId);
-        Swal.fire("메뉴가 삭제 되었습니다.", "", "success");
       }
     });
   };
@@ -348,41 +350,22 @@ function StoreMenuPage() {
     <div>
       <LayoutDiv>
         <SideBar />
-        <div style={{ padding: "10px 10px" }}>
+        <div className="p-[10px]">
           <ContentDiv className="scrollbar-hide">
             {menuCateList.map(item => (
               <div key={item.categoryId}>
                 <TitleDiv>{item.categoryName}</TitleDiv>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 40,
-                    flexWrap: "wrap",
-                    marginBottom: 30,
-                  }}
-                >
+                <div className="flex gap-[40px] flex-wrap mb-[30px]">
                   {item.menuList.map(menu => (
                     <MenuDiv key={menu.menuId}>
                       <MenuImg
                         src={`${DOCKER_URL}/pic/menu/${menu.menuId}/${menu?.menuPic}`}
                         alt="없음"
                       />
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
-                      >
+                      <div className="flex items-center w-[210px] justify-between">
                         <MenuNameDiv>{menu.menuName}</MenuNameDiv>
                         {menuEdit ? (
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 5,
-                            }}
-                          >
+                          <div className="flex items-center gap-[5px]">
                             <FiEdit
                               onClick={() => {
                                 setPatchMenuData(prev => ({
@@ -403,21 +386,13 @@ function StoreMenuPage() {
                                 );
                                 open();
                               }}
-                              style={{
-                                width: 20,
-                                height: 20,
-                                cursor: "pointer",
-                              }}
+                              className="w-5 h-5 cursor-pointer"
                             />
                             <IoMdClose
                               onClick={() =>
                                 handleClickDelete(item.categoryId, menu.menuId)
                               }
-                              style={{
-                                width: 25,
-                                height: 25,
-                                cursor: "pointer",
-                              }}
+                              className="w-6 h-6 cursor-pointer"
                             />
                           </div>
                         ) : (
@@ -433,12 +408,7 @@ function StoreMenuPage() {
           </ContentDiv>
         </div>
         <SideBarRightDiv>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
+          <div className="flex justify-center">
             {/* <MenuImg
               style={{ borderRadius: 100 }}
               src={`${DOCKER_URL}/pic/restaurant/${getData.restaurantId}/${getData.restaurantPics?.filePath}`}
@@ -550,6 +520,7 @@ function StoreMenuPage() {
                 <input
                   type="text"
                   placeholder="카테고리 이름"
+                  readOnly
                   {...register("categoryName")}
                 />
               </div>
