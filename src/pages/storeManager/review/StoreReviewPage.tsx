@@ -68,7 +68,9 @@ function StoreReviewPage(): JSX.Element {
   const [_coment, setComent] = useState("");
   // 수정하기 버튼
   const [edit, setEdit] = useState(false);
-  const [review, setReview] = useState<ReviewData>();
+  // 리뷰내용 State
+  const [review, setReview] = useState<ReviewData[]>([]);
+  const [avgRating, setAvgRating] = useState(0);
 
   const today = dayjs().format("YYYY-MM-DD");
   const yesterday = dayjs(today).add(-1, "day").format("YYYY-MM-DD");
@@ -77,6 +79,7 @@ function StoreReviewPage(): JSX.Element {
   const adminId = sessionStorage.getItem("adminId");
   const restaurantId = sessionStorage.getItem("restaurantId");
 
+  // 블랙리스트 조회
   const getBlackList = async () => {
     const params = {
       adminId,
@@ -97,6 +100,7 @@ function StoreReviewPage(): JSX.Element {
     }
   };
 
+  // 리뷰 조회
   const getReview = async () => {
     const params = {
       restaurantId,
@@ -104,7 +108,25 @@ function StoreReviewPage(): JSX.Element {
     try {
       const res = await axios.get("/api/restaurant/v3/review", { params });
       console.log("리뷰", res.data.resultData);
+      setAvgRating(res.data.resultData.avgRating);
       setReview(res.data.resultData.reviews);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 리뷰 삭제 요청
+  const patchReviewReq = async () => {
+    const params = {
+      adminId,
+      orderId: 0,
+    };
+    try {
+      const res = await axios.patch(
+        "/api/admin/restaurant/v3/review/del-request",
+        { params },
+      );
+      console.log(res);
     } catch (error) {
       console.log(error);
     }
@@ -113,9 +135,9 @@ function StoreReviewPage(): JSX.Element {
   useEffect(() => {
     getBlackList();
     getReview();
-    console.log(accessToken);
-    console.log("admin", adminId);
-    console.log("rest", restaurantId);
+    // console.log(accessToken);
+    // console.log("admin", adminId);
+    // console.log("rest", restaurantId);
   }, []);
 
   useEffect(() => {
@@ -132,8 +154,8 @@ function StoreReviewPage(): JSX.Element {
           <div className="mb-2 text-[18px]">전체 별점</div>
           <div className="flex gap-3 items-center mb-3">
             <FaStar className="text-yellow" />
-            <div className="font-bold">4.8</div>
-            <div className="text-darkGray">(총 리뷰 1,111개)</div>
+            <div className="font-bold">{avgRating.toFixed(1)}</div>
+            <div className="text-darkGray">(총 리뷰 {review.length}개)</div>
           </div>
           <div className="inline-flex gap-3 items-center border border-gray px-4 py-2 rounded-[5px] mb-10">
             <div className="text-darkGray">조회기간</div>
@@ -143,7 +165,108 @@ function StoreReviewPage(): JSX.Element {
           </div>
 
           {/* map 사용하기 */}
-          {/* {review?.map((item, index) => <div key={index}>{item.nickName}</div>)} */}
+          {review.map((item, index) => (
+            <div key={index}>
+              <div className="flex gap-5">
+                <div>
+                  <div className="font-bold mb-2">{item.nickName}</div>
+                  <div className="flex gap-3 items-center">
+                    <div className="font-bold text-[20px]">
+                      {item.rating.toFixed(1)}
+                    </div>
+                    <div className="flex gap-2">
+                      {[...Array(5)].map((_, index) => {
+                        const starIndex = index + 1;
+                        return (
+                          <FaStar
+                            key={starIndex}
+                            className={`w-[20px] h-[20px] ${starIndex <= item.rating ? "text-yellow" : "text-gray"}`}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div className="mt-2 text-darkGray">
+                    {dayjs(item.createdAt).format("YYYY-MM-DD")}
+                  </div>
+                </div>
+                <div>
+                  <div>{item.reviewText}</div>
+                  <div className="flex w-[300px] my-3 gap-1">
+                    {item.reviewPic.map(item => (
+                      <img
+                        src={item}
+                        className="flex w-1/3 rounded-[5px]"
+                        alt=""
+                      />
+                    ))}
+                    {/* <img
+                      src="/swiper1.webp"
+                      className="flex w-1/3 rounded-[5px]"
+                      alt=""
+                    />
+                    <img
+                      src="/swiper2.webp"
+                      className="flex w-1/3 rounded-[5px]"
+                      alt=""
+                    />
+                    <img
+                      src="/swiper3.webp"
+                      className="flex w-1/3 rounded-[5px]"
+                      alt=""
+                    /> */}
+                  </div>
+                  <div className="mb-2 w-[435px] flex flex-wrap gap-2">
+                    {item.menuName.map(item => (
+                      <div className="border border-slate-300 px-3 py-1 rounded-full inline">
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                  {!isClick ? (
+                    <button
+                      className="px-4 py-2 bg-primary text-white rounded-sm"
+                      onClick={() => setIsClick(true)}
+                    >
+                      댓글쓰기
+                    </button>
+                  ) : (
+                    <div>
+                      <ReactQuill
+                        className="h-[150px]"
+                        placeholder="소중한 리뷰에 답글을 남겨보세요!"
+                        modules={{
+                          toolbar: false,
+                        }}
+                        readOnly={false}
+                        onChange={e => setComent(e)}
+                      />
+                      <div className="flex justify-end gap-3 mt-2">
+                        <button
+                          className="bg-gray py-1 px-3 rounded-[5px]"
+                          onClick={() => setIsClick(false)}
+                        >
+                          취소
+                        </button>
+                        <button className="bg-primary text-white py-1 px-3 rounded-[5px]">
+                          등록
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div
+                  className={
+                    "flex gap-2 items-center cursor-pointer ml-5 text-red h-4"
+                  }
+                >
+                  <PiSirenFill className="w-[20px] h-[20px]" />
+                  <div>신고하기</div>
+                </div>
+              </div>
+              <div className="border-gray border my-5"></div>
+            </div>
+          ))}
           <div>
             <div className="flex gap-5">
               <div>
