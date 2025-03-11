@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { IoMdArrowBack } from "react-icons/io";
-import { IoIosArrowForward } from "react-icons/io";
+import { useEffect } from "react";
+import { IoIosArrowForward, IoMdArrowBack } from "react-icons/io";
 import { MdOutlineMail } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 
 import Swal from "sweetalert2";
-import { loginAtom, userDataAtom } from "../../../atoms/userAtom";
 import { isWhiteIcon } from "../../../atoms/noticeAtom";
+import { loginAtom, userDataAtom } from "../../../atoms/userAtom";
 import {
   getCookie,
   removeCookie,
   removeCookieRefresh,
 } from "../../../components/cookie";
-import Notification from "../../../components/notification/NotificationIcon";
 import MenuBar from "../../../components/MenuBar";
+import Notification from "../../../components/notification/NotificationIcon";
+import { USER_IMAGE_URL } from "../../../constants/url";
 
 function IndexPage() {
   const navigate = useNavigate();
@@ -95,17 +95,17 @@ function IndexPage() {
       </div>
       <div className="flex flex-col h-dvh justify-around mt-24 gap-10">
         <div className="w-full h-[30%] flex flex-col items-center gap-4">
-          {userData.usePic !== null ? (
+          {userData.userPic ? (
             <img
-              src={userData.usePic}
+              src={`${USER_IMAGE_URL}/${userData.userId}/${userData.userPic}`}
               alt="프로필 이미지"
-              className="w-32 rounded-full bg-auto"
+              className="w-32 h-32 rounded-full object-cover"
             />
           ) : (
             <img
               src="/profile.jpeg"
               alt="프로필 이미지"
-              className="w-32 rounded-full bg-auto"
+              className="w-32 h-32 rounded-full object-cover"
             />
           )}
           <div className="flex items-center pointer-events-none">

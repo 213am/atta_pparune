@@ -17,7 +17,7 @@ export const userDataAtom = atom({
     phone: "",
     point: 0,
     uid: "",
-    usePic: null,
+    userPic: null,
     userId: 0,
   },
 });

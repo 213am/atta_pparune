@@ -1,10 +1,16 @@
 import styled from "@emotion/styled";
+import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { FaCameraRetro, FaCheckCircle, FaStar } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
+import { getCookie } from "../../../components/cookie";
+// 스와이퍼
+import "swiper/swiper-bundle.css";
+import { Autoplay, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 interface Size {
   width?: number;
@@ -42,6 +48,7 @@ function WriteReview() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   // 별점 상태
   const [rating, setRating] = useState(0);
+  const accessToken = getCookie();
 
   const addImgHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const inputfile = e.target.files && e.target.files;
@@ -56,6 +63,18 @@ function WriteReview() {
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
+    }
+  };
+
+  const postReviewHandler = async () => {
+    try {
+      const res = await axios.post("/api/user/v3/review", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -136,27 +155,24 @@ function WriteReview() {
               onChange={e => addImgHandler(e)}
               ref={fileInputRef}
             />
-            <div className="flex overflow-x-auto gap-4">
-              {preview.map((url, index) => (
-                <IconDiv
-                  key={index}
-                  width={85}
-                  height={85}
-                  className="relative"
-                >
-                  <img
-                    src={url}
-                    alt={`preview-${index}`}
-                    className="w-full h-full"
-                  />
-                  <div className="w-[24px] h-[24px] cursor-pointer absolute top-0 right-0 rounded-full bg-black text-white p-[2px]">
-                    <IoMdClose
-                      onClick={() => deleteImg(url)}
-                      className="w-full h-full"
+            <div className="flex w-full">
+              <Swiper slidesPerView={3} spaceBetween={"5px"}>
+                {preview.map((url, index) => (
+                  <SwiperSlide key={index}>
+                    <img
+                      src={url}
+                      alt={`preview-${index}`}
+                      className="w-32 h-24 object-cover border border-slate-300"
                     />
-                  </div>
-                </IconDiv>
-              ))}
+                    <div className="w-[24px] h-[24px] cursor-pointer absolute top-0 right-0 rounded-full bg-black text-white p-[2px]">
+                      <IoMdClose
+                        onClick={() => deleteImg(url)}
+                        className="w-[90%] h-full"
+                      />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             </div>
           </div>
           <div className="mt-5 flex justify-between mr-5 items-center">

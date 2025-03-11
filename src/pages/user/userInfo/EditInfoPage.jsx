@@ -1,11 +1,11 @@
 import axios from "axios";
+import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 import { FaCameraRetro } from "react-icons/fa";
 import { IoIosArrowForward, IoMdArrowBack } from "react-icons/io";
 import { MdOutlineMail } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { debounce } from "lodash";
 import Swal from "sweetalert2";
 import { isWhiteIcon } from "../../../atoms/noticeAtom";
 import { loginAtom, userDataAtom } from "../../../atoms/userAtom";
@@ -16,6 +16,7 @@ import {
   removeCookieRefresh,
 } from "../../../components/cookie";
 import Notification from "../../../components/notification/NotificationIcon";
+import { USER_IMAGE_URL } from "../../../constants/url";
 
 function EditInfoPage() {
   const navigate = useNavigate();
@@ -55,10 +56,10 @@ function EditInfoPage() {
             headers: { Authorization: `Bearer ${accessToken}` },
           });
           const resultData = res.data.resultData;
-          const phoneNumber = resultData.phone
-            .replace(/[^0-9]/g, "")
-            .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
-            .replace(/(-{1,2})$/g, "");
+          const phoneNumber = resultData.phone;
+          // .replace(/[^0-9]/g, "")
+          // .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
+          // .replace(/(-{1,2})$/g, "");
           const pointParse = resultData.point.toLocaleString("ko-KR");
           console.log(resultData);
 
@@ -100,11 +101,15 @@ function EditInfoPage() {
         phone: inputPhone || userData.phone,
       };
 
+      const blobData = new Blob([JSON.stringify(params)], {
+        type: "application/json",
+      });
+
       const formData = new FormData();
+      formData.append("req", blobData);
       formData.append("userPic", imageValue);
 
       const res = await axios.patch(`/api/user/v3/userInfo`, formData, {
-        params,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -116,7 +121,7 @@ function EditInfoPage() {
         showConfirmButton: false,
         timer: 1500,
       });
-      setUserData({ ...userData, ...payload });
+      setUserData({ ...userData });
       navigate("/user/userInfo");
     } catch (error) {
       console.error(error);
@@ -169,13 +174,14 @@ function EditInfoPage() {
     const file = e.target.files[0];
     if (!file) return;
 
-    setImageFile(file);
+    setImageValue(file);
     const objectUrl = URL.createObjectURL(file);
     setPreviewImage(objectUrl);
     return () => URL.revokeObjectURL(objectUrl);
   };
 
-  const displayImage = previewImage || userData?.usePic || "/profile.jpeg";
+  const displayImage =
+    previewImage || `${userData?.userPic}` || "/profile.jpeg";
 
   return (
     <div className="h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide bg-white">
@@ -192,49 +198,24 @@ function EditInfoPage() {
       </div>
       <div className="flex flex-col h-dvh justify-around mt-24 gap-10">
         <div className="w-full h-[30%] flex flex-col items-center gap-4">
-          {userData.usePic !== null ? (
-            <>
-              <label htmlFor="profile">
-                <div className="relative cursor-pointer">
-                  <img
-                    src={userData.usePic}
-                    alt="프로필 이미지"
-                    className="w-32 h-32 rounded-full object-cover"
-                  />
-                  <div className="absolute bottom-0 -right-1 text-xl bg-darkGray p-2 rounded-full border-4 border-white">
-                    <input type="file" className="hidden" />
-                    <FaCameraRetro className="text-white" />
-                  </div>
-                </div>
-              </label>
-              <input
-                id="profile"
-                type="file"
-                className="absolute left-[5000px] hidden"
+          <label htmlFor="profile">
+            <div className="relative cursor-pointer">
+              <img
+                src={`${USER_IMAGE_URL}/${userData.userId}/${displayImage}`}
+                alt="프로필 이미지"
+                className="w-32 h-32 rounded-full object-cover border border-gray shadow-lg"
               />
-            </>
-          ) : (
-            <>
-              <label htmlFor="profile">
-                <div className="relative cursor-pointer">
-                  <img
-                    src={displayImage}
-                    alt="프로필 이미지"
-                    className="w-32 h-32 rounded-full object-cover"
-                  />
-                  <div className="absolute bottom-0 -right-1 text-xl bg-darkGray p-2 rounded-full border-4 border-white">
-                    <FaCameraRetro className="text-white" />
-                  </div>
-                </div>
-              </label>
-              <input
-                id="profile"
-                type="file"
-                className="absolute left-[5000px] hidden"
-                onChange={changeImgHandler}
-              />
-            </>
-          )}
+              <div className="absolute bottom-0 -right-1 text-xl bg-darkGray p-2 rounded-full border-4 border-white">
+                <FaCameraRetro className="text-white" />
+              </div>
+            </div>
+          </label>
+          <input
+            id="profile"
+            type="file"
+            className="absolute left-[5000px] hidden"
+            onChange={changeImgHandler}
+          />
           <div className="flex items-center pointer-events-none">
             <span className="pr-3">사용가능 포인트</span>
             <span className="font-bold text-2xl">{userData.point}</span>
