@@ -6,6 +6,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ImgPreview from "../../../components/ImgPreview";
 import MenuBar from "../../../components/MenuBar";
+import { REVIEW_IMAGE_URL, USER_IMAGE_URL } from "../../../constants/url";
 
 const RestaurantReviewPage = () => {
   const [previewImage, setPreviewImage] = useState(null);
@@ -14,6 +15,7 @@ const RestaurantReviewPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const reviewCnt = location.state.reviewCnt;
+  console.log("orderId 찾기 : ", reviewList);
 
   useEffect(() => {
     const getReviews = async () => {
@@ -68,7 +70,7 @@ const RestaurantReviewPage = () => {
             <div key={index} className="flex w-full items-center gap-2">
               <span className="flex w-[5%]">{item.rating}</span>
               <div
-                className={`flex w-[${(reviewCnt / item.count) * 100}%] h-2.5 rounded-md bg-darkGray after:w-[${(reviewCnt / item.count) * 100}%] after:rounded-md after:bg-yellow`}
+                className={`flex w-[${(item.count / reviewCnt) * 100}%] h-2.5 rounded-md bg-darkGray after:w-[${(item.count / reviewCnt) * 100}%] after:rounded-md after:bg-yellow`}
               />
               <span className="flex w-[10%] text-darkGray">
                 {`${(reviewCnt / item.count) * 100}%`}
@@ -81,11 +83,20 @@ const RestaurantReviewPage = () => {
         {reviewList.reviews?.map((item, index) => (
           <div className="flex flex-col px-10 pt-10 pb-5 gap-3" key={index}>
             <div className="flex gap-3 items-center">
-              <img
-                src={item.userPic || "/profile.jpeg"}
-                alt=""
-                className="flex w-10 h-10 rounded-full"
-              />
+              {item.userPic !== null ? (
+                <img
+                  src={`${USER_IMAGE_URL}/${item.userPic}`}
+                  alt=""
+                  className="flex w-10 h-10 rounded-full"
+                />
+              ) : (
+                <img
+                  src={"/profile.jpeg"}
+                  alt=""
+                  className="flex w-10 h-10 rounded-full"
+                />
+              )}
+
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-1 text-lg pointer-events-none">
                   <span className="font-semibold">{item.nickName}</span>
@@ -109,10 +120,10 @@ const RestaurantReviewPage = () => {
             </div>
 
             <div className="flex w-full cursor-pointer">
-              {item?.reviewPic.map((data, index) => (
+              {item?.reviewPic?.map((data, index) => (
                 <img
                   key={index}
-                  src="/swiper1.jpg"
+                  src={`${REVIEW_IMAGE_URL}/${item.orderId}/${data}`}
                   alt=""
                   className="flex w-1/3"
                   onClick={() => handleImageClick("/swiper1.jpg")}
