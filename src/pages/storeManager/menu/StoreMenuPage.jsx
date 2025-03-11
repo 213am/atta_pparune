@@ -175,6 +175,7 @@ function StoreMenuPage() {
   };
   const { Modal, open } = useModal({ title: titleChange() });
 
+  // 식당 상세정보 보기
   const getStoreInfo = async () => {
     try {
       const res = await axios.get(
@@ -189,6 +190,7 @@ function StoreMenuPage() {
     }
   };
 
+  // 메뉴 삭제
   const deleteMenu = async (cateId, menuId) => {
     try {
       await axios.delete(
@@ -207,6 +209,7 @@ function StoreMenuPage() {
     }
   };
 
+  // 메뉴 추가
   const postMenu = async data => {
     try {
       await axios.post("/api/admin/restaurant/v3/menu", data, {
@@ -244,6 +247,7 @@ function StoreMenuPage() {
     }
   };
 
+  // 메뉴 정보 수정
   const patchMenu = async data => {
     try {
       await axios.patch("/api/admin/restaurant/menu", data, {
@@ -287,6 +291,7 @@ function StoreMenuPage() {
     });
   };
 
+  // 이미지 미리보기
   const handleChangePreview = e => {
     const file = e.target.files[0];
     if (file) {

@@ -1,14 +1,16 @@
 import styled from "@emotion/styled";
+import axios from "axios";
 import dayjs from "dayjs";
+import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { PiSirenFill } from "react-icons/pi";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import SideBar from "../SideBar";
-import axios from "axios";
+import Swal from "sweetalert2";
 import { getCookie } from "../../../components/cookie";
+import SideBar from "../SideBar";
 
 const LayoutDiv = styled.div`
   display: flex;
@@ -48,6 +50,8 @@ const SideBarRightDiv = styled.div`
 `;
 
 interface ReviewData {
+  userId: number;
+  orderId: number;
   nickName: string;
   userPic: string;
   rating: number;
@@ -59,25 +63,37 @@ interface ReviewData {
   commentCreatedAt: string;
 }
 
+interface BlackListData {
+  userId: number;
+  nickName: string;
+  uid: string;
+}
+
 function StoreReviewPage(): JSX.Element {
   // 별점 상태
   const rating = 5;
   // 댓글쓰기 버튼
-  const [isClick, setIsClick] = useState(false);
+  const [isClick, setIsClick] = useState(0);
   // 댓글 정보
-  const [_coment, setComent] = useState("");
+  const [comment, setComment] = useState("");
   // 수정하기 버튼
   const [edit, setEdit] = useState(false);
   // 리뷰내용 State
   const [review, setReview] = useState<ReviewData[]>([]);
+  // 블랙리스트 State
+  const [blackList, setBlackList] = useState<BlackListData[]>([]);
+  // 평균 별점
   const [avgRating, setAvgRating] = useState(0);
 
   const today = dayjs().format("YYYY-MM-DD");
   const yesterday = dayjs(today).add(-1, "day").format("YYYY-MM-DD");
 
   const accessToken = getCookie();
-  const adminId = sessionStorage.getItem("adminId");
-  const restaurantId = sessionStorage.getItem("restaurantId");
+  const adminId = parseInt(sessionStorage.getItem("adminId") as string);
+
+  const restaurantId = parseInt(
+    sessionStorage.getItem("restaurantId") as string,
+  );
 
   // 블랙리스트 조회
   const getBlackList = async () => {
@@ -93,8 +109,8 @@ function StoreReviewPage(): JSX.Element {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-
-      console.log("블랙리스트 조회 완료", res.data);
+      setBlackList(res.data.resultData);
+      console.log("블랙리스트 조회 완료", res.data.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -116,20 +132,172 @@ function StoreReviewPage(): JSX.Element {
   };
 
   // 리뷰 삭제 요청
-  const patchReviewReq = async () => {
-    const params = {
+  const patchReviewReq = async (orderId: number) => {
+    const data = {
       adminId,
-      orderId: 0,
+      orderId,
     };
     try {
       const res = await axios.patch(
         "/api/admin/restaurant/v3/review/del-request",
-        { params },
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
       );
+      Swal.fire({
+        title: "신고가 성공적으로 접수되었습니다.",
+        icon: "success",
+        confirmButtonText: "확인",
+        showConfirmButton: true,
+        allowOutsideClick: false,
+      });
       console.log(res);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  // 리뷰 댓글 등록
+  const postComment = async (orderId: number) => {
+    const data = {
+      adminId,
+      orderId,
+      commentText: comment,
+    };
+    console.log(data);
+    if (comment === "<p><br></p>") {
+      Swal.fire({
+        title: "댓글 내용을 입력해주세요.",
+        icon: "error",
+        allowOutsideClick: false,
+      });
+    } else if (!comment) {
+      Swal.fire({
+        title: "댓글 내용을 입력해주세요.",
+        icon: "error",
+        allowOutsideClick: false,
+      });
+    } else {
+      try {
+        await axios.post("/api/admin/restaurant/v3/review", data, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        Swal.fire({
+          title: "댓글이 등록되었습니다.",
+          icon: "success",
+          confirmButtonText: "확인",
+          showConfirmButton: true,
+          allowOutsideClick: false,
+        });
+        getReview();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  // 블랙리스트 추가
+  const postBlackList = async (userId: number) => {
+    const data = {
+      adminId,
+      restaurantId,
+      userId,
+      reason: "폭언 및 기물파손",
+    };
+    try {
+      await axios.post("/api/admin/restaurant/v3/black-list", data, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      getBlackList();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 리뷰 댓글 삭제
+  const deleteComment = async (orderId: number) => {
+    try {
+      await axios.delete(
+        `/api/admin/restaurant/reviewComment?restaurantId=${restaurantId}&orderId=${orderId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      Swal.fire("댓글이 삭제 되었습니다.", "", "success");
+      getReview();
+      setIsClick(0);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 댓글 삭제 버튼
+  const handleCommentDelete = (id: number) => {
+    Swal.fire({
+      title: "댓글을 삭제하시겠습니까?",
+      text: "삭제한 댓글은 복구할 수 없습니다.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#79BAF2",
+      cancelButtonColor: "#E44B58",
+      confirmButtonText: "확인",
+      cancelButtonText: "취소",
+      reverseButtons: false,
+    }).then(result => {
+      if (result.isConfirmed) {
+        deleteComment(id);
+      }
+    });
+  };
+
+  // 블랙리스트 삭제
+  const deleteBlackList = async (userId: number, nickName: string) => {
+    try {
+      await axios.delete(
+        `/api/admin/restaurant/v3/black-list?adminId=${adminId}&restaurantId=${restaurantId}&userId=${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      Swal.fire(
+        `${nickName}님이 \n 블랙리스트에서 삭제 되었습니다.`,
+        "",
+        "success",
+      );
+      getBlackList();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 블랙리스트 삭제 버튼
+  const handleBlackDelete = (id: number, nickName: string) => {
+    Swal.fire({
+      title: `${nickName}님을 \n 블랙리스트에서 삭제하시겠습니까?`,
+      text: "삭제한 내용은 복구할 수 없습니다.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#79BAF2",
+      cancelButtonColor: "#E44B58",
+      confirmButtonText: "확인",
+      cancelButtonText: "취소",
+      reverseButtons: false,
+    }).then(result => {
+      if (result.isConfirmed) {
+        deleteBlackList(id, nickName);
+      }
+    });
   };
 
   useEffect(() => {
@@ -143,6 +311,10 @@ function StoreReviewPage(): JSX.Element {
   useEffect(() => {
     console.log("가져온 데이터??", review);
   }, [review]);
+
+  useEffect(() => {
+    console.log("댓글", comment);
+  }, [comment]);
 
   return (
     <div>
@@ -223,35 +395,62 @@ function StoreReviewPage(): JSX.Element {
                       </div>
                     ))}
                   </div>
-                  {!isClick ? (
-                    <button
-                      className="px-4 py-2 bg-primary text-white rounded-sm"
-                      onClick={() => setIsClick(true)}
-                    >
-                      댓글쓰기
-                    </button>
+                  {item.commentText ? (
+                    <div className="mt-5 w-[435px]">
+                      <div className="flex gap-3 items-center mb-3">
+                        <div className="font-bold text-[20px]">
+                          내가 남긴 댓글
+                        </div>
+                        <RiDeleteBin6Fill
+                          onClick={() => handleCommentDelete(item.orderId)}
+                          className="cursor-pointer text-[20px]"
+                        />
+                      </div>
+                      <p
+                        className="bg-gray p-4 rounded-[5px] w-"
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(String(item.commentText)),
+                        }}
+                      />
+                    </div>
                   ) : (
                     <div>
-                      <ReactQuill
-                        className="h-[150px]"
-                        placeholder="소중한 리뷰에 답글을 남겨보세요!"
-                        modules={{
-                          toolbar: false,
-                        }}
-                        readOnly={false}
-                        onChange={e => setComent(e)}
-                      />
-                      <div className="flex justify-end gap-3 mt-2">
+                      {isClick !== item.orderId ? (
                         <button
-                          className="bg-gray py-1 px-3 rounded-[5px]"
-                          onClick={() => setIsClick(false)}
+                          className="px-4 py-2 bg-primary text-white rounded-sm"
+                          onClick={() => setIsClick(item.orderId)}
                         >
-                          취소
+                          댓글쓰기
                         </button>
-                        <button className="bg-primary text-white py-1 px-3 rounded-[5px]">
-                          등록
-                        </button>
-                      </div>
+                      ) : (
+                        <div>
+                          <ReactQuill
+                            className="h-[150px] w-[435px]"
+                            placeholder="소중한 리뷰에 답글을 남겨보세요!"
+                            modules={{
+                              toolbar: false,
+                            }}
+                            readOnly={false}
+                            onChange={e => setComment(e)}
+                          />
+                          <div className="flex justify-end gap-3 mt-2">
+                            <button
+                              className="bg-gray py-1 px-3 rounded-[5px]"
+                              onClick={() => setIsClick(0)}
+                            >
+                              취소
+                            </button>
+                            <button
+                              className={
+                                "bg-primary text-white py-1 px-3 rounded-[5px]"
+                              }
+                              onClick={() => postComment(item.orderId)}
+                            >
+                              등록
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -259,6 +458,10 @@ function StoreReviewPage(): JSX.Element {
                   className={
                     "flex gap-2 items-center cursor-pointer ml-5 text-red h-4"
                   }
+                  onClick={() => {
+                    postBlackList(item.userId);
+                    patchReviewReq(item.orderId);
+                  }}
                 >
                   <PiSirenFill className="w-[20px] h-[20px]" />
                   <div>신고하기</div>
@@ -309,10 +512,10 @@ function StoreReviewPage(): JSX.Element {
                 <div className="mb-2">
                   모짜렐라인더 버거-베이컨 세트 1개, 양념감자(양파맛) 2개
                 </div>
-                {!isClick ? (
+                {isClick !== 2 ? (
                   <button
                     className="px-4 py-2 bg-primary text-white rounded-sm"
-                    onClick={() => setIsClick(true)}
+                    onClick={() => setIsClick(2)}
                   >
                     댓글쓰기
                   </button>
@@ -325,12 +528,12 @@ function StoreReviewPage(): JSX.Element {
                         toolbar: false,
                       }}
                       readOnly={false}
-                      onChange={e => setComent(e)}
+                      onChange={e => setComment(e)}
                     />
                     <div className="flex justify-end gap-3 mt-2">
                       <button
                         className="bg-gray py-1 px-3 rounded-[5px]"
-                        onClick={() => setIsClick(false)}
+                        onClick={() => setIsClick(0)}
                       >
                         취소
                       </button>
@@ -355,7 +558,25 @@ function StoreReviewPage(): JSX.Element {
           <TitleDiv className="text-center my-10">블랙리스트 목록</TitleDiv>
           <div className="mx-10 overflow-y-auto scrollbar-hide mb-5">
             {/* map 사용*/}
-            <div>
+            {blackList.map(item => (
+              <div>
+                <div className="flex justify-between mt-2">
+                  <div>
+                    {item.nickName}({item.uid})
+                  </div>
+                  {edit && (
+                    <RiDeleteBin6Fill
+                      onClick={() =>
+                        handleBlackDelete(item.userId, item.nickName)
+                      }
+                      className="cursor-pointer w-5 h-5"
+                    />
+                  )}
+                </div>
+                <div className="border-gray border mt-2"></div>
+              </div>
+            ))}
+            {/* <div>
               <div className="flex justify-between mt-2">
                 <div>배고픈직장인(10001211)</div>
                 {edit && (
@@ -407,7 +628,7 @@ function StoreReviewPage(): JSX.Element {
                 )}
               </div>
               <div className="border-gray border mt-2"></div>
-            </div>
+            </div> */}
           </div>
           <div className="mt-auto mb-5 flex justify-center">
             {edit ? (

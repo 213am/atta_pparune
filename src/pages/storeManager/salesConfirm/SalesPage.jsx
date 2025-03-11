@@ -38,13 +38,13 @@ const TopTitleDiv = styled.div`
 `;
 
 function SalesPage() {
-  const [salesList, setSalesList] = useState([]);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const sessionRestaurantId = sessionStorage.getItem("restaurantId");
-  const accessToken = getCookie();
   const today = dayjs().format("YYYY-MM-DD");
   const tomorrow = dayjs(today).add(1, "day").format("YYYY-MM-DD");
+  const [salesList, setSalesList] = useState([]);
+  const [startDate, setStartDate] = useState(today);
+  const [endDate, setEndDate] = useState(tomorrow);
+  const sessionRestaurantId = sessionStorage.getItem("restaurantId");
+  const accessToken = getCookie();
 
   console.log(startDate);
   console.log(endDate);
@@ -63,7 +63,7 @@ function SalesPage() {
       console.log(params);
 
       try {
-        const res = await axios.get(`/api/restaurant/orderList`, {
+        const res = await axios.get(`/api/admin/restaurant/orderList`, {
           params,
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -93,7 +93,7 @@ function SalesPage() {
       console.log(params);
 
       try {
-        const res = await axios.get(`/api/restaurant/orderList`, {
+        const res = await axios.get(`/api/admin/restaurant/orderList`, {
           params,
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -133,7 +133,6 @@ function SalesPage() {
             className="px-2"
             onChange={e => inputStartDate(e)}
             value={startDate}
-            defaultValue={today}
           />
           <span>~</span>
           <label htmlFor="">종료일</label>
@@ -142,7 +141,6 @@ function SalesPage() {
             className="px-2"
             onChange={e => inputEndDate(e)}
             value={endDate}
-            defaultValue={tomorrow}
           />
         </div>
       </TableTitleDiv>
