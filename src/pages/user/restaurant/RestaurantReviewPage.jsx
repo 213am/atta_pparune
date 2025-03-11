@@ -1,20 +1,19 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { PiSirenFill } from "react-icons/pi";
-import { RiDeleteBin6Fill } from "react-icons/ri";
-import { FaStar } from "react-icons/fa";
-import MenuBar from "../../../components/MenuBar";
-import ImgPreview from "../../../components/ImgPreview";
 import axios from "axios";
 import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { FaStar } from "react-icons/fa";
+import { IoIosArrowBack } from "react-icons/io";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import ImgPreview from "../../../components/ImgPreview";
+import MenuBar from "../../../components/MenuBar";
 
 const RestaurantReviewPage = () => {
   const [previewImage, setPreviewImage] = useState(null);
-  const [rating, setRating] = useState([]);
-  const [reviews, setReviews] = useState([]);
+  const [reviewList, setReviewList] = useState({});
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const reviewCnt = location.state.reviewCnt;
 
   useEffect(() => {
     const getReviews = async () => {
@@ -23,8 +22,8 @@ const RestaurantReviewPage = () => {
           `/api/restaurant/v3/review?restaurantId=${id}`,
         );
         console.log(res.data.resultData);
-        setReviews([...res.data.resultData.reviews]);
-        setRating([...res.data.resultData.ratingCounts]);
+
+        setReviewList({ ...res.data.resultData });
       } catch (error) {
         console.log(error);
       }
@@ -38,8 +37,6 @@ const RestaurantReviewPage = () => {
     setPreviewImage(src);
   };
 
-  console.log(reviews);
-
   return (
     <div className="flex flex-col w-full h-dvh">
       <div className="flex w-full px-4 py-4 justify-between items-center">
@@ -50,7 +47,7 @@ const RestaurantReviewPage = () => {
           <IoIosArrowBack />
         </span>
         <span className="flex w-[80%] justify-center text-lg pointer-events-none">
-          맥도날드 동성로점 리뷰
+          {reviewList.restaurantName} 리뷰
         </span>
         <span className="flex w-[10%] justify-center text-lg pointer-events-none">
           &nbsp;
@@ -61,41 +58,27 @@ const RestaurantReviewPage = () => {
           <div className="flex items-center gap-2">
             <FaStar className="text-yellow text-xl" />
             <span className="text-2xl font-semibold">
-              {rating?.ratingCounts?.rating}
+              {reviewList.avgRating}
             </span>
           </div>
-          <span className="text-sm">리뷰 {rating?.ratingCounts?.count}개</span>
+          <span className="text-sm">리뷰 {reviewCnt}개</span>
         </div>
         <div className="flex flex-col w-[70%] items-center justify-end px-4">
-          <div className="flex w-full items-center gap-2">
-            <span className="flex w-[5%]">5</span>
-            <div className="flex w-[85%] h-2.5 rounded-md bg-darkGray after:w-[85%] after:rounded-s-md after:bg-yellow" />
-            <span className="flex w-[10%] text-darkGray">85%</span>
-          </div>
-          <div className="flex w-full items-center gap-2">
-            <span className="flex w-[5%]">4</span>
-            <div className="flex w-[85%] h-2.5 rounded-md bg-darkGray after:w-[10%] after:rounded-s-md after:bg-yellow" />
-            <span className="flex w-[10%] text-darkGray">10%</span>
-          </div>
-          <div className="flex w-full items-center gap-2">
-            <span className="flex w-[5%]">3</span>
-            <div className="flex w-[85%] h-2.5 rounded-md bg-darkGray after:w-[5%] after:rounded-s-md after:bg-yellow" />
-            <span className="flex w-[10%] text-darkGray">5%</span>
-          </div>
-          <div className="flex w-full items-center gap-2">
-            <span className="flex w-[5%]">2</span>
-            <div className="flex w-[85%] h-2.5 rounded-md bg-darkGray after:w-[3%] after:rounded-s-md after:bg-yellow" />
-            <span className="flex w-[10%] text-darkGray">3%</span>
-          </div>
-          <div className="flex w-full items-center gap-2">
-            <span className="flex w-[5%]">1</span>
-            <div className="flex w-[85%] h-2.5 rounded-md bg-darkGray after:w-[2%] after:rounded-s-md after:bg-yellow" />
-            <span className="flex w-[10%] text-darkGray">2%</span>
-          </div>
+          {reviewList.ratingCounts?.map((item, index) => (
+            <div key={index} className="flex w-full items-center gap-2">
+              <span className="flex w-[5%]">{item.rating}</span>
+              <div
+                className={`flex w-[${(reviewCnt / item.count) * 100}%] h-2.5 rounded-md bg-darkGray after:w-[${(reviewCnt / item.count) * 100}%] after:rounded-md after:bg-yellow`}
+              />
+              <span className="flex w-[10%] text-darkGray">
+                {`${(reviewCnt / item.count) * 100}%`}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
       <div className="flex flex-col w-full pb-24">
-        {reviews.map((item, index) => (
+        {reviewList.reviews?.map((item, index) => (
           <div className="flex flex-col px-10 pt-10 pb-5 gap-3" key={index}>
             <div className="flex gap-3 items-center">
               <img
@@ -178,11 +161,11 @@ const RestaurantReviewPage = () => {
                     <div className="flex items-center p-4 gap-4">
                       <span>사장님</span>
                       <span className="text-sm">
-                        {reviews.commentCreatedAt}
+                        {reviewList.reviews.commentCreatedAt}
                       </span>
                     </div>
                     <div className="flex p-4">
-                      <span>{reviews.commentText}</span>
+                      <span>{reviewList.reviews.commentText}</span>
                     </div>
                   </div>
                 </div>
