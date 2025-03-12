@@ -53,16 +53,16 @@ export const orderIdAtom = atom({
   default: 0,
 });
 
+// 서버에 보낼 데이터
 export const memberDataAtom = atom({
   key: "memberDataAtom",
   default: {
     orderId: 0,
-    userId: [],
-    point: [],
+    data: [],
   },
 });
 
-// 함께 예약할 인원 임시 저장
+// 화면에 출력할 유저의 정보
 export const paymentMemberAtom = atom({
   key: "paymentMemberAtom",
   default: [

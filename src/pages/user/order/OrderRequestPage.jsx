@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import { MdOutlineRefresh } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { ticketIdAtom, userDataAtom } from "../../../atoms/userAtom";
 import { getCookie } from "../../../components/cookie";
@@ -14,50 +14,24 @@ const OrderRequestPage = () => {
   const [inputValues, setInputValues] = useState({});
   const [isCompleted, setIsCompleted] = useState({});
   const [userData, setUserData] = useRecoilState(userDataAtom);
-  const [newOrderId, setNewOrderId] = useRecoilState(orderIdAtom);
   const [newTicketId, setNewTicketId] = useRecoilState(ticketIdAtom);
-
   const sessionUserId = sessionStorage.getItem("userId");
   const navigate = useNavigate();
   const accessToken = getCookie();
+  const { id } = useParams();
 
   useEffect(() => {
     const params = {
-      userId: sessionUserId,
+      orderId: id,
     };
-    const getOrderId = async () => {
+    const getPaymentMember = async () => {
       try {
-        const res = await axios.get(`/api/user/orderId`, {
+        const res = await axios.get("/api/user/user-payment-member", {
           params,
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        console.log(res.data.resultData);
-        const result = res.data.resultData;
-        setNewOrderId(result);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getOrderId();
-  }, []);
-
-  useEffect(() => {
-    const params = {
-      orderId: newOrderId,
-    };
-    const getPaymentMember = async () => {
-      try {
-        const res = await axios.get(
-          "/api/user/user-payment-member/userPaymentMember",
-          {
-            params,
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          },
-        );
         console.log(res.data.resultData);
         const result = res.data.resultData;
         setPriceList([...result]);
@@ -70,7 +44,7 @@ const OrderRequestPage = () => {
 
   const getUserApproval = async () => {
     const params = {
-      orderId: newOrderId,
+      orderId: id,
     };
     try {
       const res = await axios.get(
@@ -93,7 +67,7 @@ const OrderRequestPage = () => {
   // 모든 유저가 결제 승인 후 서버에 최종적으로 결제 요청
   const postPayment = async () => {
     const payload = {
-      orderId: parseInt(newOrderId),
+      orderId: parseInt(id),
     };
     try {
       const res = await axios.post(
@@ -119,13 +93,12 @@ const OrderRequestPage = () => {
       console.log(error);
     }
   };
-  console.log(newOrderId);
 
   const patchApproval = async userId => {
     console.log(userId);
 
     const payload = {
-      orderId: newOrderId,
+      orderId: id,
       userId: userId,
       approvalStatus: 1,
     };
