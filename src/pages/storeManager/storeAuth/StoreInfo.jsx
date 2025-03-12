@@ -41,7 +41,6 @@ const StoreInfo = () => {
     register,
     handleSubmit,
     setValue,
-
     formState: { errors },
   } = useForm({
     resolver: yupResolver(infoEditSchema),
@@ -92,7 +91,6 @@ const StoreInfo = () => {
     setValue("operatingHours", getData.operatingHours);
     setValue("maxCapacity", getData.maxCapacity);
     setValue("status", getData.status);
-    console.log("응?", getData);
   }, [getData]);
 
   const addImgHandler = e => {
@@ -175,6 +173,7 @@ const StoreInfo = () => {
   const patchStoreInfo = async data => {
     try {
       await axios.patch("/api/admin/restaurant", data);
+      getStoreInfo();
       Swal.fire({
         title: "매장 정보가 수정되었습니다.",
         icon: "success",
@@ -395,6 +394,7 @@ const StoreInfo = () => {
                     id="open"
                     className="border px-2 rounded-md"
                     value={0}
+                    onChange={() => setValue("status", 0)}
                     {...register("status")}
                   />
                   <label htmlFor="open" className="w-16">
@@ -407,6 +407,7 @@ const StoreInfo = () => {
                     id="break"
                     className="border px-2 rounded-md"
                     value={1}
+                    onChange={() => setValue("status", 1)}
                     {...register("status")}
                   />
                   <label htmlFor="break" className="w-28">
@@ -418,7 +419,8 @@ const StoreInfo = () => {
                     type="radio"
                     id="closed"
                     className="border px-2 rounded-md"
-                    value={2}
+                    value={9}
+                    onChange={() => setValue("status", 9)}
                     {...register("status")}
                   />
                   <label htmlFor="closed" className="w-20">
