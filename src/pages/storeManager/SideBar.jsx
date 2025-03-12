@@ -11,7 +11,9 @@ import { useRecoilState } from "recoil";
 import Swal from "sweetalert2";
 import { roleAtom } from "../../atoms/roleAtom";
 import { removeCookie, removeCookieRefresh } from "../../components/cookie";
+import useModal from "../../components/useModal";
 import { STORE } from "../../constants/Role";
+import PwKeyboard from "../../components/PwKeyboard";
 
 const SubMenuDiv = styled.div`
   padding: 5px 10px;
@@ -26,6 +28,11 @@ const SideBar = () => {
   const [activeMenu, setActiveMenu] = useState("");
   const [subMenuClick, setSubMenuClick] = useState(false);
   const [role, setRole] = useRecoilState(roleAtom);
+  const { Modal, open, close } = useModal({
+    title: "",
+    width: 800,
+    height: 1000,
+  });
 
   useEffect(() => {
     const pathToMenuMap = {
@@ -141,6 +148,7 @@ const SideBar = () => {
             >
               정보수정
             </SubMenuDiv>
+            <SubMenuDiv onClick={open}>PIN 변경</SubMenuDiv>
             <SubMenuDiv
               onClick={() => {
                 navigate("/auth/editpw");
@@ -175,6 +183,9 @@ const SideBar = () => {
       >
         로그아웃
       </div>
+      <Modal>
+        <PwKeyboard />
+      </Modal>
     </div>
   );
 };

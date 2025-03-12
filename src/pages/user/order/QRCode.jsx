@@ -1,5 +1,5 @@
 import { QRCodeSVG } from "qrcode.react";
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState, useLayoutEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import MenuBar from "../../../components/MenuBar";
 import axios from "axios";
@@ -22,10 +22,13 @@ const QRCode = () => {
   const [ticketStatus, setTicketStatus] = useState(0);
   const navigate = useNavigate();
 
+  const visualRef = useRef(null);
+  const infoRef = useRef(null);
+
   const setCouponPath = () => {
-    const visual = document.getElementById("visual");
+    const visual = visualRef.current;
     const couponW = visual.clientWidth;
-    const info = document.getElementById("info");
+    const info = infoRef.current;
     const visualH = visual.clientHeight;
     const infoH = info.clientHeight;
 
@@ -34,18 +37,20 @@ const QRCode = () => {
   };
 
   useLayoutEffect(() => {
-    setCouponPath();
-  }, [newTicketId, dimensions]);
+    if (dimensions.couponW > 0) {
+      requestAnimationFrame(() => {
+        setCouponPath();
+      });
+    }
+  }, [dimensions]);
 
   useEffect(() => {
-    const visual = document.getElementById("visual");
-    const info = document.getElementById("info");
     const updateDimensions = () => {
-      if (visual && info) {
+      if (visualRef.current && infoRef.current) {
         setDimensions({
-          couponW: visual.clientWidth,
-          visualH: visual.clientHeight,
-          infoH: info.clientHeight,
+          couponW: visualRef.current.clientWidth,
+          visualH: visualRef.current.clientHeight,
+          infoH: infoRef.current.clientHeight,
         });
       }
     };
@@ -145,9 +150,9 @@ const QRCode = () => {
   }, [newTicketId]);
 
   return (
-    <div className="flex flex-col w-full h-dvh px-10 mt-28">
+    <div className="flex flex-col w-full h-dvh px-10 pt-20 overflow-x-hidden overflow-y-scroll scrollbar-hide">
       {/* 시각적 요소 섹션 */}
-      <section id="visual">
+      <section id="visual" ref={visualRef}>
         <div className="gap-4 pb-4 flex flex-col items-center justify-center bg-gray rounded-t-2xl border-b-4 border-dotted border-darkGray">
           <div className="w-full text-center bg-primary rounded-t-2xl p-6 text-white font-bold">
             <span className="font-bold text-4xl text-nowrap">
@@ -175,7 +180,7 @@ const QRCode = () => {
         </div>
       </section>
       {/* 정보 요소 섹션 */}
-      <section id="info">
+      <section id="info" ref={infoRef}>
         <div className="p-10 flex flex-col justify-center items-center bg-gray rounded-b-2xl">
           <div className="flex w-full justify-center items-center ">
             <QRCodeSVG

@@ -25,7 +25,6 @@ const Seatmate = () => {
   const userId = sessionStorage.getItem("userId");
   const accessToken = getCookie();
   const { id } = useParams();
-  console.log(memberData);
 
   useEffect(() => {
     const params = {
@@ -52,14 +51,15 @@ const Seatmate = () => {
         }));
 
         setPaymentMemberData(prev => {
-          const userIdList = prev.userId || [];
-          const isSelected = userIdList.includes(result.userId);
-          return {
-            ...prev,
-            userId: isSelected
-              ? userIdList.filter(id => id !== result.userId)
-              : [...userIdList, result.userId],
-          };
+          const members = prev || [];
+          const isSelected = members.some(m => m.userId === userData.userId);
+
+          if (isSelected) return members;
+
+          return [
+            { userId: result.userId, name: result.name, uid: result.uid },
+            ...members,
+          ];
         });
       } catch (error) {
         console.log(error);
@@ -141,42 +141,55 @@ const Seatmate = () => {
     }
   };
 
-  const changeCheckHandler = e => {
-    const userId = e?.userId;
-    if (!userId) return;
+  const changeCheckHandler = member => {
+    if (!member || !member.userId) return;
 
     setPaymentMemberData(prev => {
-      const userIds = prev.userId || [];
-      const isSelected = userIds.includes(userId);
-      return {
-        ...prev,
-        userId: isSelected
-          ? userIds.filter(id => id !== userId)
-          : [...userIds, userId],
+      const members = prev || [];
+      const isSelected = members.some(m => m.userId === member.userId);
+
+      let updatedMembers;
+      if (isSelected) {
+        updatedMembers = members.filter(m => m.userId !== member.userId);
+      } else {
+        updatedMembers = [
+          ...members,
+          { userId: member.userId, name: member.name, uid: member.uid },
+        ];
+      }
+
+      // 로그인한 사용자를 0번 인덱스에 유지
+      const loggedInUser = {
+        userId: userData.userId,
+        name: userData.name,
+        uid: userData.uid,
       };
+      return [
+        loggedInUser,
+        ...updatedMembers.filter(m => m.userId !== userData.userId),
+      ];
     });
 
     setMemberData(prev => {
-      const updatedMembers = prev.data.filter(
-        member => member.userId !== userId,
-      );
+      const updatedMembers = prev.data.filter(m => m.userId !== member.userId);
 
       if (updatedMembers.length === prev.data.length) {
-        // 멤버 추가 (기본 포인트 0으로 설정)
         return {
           ...prev,
-          data: [...prev.data, { userId, point: 0 }],
+          data: [{ userId: member.userId, point: 0 }, ...prev.data],
         };
       }
 
-      // 멤버 삭제
       return { ...prev, data: updatedMembers };
     });
   };
 
   const nextBtnHandler = () => {
-    navigate(`/user/placetoorder/price/${newOrderId}`);
+    navigate(`/user/placetoorder/price/${id}`);
   };
+
+  console.log("화면에 출력할 데이터 : ", paymentMemberData);
+  console.log("서버에 보낼 데이터 : ", memberData);
 
   return (
     <div className="w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
@@ -198,7 +211,7 @@ const Seatmate = () => {
         </div>
       </div>
       <div className="flex w-full justify-end p-4">
-        <div>총 {paymentMemberData?.userId?.length}명 선택 중</div>
+        <div>총 {paymentMemberData?.length}명 선택 중</div>
       </div>
       <div className="w-full h-dvh ">
         <div className="flex w-full h-[6%] items-center px-6 border-b border-gray">

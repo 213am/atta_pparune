@@ -65,11 +65,5 @@ export const memberDataAtom = atom({
 // 화면에 출력할 유저의 정보
 export const paymentMemberAtom = atom({
   key: "paymentMemberAtom",
-  default: [
-    {
-      name: null,
-      uid: null,
-      userId: null,
-    },
-  ],
+  default: [],
 });

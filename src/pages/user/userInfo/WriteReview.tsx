@@ -156,7 +156,11 @@ function WriteReview() {
               ref={fileInputRef}
             />
             <div className="flex w-full">
-              <Swiper slidesPerView={3} spaceBetween={"5px"}>
+              <Swiper
+                slidesPerView={3}
+                spaceBetween={"5px"}
+                className="flex w-full"
+              >
                 {preview.map((url, index) => (
                   <SwiperSlide key={index}>
                     <img

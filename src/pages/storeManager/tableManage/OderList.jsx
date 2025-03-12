@@ -20,7 +20,7 @@ const OrderList = () => {
         restaurantId: sessionStoreId,
       };
       try {
-        const res = await axios.get(`/api/order/restaurant/reservation`, {
+        const res = await axios.get(`/api/admin/restaurant/order/reservation`, {
           params,
         });
         const result = res.data.resultData;
@@ -51,7 +51,10 @@ const OrderList = () => {
       reservationStatus: 1,
     };
     try {
-      const res = await axios.put(`/api/order/access`, payload);
+      const res = await axios.put(
+        `/api/admin/restaurant/order/reservation/status`,
+        payload,
+      );
       console.log(res);
       Swal.fire({
         title: "주문을 승인했습니다!",

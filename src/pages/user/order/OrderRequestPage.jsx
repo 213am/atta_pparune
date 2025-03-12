@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { ticketIdAtom, userDataAtom } from "../../../atoms/userAtom";
 import { getCookie } from "../../../components/cookie";
-import { orderIdAtom } from "../../../atoms/restaurantAtom";
+import { memberDataAtom, orderIdAtom } from "../../../atoms/restaurantAtom";
 import Swal from "sweetalert2";
 
 const OrderRequestPage = () => {
@@ -14,6 +14,7 @@ const OrderRequestPage = () => {
   const [inputValues, setInputValues] = useState({});
   const [isCompleted, setIsCompleted] = useState({});
   const [userData, setUserData] = useRecoilState(userDataAtom);
+  const [memberData, setMemberData] = useRecoilState(memberDataAtom);
   const [newTicketId, setNewTicketId] = useRecoilState(ticketIdAtom);
   const sessionUserId = sessionStorage.getItem("userId");
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const OrderRequestPage = () => {
 
   useEffect(() => {
     const params = {
-      orderId: id,
+      orderId: parseInt(id),
     };
     const getPaymentMember = async () => {
       try {
@@ -44,11 +45,11 @@ const OrderRequestPage = () => {
 
   const getUserApproval = async () => {
     const params = {
-      orderId: id,
+      orderId: parseInt(id),
     };
     try {
       const res = await axios.get(
-        `/api/user/user-payment-member/userOrderApprovalAccess`,
+        `/api/user/user-payment-member/approval-status`,
         {
           params,
           headers: {
@@ -56,7 +57,7 @@ const OrderRequestPage = () => {
           },
         },
       );
-      console.log(res.data.resultData);
+      console.log("승인 상태 확인하기 : ", res.data.resultData);
       const result = res.data.resultData;
       setPriceList([...result]);
     } catch (error) {
@@ -161,6 +162,8 @@ const OrderRequestPage = () => {
     console.log(sessionUserId);
   };
 
+  const isDisabled = !priceList.every(item => item.approvalStatus === 1);
+
   return (
     <div className="w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
       <div className="flex w-full justify-between py-6 items-center border-b border-gray">
@@ -259,15 +262,22 @@ const OrderRequestPage = () => {
         <div className="flex w-full justify-center gap-10">
           {priceList?.userId !== parseInt(sessionUserId) && (
             <>
-              <span
+              <button
                 onClick={() => postPayment()}
-                className="bg-primary text-white text-lg px-2 py-1 rounded-md cursor-pointer"
+                disabled={isDisabled}
+                className={`text-lg px-2 py-1 rounded-md cursor-pointer ${
+                  isDisabled
+                    ? "bg-darkGray text-gray cursor-not-allowed"
+                    : "bg-primary text-white"
+                }`}
               >
                 결제 요청
-              </span>
-              <span className="bg-red text-white text-lg px-2 py-1 rounded-md cursor-pointer">
+              </button>
+              <button
+                className={`text-lg px-2 py-1 rounded-md cursor-pointer bg-red text-white`}
+              >
                 결제 취소
-              </span>
+              </button>
             </>
           )}
         </div>
