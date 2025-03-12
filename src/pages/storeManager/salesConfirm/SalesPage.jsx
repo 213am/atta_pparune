@@ -1,15 +1,17 @@
 import styled from "@emotion/styled";
 import axios from "axios";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { getCookie } from "../../../components/cookie";
-import dayjs from "dayjs";
 
 const TableDiv = styled.div`
+  width: 1060px;
   margin: 30px 35px;
   overflow-y: scroll;
 `;
 
 const TableTitleDiv = styled.div`
+  width: 100%;
   display: flex;
   justify-content: space-between;
   padding: 15px 25px;
@@ -21,6 +23,9 @@ const TableTitleDiv = styled.div`
 `;
 
 const TableTopDiv = styled.div`
+  border-right: 1px solid #929292;
+  border-bottom: 1px solid #929292;
+  width: 100%;
   justify-content: space-between;
   display: flex;
   background-color: #eee;
@@ -32,9 +37,18 @@ const TopTitleDiv = styled.div`
   flex-direction: column;
   width: 20%;
   text-align: center;
-  padding: 10px 0;
+  padding: 10px 10px;
   border-right: 1px solid #929292;
-  border-bottom: 1px solid #929292;
+`;
+
+const ContentDiv = styled(TopTitleDiv)`
+  padding: 0 10px;
+  height: 70px;
+  line-height: 70px;
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+  text-overflow: ellipsis;
 `;
 
 function SalesPage() {
@@ -63,7 +77,7 @@ function SalesPage() {
       console.log(params);
 
       try {
-        const res = await axios.get(`/api/admin/restaurant/orderList`, {
+        const res = await axios.get(`/api/admin/restaurant/order/list`, {
           params,
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -93,7 +107,7 @@ function SalesPage() {
       console.log(params);
 
       try {
-        const res = await axios.get(`/api/admin/restaurant/orderList`, {
+        const res = await axios.get(`/api/admin/restaurant/order/list`, {
           params,
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -149,23 +163,21 @@ function SalesPage() {
         <TopTitleDiv>주문 일시</TopTitleDiv>
         <TopTitleDiv>주문자 성함</TopTitleDiv>
         <TopTitleDiv>주문한 메뉴</TopTitleDiv>
-        <TopTitleDiv>주문 종류</TopTitleDiv>
+        <TopTitleDiv style={{ border: "none" }}>주문 종류</TopTitleDiv>
       </TableTopDiv>
       {/* 여기부터 map 돌리기 */}
       {salesList.map(item => (
         <TableTopDiv key={item.orderId} style={{ backgroundColor: "#fff" }}>
-          <TopTitleDiv>{item.orderId}</TopTitleDiv>
-          <TopTitleDiv>{item.createdAt}</TopTitleDiv>
-          <TopTitleDiv>{item.userName}</TopTitleDiv>
-          {item.orderDetails.length === 1 ? (
-            <TopTitleDiv>{item.orderDetails[0].menuName}</TopTitleDiv>
-          ) : (
-            <TopTitleDiv>
-              {item.orderDetails[0].menuName} 외 {item.orderDetails.length - 1}{" "}
-              개
-            </TopTitleDiv>
-          )}
-          <TopTitleDiv>{item.reservationYnStr}</TopTitleDiv>
+          <ContentDiv>{item.orderId}</ContentDiv>
+          <TopTitleDiv>
+            <span>{dayjs(item.createdAt).format("YYYY-MM-DD")}</span>
+            <span>{dayjs(item.createdAt).format("HH : mm")}</span>
+          </TopTitleDiv>
+          <ContentDiv>{item.userName}</ContentDiv>
+          <ContentDiv>{item.orderDetails[0].menuName}</ContentDiv>
+          <ContentDiv style={{ border: "none" }}>
+            {item.reservationYnStr}
+          </ContentDiv>
         </TableTopDiv>
       ))}
     </TableDiv>

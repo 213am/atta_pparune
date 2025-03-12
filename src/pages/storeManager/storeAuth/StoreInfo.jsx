@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DaumPostcodeEmbed from "react-daum-postcode";
 import { useForm } from "react-hook-form";
 import { GrUpload } from "react-icons/gr";
@@ -27,10 +27,10 @@ const infoEditSchema = yup.object({
 const StoreInfo = () => {
   const [imgFile, setImgFile] = useState([]);
   const [imgPreview, setImgPreview] = useState([]);
-  const [isClick, setIsClick] = useState(false);
   const [inputAddress, setInputAddress] = useState({});
 
   const [getData, setGetData] = useState({});
+  const fileInputRef = useRef(null);
 
   const sessionRestaurantId = sessionStorage.getItem("restaurantId");
   const { Modal, open, close } = useModal({ title: "주소검색" });
@@ -56,6 +56,7 @@ const StoreInfo = () => {
     mode: "onChange",
   });
 
+  // 식당 정보 가져오기
   const getStoreInfo = async () => {
     try {
       const params = { restaurantId: sessionRestaurantId }; // 숫자만 로그인한 레스토랑의 id 값으로 변경
@@ -103,6 +104,9 @@ const StoreInfo = () => {
 
     const imgURL = fileArray.map(data => URL.createObjectURL(data));
     setImgPreview([...imgURL]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
   console.log(imgPreview);
   console.log("요거다!!!!!!!", imgFile);
@@ -115,12 +119,8 @@ const StoreInfo = () => {
     if (indexToRemove === -1) return; // 해당 이미지가 없으면 종료
 
     // 해당 인덱스의 파일과 미리보기 URL을 제거
-    const newImgFiles = imgFile.filter((_, idx) => idx !== indexToRemove);
-    const newImgPreview = imgPreview.filter((_, idx) => idx !== indexToRemove);
-
-    // 상태 업데이트
-    setImgFile(newImgFiles);
-    setImgPreview(newImgPreview);
+    setImgFile(prev => prev.filter((_, idx) => idx !== indexToRemove));
+    setImgPreview(prev => prev.filter((_, idx) => idx !== indexToRemove));
     console.log(imgFile);
   };
 
@@ -171,6 +171,7 @@ const StoreInfo = () => {
     setValue("restaurantAddress", fullAddress);
   };
 
+  // 식당 정보 수정
   const patchStoreInfo = async data => {
     try {
       await axios.patch("/api/admin/restaurant", data);
@@ -190,6 +191,7 @@ const StoreInfo = () => {
     }
   };
 
+  // 식당 사진 등록
   const postImgFiles = async data => {
     try {
       await axios.post(
@@ -197,11 +199,9 @@ const StoreInfo = () => {
         data,
         { headers: { "Content-Type": "multipart/form-data" } },
       );
-      console.log("잘 들어왔다 이미지!!!!!!!");
       console.log("이미지 데이터", data);
     } catch (error) {
       console.log(error);
-      console.log("이미지 데이터", data);
     }
   };
 
@@ -257,6 +257,7 @@ const StoreInfo = () => {
                 type="file"
                 id="inputImg"
                 multiple
+                ref={fileInputRef}
                 onChange={e => addImgHandler(e)}
                 accept="image/png, image/jpeg"
                 className="hidden"
