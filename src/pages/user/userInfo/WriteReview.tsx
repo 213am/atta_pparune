@@ -8,9 +8,8 @@ import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import { getCookie } from "../../../components/cookie";
 // 스와이퍼
-import "swiper/swiper-bundle.css";
-import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper-bundle.css";
 
 interface Size {
   width?: number;
@@ -137,7 +136,7 @@ function WriteReview() {
             readOnly={false}
             onChange={e => setReview(e)}
           />
-          <div className="flex mt-4 items-center gap-2 mr-5">
+          <div className="flex mt-4 items-center gap-5 mr-5">
             <div className="px-[10px] py-[10px] border border-black rounded-[5px] w-[85px] h-[85px]">
               <label htmlFor="reviewImg" className="cursor-pointer">
                 <IconDiv width={30} height={30} className="m-auto mb-2">
@@ -155,25 +154,34 @@ function WriteReview() {
               onChange={e => addImgHandler(e)}
               ref={fileInputRef}
             />
-            <div className="flex w-full">
-              <Swiper slidesPerView={3} spaceBetween={"5px"}>
-                {preview.map((url, index) => (
-                  <SwiperSlide key={index}>
+            <Swiper
+              slidesPerView={2}
+              spaceBetween={"5px"}
+              className="w-[200px]"
+            >
+              {preview.map((url, index) => (
+                <SwiperSlide className="min-w-[85px]">
+                  <IconDiv
+                    key={index}
+                    width={85}
+                    height={85}
+                    className="relative"
+                  >
                     <img
                       src={url}
                       alt={`preview-${index}`}
-                      className="w-32 h-24 object-cover border border-slate-300"
+                      className="w-full h-full"
                     />
                     <div className="w-[24px] h-[24px] cursor-pointer absolute top-0 right-0 rounded-full bg-black text-white p-[2px]">
                       <IoMdClose
                         onClick={() => deleteImg(url)}
-                        className="w-[90%] h-full"
+                        className="w-full h-full"
                       />
                     </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </div>
+                  </IconDiv>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
           <div className="mt-5 flex justify-between mr-5 items-center">
             <div>

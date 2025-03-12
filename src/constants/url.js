@@ -4,4 +4,4 @@ export const STORE_IMAGE_URL = `${DOCKER_URL}/pic/restaurant`;
 
 export const USER_IMAGE_URL = `${DOCKER_URL}/pic/profile`;
 
-export const REVIEW_IMAGE_URL = `${DOCKER_URL}/review_pics`;
+export const REVIEW_IMAGE_URL = `${DOCKER_URL}/pic/review_pics`;
