@@ -11,6 +11,7 @@ import "react-quill/dist/quill.snow.css";
 import Swal from "sweetalert2";
 import { getCookie } from "../../../components/cookie";
 import SideBar from "../SideBar";
+import { REVIEW_IMAGE_URL } from "../../../constants/url";
 
 const LayoutDiv = styled.div`
   display: flex;
@@ -88,6 +89,9 @@ function StoreReviewPage(): JSX.Element {
   const today = dayjs().format("YYYY-MM-DD");
   const yesterday = dayjs(today).add(-1, "day").format("YYYY-MM-DD");
 
+  const [startDate, setStartDate] = useState(yesterday);
+  const [endDate, setEndDate] = useState(today);
+
   const accessToken = getCookie();
   const adminId = parseInt(sessionStorage.getItem("adminId") as string);
 
@@ -120,6 +124,8 @@ function StoreReviewPage(): JSX.Element {
   const getReview = async () => {
     const params = {
       restaurantId,
+      startDate,
+      endDate,
     };
     try {
       const res = await axios.get("/api/restaurant/v3/review", { params });
@@ -207,7 +213,7 @@ function StoreReviewPage(): JSX.Element {
       adminId,
       restaurantId,
       userId,
-      reason: "폭언 및 기물파손",
+      reason: "",
     };
     try {
       await axios.post("/api/admin/restaurant/v3/black-list", data, {
@@ -306,7 +312,7 @@ function StoreReviewPage(): JSX.Element {
     // console.log(accessToken);
     // console.log("admin", adminId);
     // console.log("rest", restaurantId);
-  }, []);
+  }, [startDate, endDate]);
 
   useEffect(() => {
     console.log("가져온 데이터??", review);
@@ -331,9 +337,17 @@ function StoreReviewPage(): JSX.Element {
           </div>
           <div className="inline-flex gap-3 items-center border border-gray px-4 py-2 rounded-[5px] mb-10">
             <div className="text-darkGray">조회기간</div>
-            <input type="date" defaultValue={yesterday} />
+            <input
+              type="date"
+              value={startDate}
+              onChange={e => setStartDate(e.target.value)}
+            />
             <div>~</div>
-            <input type="date" defaultValue={today} />
+            <input
+              type="date"
+              value={endDate}
+              onChange={e => setEndDate(e.target.value)}
+            />
           </div>
 
           {/* map 사용하기 */}
@@ -363,30 +377,15 @@ function StoreReviewPage(): JSX.Element {
                   </div>
                 </div>
                 <div>
-                  <div>{item.reviewText}</div>
+                  <div className="w-[435px]">{item.reviewText}</div>
                   <div className="flex w-[300px] my-3 gap-1">
-                    {item.reviewPic.map(item => (
+                    {item.reviewPic.map(url => (
                       <img
-                        src={item}
-                        className="flex w-1/3 rounded-[5px]"
+                        src={`${REVIEW_IMAGE_URL}/${item.orderId}/${url}`}
+                        className="flex min-w-[100px] w-[100px] h-[100px] object-cover rounded-[5px]"
                         alt=""
                       />
                     ))}
-                    {/* <img
-                      src="/swiper1.webp"
-                      className="flex w-1/3 rounded-[5px]"
-                      alt=""
-                    />
-                    <img
-                      src="/swiper2.webp"
-                      className="flex w-1/3 rounded-[5px]"
-                      alt=""
-                    />
-                    <img
-                      src="/swiper3.webp"
-                      className="flex w-1/3 rounded-[5px]"
-                      alt=""
-                    /> */}
                   </div>
                   <div className="mb-2 w-[435px] flex flex-wrap gap-2">
                     {item.menuName.map(item => (
@@ -407,7 +406,7 @@ function StoreReviewPage(): JSX.Element {
                         />
                       </div>
                       <p
-                        className="bg-gray p-4 rounded-[5px] w-"
+                        className="bg-gray p-4 rounded-[5px]"
                         dangerouslySetInnerHTML={{
                           __html: DOMPurify.sanitize(String(item.commentText)),
                         }}
@@ -470,87 +469,6 @@ function StoreReviewPage(): JSX.Element {
               <div className="border-gray border my-5"></div>
             </div>
           ))}
-          <div>
-            <div className="flex gap-5">
-              <div>
-                <div className="font-bold mb-2">건물주 고양이</div>
-                <div className="flex gap-3 items-center">
-                  <div className="font-bold text-[20px]">5.0</div>
-                  <div className="flex gap-2">
-                    {[...Array(5)].map((_, index) => {
-                      const starIndex = index + 1;
-                      return (
-                        <FaStar
-                          key={starIndex}
-                          className={`w-[20px] h-[20px] ${starIndex <= rating ? "text-yellow" : "text-gray"}`}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-                <div className="mt-2 text-darkGray">2025-02-23</div>
-              </div>
-              <div>
-                <div>양도 많고 감자도 잘 튀겨졌어요~~~ 역시 최고 !!</div>
-                <div className="flex w-[300px] my-3 gap-1">
-                  <img
-                    src="/swiper1.webp"
-                    className="flex w-1/3 rounded-[5px]"
-                    alt=""
-                  />
-                  <img
-                    src="/swiper2.webp"
-                    className="flex w-1/3 rounded-[5px]"
-                    alt=""
-                  />
-                  <img
-                    src="/swiper3.webp"
-                    className="flex w-1/3 rounded-[5px]"
-                    alt=""
-                  />
-                </div>
-                <div className="mb-2">
-                  모짜렐라인더 버거-베이컨 세트 1개, 양념감자(양파맛) 2개
-                </div>
-                {isClick !== 2 ? (
-                  <button
-                    className="px-4 py-2 bg-primary text-white rounded-sm"
-                    onClick={() => setIsClick(2)}
-                  >
-                    댓글쓰기
-                  </button>
-                ) : (
-                  <div>
-                    <ReactQuill
-                      className="h-[150px]"
-                      placeholder="소중한 리뷰에 답글을 남겨보세요!"
-                      modules={{
-                        toolbar: false,
-                      }}
-                      readOnly={false}
-                      onChange={e => setComment(e)}
-                    />
-                    <div className="flex justify-end gap-3 mt-2">
-                      <button
-                        className="bg-gray py-1 px-3 rounded-[5px]"
-                        onClick={() => setIsClick(0)}
-                      >
-                        취소
-                      </button>
-                      <button className="bg-primary text-white py-1 px-3 rounded-[5px]">
-                        등록
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="flex gap-2 items-center cursor-pointer ml-24 text-red h-4">
-                <PiSirenFill className="w-[20px] h-[20px]" />
-                <div>신고하기</div>
-              </div>
-            </div>
-            <div className="border-gray border my-5"></div>
-          </div>
         </ContentDiv>
 
         {/* 블랙리스트 관리 */}

@@ -79,7 +79,19 @@ const LineChartLayout = () => {
         <XAxis dataKey="name" className="flex text-xl tracking-wider" />
         <YAxis />
         <Tooltip />
-        <Legend />
+        <Legend
+          formatter={value => (
+            <span
+              style={{
+                marginRight: 20,
+                marginTop: 5,
+                display: "inline-block",
+              }}
+            >
+              {value}
+            </span>
+          )}
+        />
         <Line
           type="monotone"
           dataKey="예약주문"
