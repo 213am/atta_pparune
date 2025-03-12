@@ -16,6 +16,7 @@ import FranchiseePage from "./pages/admin/franchisee/FranchiseePage";
 import RefundPage from "./pages/admin/refund/RefundPage";
 import TransactionPage from "./pages/admin/transaction/TransactionPage";
 import DetailPage from "./pages/service/notice/DetailPage";
+import OrderLoading from "./pages/user/order/OrderLoading";
 
 const WritePostPage = lazy(
   () => import("./pages/service/notice/WritePostPage"),
@@ -317,6 +318,14 @@ const App = (): JSX.Element => {
               element={
                 <StoreLayout>
                   <StoreReviewPage />
+                </StoreLayout>
+              }
+            />
+            <Route
+              path="loading"
+              element={
+                <StoreLayout>
+                  <OrderLoading />
                 </StoreLayout>
               }
             />

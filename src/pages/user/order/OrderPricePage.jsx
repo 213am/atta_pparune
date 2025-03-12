@@ -1,21 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { IoMdAddCircleOutline, IoMdArrowBack } from "react-icons/io";
-import { useLocation } from "react-router";
+import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import Swal from "sweetalert2";
 import {
   memberDataAtom,
-  orderIdAtom,
   paymentMemberAtom,
 } from "../../../atoms/restaurantAtom";
 import { userDataAtom } from "../../../atoms/userAtom";
 import { getCookie } from "../../../components/cookie";
-import { useParams } from "react-router";
 
 const PriceOrderPage = () => {
-  const [priceList, setPriceList] = useState({});
   const [inputValues, setInputValues] = useState({});
   const [isCompleted, setIsCompleted] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
@@ -29,13 +26,12 @@ const PriceOrderPage = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    const params = {
-      orderId: memberData.orderId,
-    };
+    // const params = {
+    //   orderId: memberData.orderId,
+    // };
     const getTotalPrice = async () => {
       try {
         const res = await axios.get(`/api/user/activeOrderCheck`, {
-          params,
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -115,7 +111,7 @@ const PriceOrderPage = () => {
         setMemberData(prev => ({
           ...prev,
           point: [],
-          userId: [parseInt(userId)],
+          userId: [parseInt(userId)], // 이 부분 수정 필요 0312
         }));
         setPaymentMemberData([]);
         navigate(-1);
@@ -123,8 +119,8 @@ const PriceOrderPage = () => {
     });
   };
 
-  console.log(paymentMemberData);
-  console.log(memberData);
+  console.log("화면에 출력할 데이터 : ", paymentMemberData);
+  console.log("서버에 보낼 데이터 : ", memberData);
 
   return (
     <div className="w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
@@ -135,7 +131,7 @@ const PriceOrderPage = () => {
         <span className="text-lg font-semibold">금액 선택</span>
         <div className="w-[15%]">
           <span className="text-center px-3 py-1 rounded-md text-white text-opacity-0">
-            ㅇ
+            &nbsp;
           </span>
         </div>
       </div>

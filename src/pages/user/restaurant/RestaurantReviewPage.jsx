@@ -66,17 +66,22 @@ const RestaurantReviewPage = () => {
           <span className="text-sm">리뷰 {reviewCnt}개</span>
         </div>
         <div className="flex flex-col w-[70%] items-center justify-end px-4">
-          {reviewList.ratingCounts?.map((item, index) => (
-            <div key={index} className="flex w-full items-center gap-2">
-              <span className="flex w-[5%]">{item.rating}</span>
-              <div
-                className={`flex w-[${(item.count / reviewCnt) * 100}%] h-2.5 rounded-md bg-darkGray after:w-[${(item.count / reviewCnt) * 100}%] after:rounded-md after:bg-yellow`}
-              />
-              <span className="flex w-[10%] text-darkGray">
-                {`${(reviewCnt / item.count) * 100}%`}
-              </span>
-            </div>
-          ))}
+          {reviewList.ratingCounts?.map((item, index) => {
+            const percentage =
+              reviewCnt === 0 ? 0 : (item.count / reviewCnt) * 100;
+            return (
+              <div key={index} className="flex w-full items-center gap-2">
+                <span className="flex w-[5%]">{item.rating}</span>
+                <div className="relative flex w-full h-2.5 rounded-md bg-darkGray">
+                  <div
+                    className="absolute left-0 top-0 h-full rounded-md bg-yellow"
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
+                <span className="flex w-[10%] text-darkGray ">{`${percentage}%`}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
       <div className="flex flex-col w-full pb-24">

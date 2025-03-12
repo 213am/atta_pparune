@@ -62,8 +62,14 @@ const OrderList = () => {
   }, []);
   console.log(activeList);
 
+  const linkToTicket = () => {
+    if (activeList.ticketId) {
+      navigate(`/user/placetoorder/coupon/${activeList.ticketId}`);
+    }
+  };
+
   return (
-    <div className="w-full h-dvh flex flex-col justify-between overflow-x-hidden overflow-y-scroll scrollbar-hide  bg-white">
+    <div className="w-full h-dvh flex flex-col justify-between overflow-x-hidden overflow-y-scroll scrollbar-hide bg-white">
       <div className="absolute top-0 left-0 w-full flex justify-between border-b-2 border-gray border-opacity-70 bg-white">
         <div
           onClick={() => setIsTap(true)}
@@ -112,7 +118,10 @@ const OrderList = () => {
                     </div>
                   </div>
                 ))}
-                <div className="flex w-full items-center justify-center gap-6">
+                <div
+                  onClick={linkToTicket}
+                  className="flex w-full items-center justify-center gap-6 cursor-pointer"
+                >
                   <span>총 가격</span>
                   <span className="text-2xl">
                     {activeList.totalMenuCost.toLocaleString("ko")}원

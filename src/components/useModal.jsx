@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import Modal from "../components/Modal";
 
-const useModal = ({ useBlur = true, title } = {}) => {
+const useModal = ({ useBlur = true, title, width, height } = {}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [eventData, setEventData] = useState({});
 
@@ -16,7 +16,12 @@ const useModal = ({ useBlur = true, title } = {}) => {
   return {
     Modal: isOpen
       ? ({ children }) => (
-          <Modal onClose={useBlur ? close : null} title={title}>
+          <Modal
+            onClose={useBlur ? close : null}
+            title={title}
+            width={width}
+            height={height}
+          >
             {children}
           </Modal>
         )

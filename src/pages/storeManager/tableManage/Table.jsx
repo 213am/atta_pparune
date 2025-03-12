@@ -16,7 +16,7 @@ const Table = () => {
     };
     const getOrderList = async () => {
       try {
-        const res = await axios.get(`/api/order/restaurant`, {
+        const res = await axios.get(`/api/admin/restaurant/order`, {
           params,
           headers: {
             Authorization: `Bearer ${accessToken}`,
