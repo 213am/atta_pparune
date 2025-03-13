@@ -3,6 +3,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { AgGridReact } from "ag-grid-react";
 import AdminHeader from "../../../components/AdminHeader";
+import AdminSideBar from "../../../components/AdminSideBar";
 
 export interface RowDataT {
   id: number;
@@ -177,23 +178,30 @@ const PointHistory = (): JSX.Element => {
     console.log(`Button clicked for ${params.data.restaurantName}`);
   };
 
+  const clickHandler = () => {
+    console.log("2 : 거래내역");
+  };
+
   return (
-    <div className="relative flex flex-col w-full h-dvh bg-white">
-      <AdminHeader title={"거래내역"} />
-      <div className="flex flex-col w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
-        <div className="flex flex-col w-[100%] h-[10%] px-10 pt-10 bg-white items-start pointer-events-none">
-          포인트 판매내역
-        </div>
-        <div className="flex ag-theme-alpine w-full h-full justify-start px-10">
-          <AgGridReact
-            columnDefs={columnDefs}
-            rowData={rowDefs}
-            pagination={true}
-            paginationPageSize={10}
-            domLayout="print"
-            modules={[ClientSideRowModelModule]}
-            theme={"legacy"}
-          />
+    <div className="flex">
+      <AdminSideBar onMenuClick={clickHandler} />
+      <div className="relative flex flex-col w-full h-dvh bg-white">
+        <AdminHeader title={"거래내역"} />
+        <div className="flex flex-col w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
+          <div className="flex flex-col w-[100%] h-[10%] px-10 pt-10 bg-white items-start pointer-events-none">
+            포인트 판매내역
+          </div>
+          <div className="flex ag-theme-alpine w-full h-full justify-start px-10">
+            <AgGridReact
+              columnDefs={columnDefs}
+              rowData={rowDefs}
+              pagination={true}
+              paginationPageSize={10}
+              domLayout="print"
+              modules={[ClientSideRowModelModule]}
+              theme={"legacy"}
+            />
+          </div>
         </div>
       </div>
     </div>

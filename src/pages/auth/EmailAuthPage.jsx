@@ -2,14 +2,6 @@ import styled from "@emotion/styled";
 import { AiFillUnlock } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { LayoutDiv } from "./loginStyle";
-// const ResendBtn = styled.button`
-//   margin-top: 20px;
-//   background-color: #d5cbf5;
-//   color: #333;
-//   padding: 10px 25px;
-//   border-radius: 5px;
-//   font-weight: 700;
-// `;
 
 const FlexDiv = styled.div`
   display: flex;
@@ -76,7 +68,6 @@ function EmailAuthPage() {
           <NoticeContentDiv>
             2. 메일이 도착하지 않았다면 스팸함을 확인해 주시기 바랍니다.
           </NoticeContentDiv>
-          {/* <ResendBtn>인증메일 재발송</ResendBtn> */}
         </NoticeDiv>
       </FlexDiv>
       <Link to={"/auth"}>

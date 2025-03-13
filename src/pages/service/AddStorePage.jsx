@@ -141,12 +141,12 @@ function AddStorePage() {
     resolver: yupResolver(storeSchema),
   });
 
-  // 가게 등록 post
+  // 식당 입점신청 post
   const postStore = async data => {
     try {
-      await axios.post("/api/restaurant", data);
+      await axios.post("/api/admin/restaurant/v3/enrollment", data);
       Swal.fire({
-        title: "가게 등록이 완료 되었습니다.",
+        title: "가게 입점 신청이 완료 되었습니다.",
         icon: "success",
         confirmButtonText: "확인",
         showConfirmButton: true, // ok 버튼 노출 여부
@@ -207,7 +207,7 @@ function AddStorePage() {
   const postBno = async () => {
     setIsClick(true);
     try {
-      const res = await axios.post(`/api/user/company/status?bNo=${bnoVal}`);
+      const res = await axios.post(`/api/company/status?bNo=${bnoVal}`);
       const result = res.data.resultData;
       if (result.bstt === "계속사업자") {
         setIsCheck(true);

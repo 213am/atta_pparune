@@ -23,10 +23,8 @@ import { STORE, USER } from "../../constants/Role";
 import Swal from "sweetalert2";
 
 const findPwSchema = yup.object({
-  id: yup
-    .string()
-    .min(6, "최소 6자 이상 작성해야 합니다.")
-    .max(12, "최대 12자까지 작성 가능합니다."),
+  id: yup.string().min(6, "최소 6자 이상 작성해야 합니다."),
+  // .max(12, "최대 12자까지 작성 가능합니다.")
   // .matches(
   //   /^[A-Za-z][A-Za-z0-9_]{6,12}$/,
   //   "아이디는 숫자, 영문으로 작성 가능합니다.",
@@ -56,7 +54,7 @@ function FindPwPage() {
   const findPw = async data => {
     try {
       if (role === USER) {
-        await axios.put("/api/user/find-passowrd", data);
+        await axios.put("/api/user/v3/find-passowrd", data);
         Swal.fire({
           title: `${data.email}로 비밀번호가 전송되었습니다.`,
           icon: "success",
@@ -69,7 +67,7 @@ function FindPwPage() {
           }
         });
       } else if (role === STORE) {
-        await axios.put("/api/admin/find-passowrd", data);
+        await axios.put("/api/admin/v3/find-password", data);
         Swal.fire({
           title: `${data.email}로 비밀번호가 전송되었습니다.`,
           icon: "success",
