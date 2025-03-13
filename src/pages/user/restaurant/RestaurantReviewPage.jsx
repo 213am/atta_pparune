@@ -7,6 +7,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ImgPreview from "../../../components/ImgPreview";
 import MenuBar from "../../../components/MenuBar";
 import { REVIEW_IMAGE_URL, USER_IMAGE_URL } from "../../../constants/url";
+import DOMPurify from "dompurify";
 
 const RestaurantReviewPage = () => {
   const [previewImage, setPreviewImage] = useState(null);
@@ -60,15 +61,16 @@ const RestaurantReviewPage = () => {
           <div className="flex items-center gap-2">
             <FaStar className="text-yellow text-xl" />
             <span className="text-2xl font-semibold">
-              {reviewList.avgRating}
+              {reviewList.avgRating?.toFixed(1)}
             </span>
           </div>
           <span className="text-sm">리뷰 {reviewCnt}개</span>
         </div>
         <div className="flex flex-col w-[70%] items-center justify-end px-4">
           {reviewList.ratingCounts?.map((item, index) => {
-            const percentage =
-              reviewCnt === 0 ? 0 : (item.count / reviewCnt) * 100;
+            const percentage = (
+              reviewCnt === 0 ? 0 : (item.count / reviewCnt) * 100
+            ).toFixed(0);
             return (
               <div key={index} className="flex w-full items-center gap-2">
                 <span className="flex w-[5%]">{item.rating}</span>
@@ -88,9 +90,9 @@ const RestaurantReviewPage = () => {
         {reviewList.reviews?.map((item, index) => (
           <div className="flex flex-col px-10 pt-10 pb-5 gap-3" key={index}>
             <div className="flex gap-3 items-center">
-              {item.userPic !== null ? (
+              {item.userPic ? (
                 <img
-                  src={`${USER_IMAGE_URL}/${item.userPic}`}
+                  src={`${USER_IMAGE_URL}/${item.userId}/${item.userPic}`}
                   alt=""
                   className="flex w-10 h-10 rounded-full"
                 />
@@ -131,7 +133,11 @@ const RestaurantReviewPage = () => {
                   src={`${REVIEW_IMAGE_URL}/${item.orderId}/${data}`}
                   alt=""
                   className="flex w-1/3"
-                  onClick={() => handleImageClick("/swiper1.jpg")}
+                  onClick={() =>
+                    handleImageClick(
+                      `${REVIEW_IMAGE_URL}/${item.orderId}/${data}`,
+                    )
+                  }
                 />
               ))}
             </div>
@@ -159,7 +165,7 @@ const RestaurantReviewPage = () => {
           </div> */}
             </div>
             {/* 식당 리뷰 답글 */}
-            {item.commentCreatedAt === null ? (
+            {!item.commentCreatedAt ? (
               <></>
             ) : (
               <div className="flex w-full gap-3">
@@ -177,11 +183,16 @@ const RestaurantReviewPage = () => {
                     <div className="flex items-center p-4 gap-4">
                       <span>사장님</span>
                       <span className="text-sm">
-                        {reviewList.reviews.commentCreatedAt}
+                        {dayjs(item.commentCreatedAt).format("YYYY-MM-DD")}
                       </span>
                     </div>
                     <div className="flex p-4">
-                      <span>{reviewList.reviews.commentText}</span>
+                      <span
+                        className="bg-gray p-4 rounded-[5px]"
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(String(item.commentText)),
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
