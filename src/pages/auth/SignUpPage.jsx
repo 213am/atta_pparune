@@ -3,10 +3,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoMdArrowBack } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import * as yup from "yup";
-import { roleAtom } from "../../atoms/roleAtom";
 import Loading from "../../components/Loading";
 import {
   CloseDiv,
@@ -19,19 +18,14 @@ import {
   TitleDiv,
   YupDiv,
 } from "./loginStyle";
-import Swal from "sweetalert2";
 
 const SignUpSchema = yup.object({
-  roleId: yup.string(),
-  id: yup
+  adminId: yup.number(),
+  aid: yup
     .string()
     .min(6, "최소 6자 이상 작성해야 합니다.")
     .max(12, "최대 12자까지 작성 가능합니다."),
-  // .matches(
-  //   /^[A-Za-z][A-Za-z0-9_]{6,12}$/,
-  //   "아이디는 숫자, 영문으로 작성 가능합니다.",
-  // ),
-  pw: yup
+  apw: yup
     .string()
     .required("비밀번호는 필수입니다.")
     .min(8, "최소 8자 이상 작성해야 합니다.")
@@ -44,10 +38,6 @@ const SignUpSchema = yup.object({
     .string()
     .required("이름은 필수입니다.")
     .min(2, "이름은 최소 2자 이상이어야 합니다."),
-  email: yup
-    .string()
-    .required("이메일은 필수입니다.")
-    .email("올바른 이메일 형식이 아닙니다."),
   phone: yup
     .string()
     .required("전화번호는 필수입니다.")
@@ -59,8 +49,9 @@ const SignUpSchema = yup.object({
 
 function SignUpPage() {
   const navigate = useNavigate();
-  const role = useRecoilValue(roleAtom);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [searchParams] = useSearchParams();
+  const adminId = searchParams.get("adminId");
 
   const {
     register,
@@ -76,17 +67,16 @@ function SignUpPage() {
     },
   });
 
-  const idVal = watch("id");
-  const pwVal = watch("pw");
+  const idVal = watch("aid");
+  const pwVal = watch("apw");
   const nameVal = watch("name");
-  const emailVal = watch("email");
   const phoneVal = watch("phone");
-  const hasVal = idVal && pwVal && nameVal && emailVal && phoneVal;
+  const adminVal = watch("adminId");
+  const hasVal = idVal && pwVal && nameVal && adminVal && phoneVal;
 
-  const postSignUp = async data => {
+  const putSignUp = async data => {
     try {
-      // console.log("보낼 데이터", data);
-      await axios.post("/api/admin/sign-up", data);
+      await axios.put("/api/admin/v3", data);
       Swal.fire({
         title: "회원가입이 완료 되었습니다.",
         icon: "success",
@@ -95,35 +85,49 @@ function SignUpPage() {
         allowOutsideClick: false, // 외부 영역 클릭 방지
       }).then(result => {
         if (result.isConfirmed) {
-          navigate("/auth/signup/emailauth");
+          navigate("/");
         }
       });
       console.log("보낸 데이터??", data);
     } catch (error) {
-      console.log("보낸 데이터??", data);
+      Swal.fire({
+        title: "회원가입에 실패 하였습니다.",
+        icon: "error",
+        confirmButtonText: "확인",
+        showConfirmButton: true, // ok 버튼 노출 여부
+        allowOutsideClick: false, // 외부 영역 클릭 방지
+      }).then(result => {
+        if (result.isConfirmed) {
+          setIsSubmit(false);
+        }
+      });
       console.log(error);
     }
   };
 
   const handleSubmitForm = async data => {
-    console.log(data);
     setIsSubmit(prev => !prev);
-    data.phone = data.phone.replace(/-/g, "");
-    postSignUp(data);
+    // data.phone = data.phone.replace(/-/g, "");
+    putSignUp(data);
+    console.log(data);
   };
 
   useEffect(() => {
-    if (phoneVal.length === 11) {
-      setValue("phone", phoneVal.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3"));
-    }
-    if (phoneVal.length === 13) {
-      setValue(
-        "phone",
-        phoneVal.replace(/-/g, "").replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"),
-      );
-    }
-    console.log(phoneVal);
-  }, [phoneVal]);
+    setValue("adminId", adminId);
+  }, []);
+
+  // useEffect(() => {
+  //   if (phoneVal.length === 11) {
+  //     setValue("phone", phoneVal.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3"));
+  //   }
+  //   if (phoneVal.length === 13) {
+  //     setValue(
+  //       "phone",
+  //       phoneVal.replace(/-/g, "").replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"),
+  //     );
+  //   }
+  //   console.log(phoneVal);
+  // }, [phoneVal]);
 
   return (
     <div>
@@ -138,29 +142,22 @@ function SignUpPage() {
         </HeaderDiv>
         <FormDiv>
           <form onSubmit={handleSubmit(handleSubmitForm)}>
-            {/* roleId를 보내기 위한 input */}
-            <input
-              type="text"
-              value={role}
-              style={{ display: "none" }}
-              {...register("roleId")}
-            />
             <TitleDiv>회원가입</TitleDiv>
             <InputYupDiv>
               <SignUpInput
                 type="text"
                 placeholder="아이디"
-                {...register("id")}
+                {...register("aid")}
               />
-              <YupDiv>{errors.id?.message}</YupDiv>
+              <YupDiv>{errors.aid?.message}</YupDiv>
             </InputYupDiv>
             <InputYupDiv>
               <SignUpInput
                 type="password"
                 placeholder="비밀번호 (8-16자)"
-                {...register("pw")}
+                {...register("apw")}
               />
-              <YupDiv>{errors.pw?.message}</YupDiv>
+              <YupDiv>{errors.apw?.message}</YupDiv>
             </InputYupDiv>
             <InputYupDiv>
               <SignUpInput
@@ -170,19 +167,11 @@ function SignUpPage() {
               />
               <YupDiv>{errors.name?.message}</YupDiv>
             </InputYupDiv>
-            {/* <InputYupDiv>
-              <SignUpInput
-                type="email"
-                placeholder="이메일"
-                {...register("email")}
-              />
-              <YupDiv>{errors.email?.message}</YupDiv>
-            </InputYupDiv> */}
             <InputYupDiv>
               <SignUpInput
                 type="tel"
                 placeholder="휴대전화번호"
-                maxLength={13}
+                maxLength={11}
                 {...register("phone")}
               />
               <YupDiv>{errors.phone?.message}</YupDiv>

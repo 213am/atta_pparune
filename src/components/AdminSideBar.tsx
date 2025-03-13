@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa6";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { IoCalculatorOutline } from "react-icons/io5";
 import { LuTriangleAlert } from "react-icons/lu";
 import { RiStore2Line } from "react-icons/ri";
 import { TbCreditCardRefund } from "react-icons/tb";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface AdminSideBarProps {
   children?: ReactNode;
@@ -35,6 +35,7 @@ const IconDiv = styled.div<Size>`
 
 const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // 메인 메뉴 클릭 State
   const [isClick, setIsClick] = useState<Click>({
@@ -73,7 +74,6 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
           forth: isClick.forth,
           fifth: isClick.fifth,
         });
-        navigate("/admin/transaction");
         break;
       case 3:
         setIsClick({
@@ -120,6 +120,60 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
       fifth: false,
     });
   };
+
+  useEffect(() => {
+    console.log(location.pathname);
+
+    switch (location.pathname) {
+      case "/admin":
+        setIsClick({
+          first: true,
+          second: isClick.second,
+          third: isClick.third,
+          forth: false,
+          fifth: false,
+        });
+        break;
+      case "/admin/enquiry":
+        setIsClick({
+          first: false,
+          second: isClick.second,
+          third: isClick.third,
+          forth: true,
+          fifth: false,
+        });
+        break;
+      case "/admin/refund":
+        setIsClick({
+          first: false,
+          second: isClick.second,
+          third: isClick.third,
+          forth: false,
+          fifth: true,
+        });
+        break;
+      case "/admin/point":
+        setIsClick({
+          first: false,
+          second: true,
+          third: false,
+          forth: false,
+          fifth: false,
+        });
+        setSubMenu(1);
+        break;
+      case "/admin/deposit":
+        setIsClick({
+          first: false,
+          second: true,
+          third: false,
+          forth: false,
+          fifth: false,
+        });
+        setSubMenu(2);
+        break;
+    }
+  }, [location]);
 
   return (
     <div className="bg-black w-[300px] h-[100vh] py-3">
@@ -168,7 +222,7 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
               className="ml-7 mr-[20px] cursor-pointer"
               onClick={() => {
                 handleSubClick(1);
-                navigate("/admin/transaction/point");
+                navigate("/admin/point");
               }}
             >
               <div
@@ -181,7 +235,7 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
               className="ml-7 mr-[20px] cursor-pointer"
               onClick={() => {
                 handleSubClick(2);
-                navigate("/admin/transaction/deposit");
+                navigate("/admin/deposit");
               }}
             >
               <div
