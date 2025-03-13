@@ -66,24 +66,26 @@ const PwKeyboard = () => {
   };
 
   return (
-    <div className="flex flex-col items-center p-4">
+    <div className="flex flex-col w-full items-center p-4 justify-center">
       <div className="flex flex-col w-full items-center">
         <span className="flex text-lg">
           <strong className="text-primary pr-1 text-xl">ㅇㅇㅇ 님</strong> 의
         </span>
         <span className="flex text-2xl">결제 비밀번호를 입력해주세요</span>
       </div>
-      <input
-        className="bg-inherit text-2xl text-center text-darkGray border-b-2 border-white w-40 p-2"
-        type="password"
-        value={password}
-        readOnly
-      />
+      <div className="flex space-x-2 my-4">
+        {[...Array(PASSWORD_MAX_LENGTH)].map((_, i) => (
+          <div
+            key={i}
+            className={`w-6 h-6 border rounded-full transition-all duration-300 ${i < password.length ? "bg-primary" : "bg-white"}`}
+          ></div>
+        ))}
+      </div>
       <div className="flex flex-wrap w-96 h-80 justify-between items-center mt-6">
         {nums.map((n, i) => (
           <button
             key={i}
-            className="w-1/3 h-1/4 border flex items-center justify-center text-2xl font-fantasy transition-all duration-300 ease-in-out hover:shadow-lg hover:text-white hover:bg-slate-600"
+            className="w-1/3 h-1/4 border flex items-center justify-center text-2xl font-fantasy transition-all duration-300 ease-in-out hover:shadow-lg hover:text-white hover:bg-primaryFocus"
             onClick={shuffleNums(n)}
           >
             {n}
@@ -99,7 +101,7 @@ const PwKeyboard = () => {
           className="w-1/3 h-1/4 border flex items-center justify-center text-2xl font-fantasy transition-all duration-300 ease-in-out hover:shadow-lg hover:text-white hover:bg-slate-600"
           onClick={erasePasswordOne}
         >
-          <FaDeleteLeft className="" />
+          <FaDeleteLeft />
         </button>
       </div>
       <button

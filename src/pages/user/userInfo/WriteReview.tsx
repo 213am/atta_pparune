@@ -66,12 +66,28 @@ function WriteReview() {
   };
 
   const postReviewHandler = async () => {
+    const postData = {
+      orderId: 0,
+      rating: rating,
+      reviewText: "",
+    };
+    const formData = new FormData();
+    formData.append(
+      "reviewRequestDto",
+      new Blob([JSON.stringify(postData)], { type: "application/json" }),
+    );
+    imgFile.forEach(file => {
+      formData.append("reviewPics", file);
+    });
+
     try {
-      const res = await axios.post("/api/user/v3/review", {
+      const res = await axios.post("/api/user/v3/review", formData, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
+
+      console.log("res : ", res);
     } catch (error) {
       console.log(error);
     }
@@ -203,7 +219,10 @@ function WriteReview() {
           </div>
         </div>
       </div>
-      <button className="w-full py-3 bg-primary text-white absolute bottom-0">
+      <button
+        onClick={postReviewHandler}
+        className="w-full py-3 bg-primary text-white absolute bottom-0"
+      >
         등록하기
       </button>
     </div>
