@@ -14,11 +14,11 @@ import {
 import EnquiryPage from "./pages/admin/enquiry/EnquiryPage";
 import FranchiseePage from "./pages/admin/franchisee/FranchiseePage";
 import RefundPage from "./pages/admin/refund/RefundPage";
-import TransactionPage from "./pages/admin/transaction/TransactionPage";
-import DetailPage from "./pages/service/notice/DetailPage";
-import OrderLoading from "./pages/user/order/OrderLoading";
 import DepositHistory from "./pages/admin/transaction/DepositHistory";
 import PointHistory from "./pages/admin/transaction/PointHistory";
+import DetailPage from "./pages/service/notice/DetailPage";
+import OrderLoading from "./pages/user/order/OrderLoading";
+import RequestPayment from "./pages/user/payment/RequestPayment";
 
 const WritePostPage = lazy(
   () => import("./pages/service/notice/WritePostPage"),

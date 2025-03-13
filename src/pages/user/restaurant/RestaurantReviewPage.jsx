@@ -124,13 +124,13 @@ const RestaurantReviewPage = () => {
               </div>
             </div>
 
-            <div className="flex w-full cursor-pointer">
+            <div className="flex w-full">
               {item?.reviewPic?.map((data, index) => (
                 <img
                   key={index}
                   src={`${REVIEW_IMAGE_URL}/${item.orderId}/${data}`}
                   alt=""
-                  className="flex w-1/3"
+                  className="flex w-1/3 h-32 cursor-pointer"
                   onClick={() =>
                     handleImageClick(
                       `${REVIEW_IMAGE_URL}/${item.orderId}/${data}`,
@@ -139,7 +139,7 @@ const RestaurantReviewPage = () => {
                 />
               ))}
             </div>
-            <div className="flex w-full ">
+            <div className="flex w-full">
               <span>{item.reviewText}</span>
             </div>
             <div className="flex w-full gap-4 items-center ">
@@ -178,7 +178,7 @@ const RestaurantReviewPage = () => {
                 after:content-[''] after:absolute after: after:border-solid after:border-transparent after:h-0 after:w-0 after:right-full after:top-1/2 after:mt-[-10px] after:border-r-[#ffffff]
                 before:content-[''] before:absolute before: before:border-solid before:border-transparent before:h-0 before:w-0 before:right-full before:top-5 before:border-[9px] before:mt-[-11px] before:border-r-black"
                   >
-                    <div className="flex items-center p-4 gap-4">
+                    <div className="flex items-center px-4 pt-4 gap-4">
                       <span>사장님</span>
                       <span className="text-sm">
                         {dayjs(item.commentCreatedAt).format("YYYY-MM-DD")}
