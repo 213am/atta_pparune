@@ -59,8 +59,8 @@ const SideBar = () => {
   };
 
   return (
-    <div className="flex flex-col w-44 h-dvh justify-between items-center bg-primaryFocus">
-      <div className="w-full mt-8">
+    <div className="flex flex-col w-44 h-dvh items-center bg-primaryFocus">
+      <div className="w-full mt-8 flex-grow">
         <div className="flex mb-6 px-4 w-44 justify-center items-center">
           <img src={"/adminLogo.png"} className="flex w-full h-full pb-6" />
         </div>
@@ -157,7 +157,7 @@ const SideBar = () => {
             >
               비밀번호 변경
             </SubMenuDiv>
-            <SubMenuDiv>계정삭제</SubMenuDiv>
+            <SubMenuDiv>제휴상태 변경</SubMenuDiv>
           </>
         )}
       </div>

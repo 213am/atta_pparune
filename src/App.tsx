@@ -17,7 +17,8 @@ import RefundPage from "./pages/admin/refund/RefundPage";
 import TransactionPage from "./pages/admin/transaction/TransactionPage";
 import DetailPage from "./pages/service/notice/DetailPage";
 import OrderLoading from "./pages/user/order/OrderLoading";
-import RequestPayment from "./pages/user/payment/RequestPayment";
+import DepositHistory from "./pages/admin/transaction/DepositHistory";
+import PointHistory from "./pages/admin/transaction/PointHistory";
 
 const WritePostPage = lazy(
   () => import("./pages/service/notice/WritePostPage"),
@@ -361,9 +362,8 @@ const App = (): JSX.Element => {
             <Route path="enquiry" element={<EnquiryPage />} />
             <Route path="franchisee" element={<FranchiseePage />} />
             <Route path="refund" element={<RefundPage />} />
-            <Route path="transaction">
-              <Route index element={<TransactionPage />} />
-            </Route>
+            <Route path="deposit" element={<DepositHistory />} />
+            <Route path="point" element={<PointHistory />} />
           </Route>
 
           {/* 회사 */}

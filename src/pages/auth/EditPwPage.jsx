@@ -60,7 +60,7 @@ function FindPwPage() {
       const accessToken = getCookie();
       console.log(accessToken);
       if (role === USER) {
-        await axios.put("/api/user/upw", data, {
+        await axios.put("/api/user/v3/upw", data, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -77,7 +77,7 @@ function FindPwPage() {
           }
         });
       } else if (role === STORE) {
-        await axios.put("/api/admin/upw", data, {
+        await axios.put("/api/admin/v3/upw", data, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

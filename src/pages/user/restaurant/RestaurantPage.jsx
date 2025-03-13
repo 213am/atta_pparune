@@ -249,11 +249,11 @@ function RestaurantPage() {
     getRestaurantList();
   }, [sort, location]);
 
-  // // geolocation 현재 위치
-  // useEffect(() => {
-  //   // 성공시 successHandler, 실패시 errorHandler 함수가 실행된다.
-  //   navigator.geolocation.getCurrentPosition(successHandler, errorHandler);
-  // }, []);
+  // geolocation 현재 위치
+  useEffect(() => {
+    // 성공시 successHandler, 실패시 errorHandler 함수가 실행된다.
+    navigator.geolocation.getCurrentPosition(successHandler, errorHandler);
+  }, []);
 
   useEffect(() => {
     const loadKakaoMap = () => {
@@ -469,7 +469,9 @@ function RestaurantPage() {
 
               <FlexDiv>
                 <FaStar style={{ width: 10, height: 10, color: "E1FF00" }} />
-                <span style={{ fontWeight: 700, fontSize: 8 }}>4.8</span>
+                <span style={{ fontWeight: 700, fontSize: 8 }}>
+                  {item.avgRating.toFixed(1)}
+                </span>
                 <span style={{ fontSize: 8, color: "#BABABA" }}>
                   {
                     item?.restaurantAddress.match(
