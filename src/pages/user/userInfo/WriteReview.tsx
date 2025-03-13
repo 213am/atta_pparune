@@ -5,7 +5,7 @@ import { FaCameraRetro, FaCheckCircle, FaStar } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getCookie } from "../../../components/cookie";
 // 스와이퍼
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -14,6 +14,25 @@ import "swiper/swiper-bundle.css";
 interface Size {
   width?: number;
   height?: number;
+}
+
+interface menuList {
+  menuCount: number;
+  menuId: number;
+  menuName: string;
+  price: number;
+}
+
+interface OrderData {
+  createdAt: string;
+  menuTotalPrice: number;
+  orderId: number;
+  pastDtoList: menuList[];
+  pic: null;
+  reservationYn: number;
+  restaurantId: number;
+  restaurantName: string;
+  reviewStatus: number;
 }
 
 const HeaderDiv = styled.div`
@@ -38,7 +57,7 @@ const IconDiv = styled.div<Size>`
 function WriteReview() {
   const navigate = useNavigate();
   // 리뷰
-  const [_review, setReview] = useState("");
+  const [review, setReview] = useState("");
   // 이미지 미리보기 state
   const [preview, setPreview] = useState<string[]>([]);
   // 이미지 파일 state
@@ -48,6 +67,8 @@ function WriteReview() {
   // 별점 상태
   const [rating, setRating] = useState(0);
   const accessToken = getCookie();
+  const locate = useLocation();
+  console.log(locate.state);
 
   const addImgHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const inputfile = e.target.files && e.target.files;
@@ -67,10 +88,13 @@ function WriteReview() {
 
   const postReviewHandler = async () => {
     const postData = {
-      orderId: 0,
+      orderId: locate.state.orderId,
       rating: rating,
-      reviewText: "",
+      reviewText: review,
     };
+
+    console.log(postData);
+
     const formData = new FormData();
     formData.append(
       "reviewRequestDto",
@@ -129,7 +153,7 @@ function WriteReview() {
           <div className="text-[24px] font-bold">음식 평가</div>
         </div>
         <div className="ml-[46px]">
-          <div className="mt-2 text-[18px]">신라짬뽕</div>
+          <div className="mt-2 text-[18px]">{locate.state.restaurantName}</div>
           <div className="flex gap-1 mt-2">
             {[...Array(5)].map((_, index) => {
               const starIndex = index + 1;
@@ -201,8 +225,11 @@ function WriteReview() {
           </div>
           <div className="mt-5 flex justify-between mr-5 items-center">
             <div>
-              <div className="text-[18px]">1인 세트</div>
-              <div>차돌박이 짬뽕, 스프라이트 245ml</div>
+              {locate.state.pastDtoList.map((item: menuList, index: number) => (
+                <div key={index}>
+                  <div className="text-[18px]">{item.menuName}</div>
+                </div>
+              ))}
             </div>
             {/* <div className="flex gap-3">
               <div className="px-3 py-2 bg-secondary rounded-[20px] text-white">

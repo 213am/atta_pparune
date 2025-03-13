@@ -50,7 +50,6 @@ function IndexPage() {
             .replace(/(-{1,2})$/g, "");
           const pointParse = resultData.point.toLocaleString("ko-KR");
           console.log(resultData);
-          console.log(res);
 
           setUserData({ ...resultData, phone: phoneNumber, point: pointParse });
         }
@@ -75,6 +74,7 @@ function IndexPage() {
       allowOutsideClick: false,
     }).then(result => {
       if (result.isConfirmed) {
+        setIsLogin(false);
         navigate("/user");
       }
     });
@@ -84,13 +84,8 @@ function IndexPage() {
     <div className="h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide bg-white">
       <Notification />
       <div className="absolute top-0 left-0 w-full flex justify-between items-center px-3 py-5 border-b-2 border-gray border-opacity-70 bg-white">
-        <IoMdArrowBack
-          className="text-3xl cursor-pointer"
-          onClick={() => navigate("/user")}
-        />
-        <span className="text-xl font-semibold pointer-events-none">
-          내 정보
-        </span>
+        <span>&emsp;</span>
+        <span className="text-xl font-semibold ">내 정보</span>
         <span>&emsp;</span>
       </div>
       <div className="flex flex-col h-dvh justify-around mt-24 gap-10">
@@ -108,11 +103,11 @@ function IndexPage() {
               className="w-32 h-32 rounded-full object-cover"
             />
           )}
-          <div className="flex items-center pointer-events-none">
+          <div className="flex items-center ">
             <span className="pr-3 ">사용가능 포인트</span>
             <span className="font-bold text-2xl">{userData.point}</span>
           </div>
-          <span className="flex items-center gap-2 px-3 py-1 border-2 border-gray rounded-xl pointer-events-none">
+          <span className="flex items-center gap-2 px-3 py-1 border-2 border-gray rounded-xl ">
             <MdOutlineMail className="text-xl" />
             {userData.email}
           </span>
@@ -124,7 +119,7 @@ function IndexPage() {
             <IoIosArrowForward className="text-xl font-semibold" />
           </div>
         </div>
-        <div className="h-[40%] flex justify-center items-center pointer-events-none">
+        <div className="h-[40%] flex justify-center items-center ">
           <div className="flex w-1/2 gap-5 items-center">
             <div className="flex flex-col w-[20%] gap-6 font-thin text-lg h-full text-darkGray text-nowrap">
               <span>닉네임</span>

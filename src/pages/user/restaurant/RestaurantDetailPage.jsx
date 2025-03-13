@@ -8,7 +8,7 @@ import { FaStar } from "react-icons/fa";
 import { LuMapPin } from "react-icons/lu";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-
+import DOMPurify from "dompurify";
 import Swal from "sweetalert2";
 import { reserveState } from "../../../atoms/restaurantAtom";
 import { getCookie } from "../../../components/cookie";
@@ -248,6 +248,7 @@ function StoreDetailPage() {
     getDetailStore();
     console.log(id);
   }, []);
+
   return (
     <div style={{ height: "100vh", backgroundColor: "white" }}>
       {formData?.restaurantPics?.filePath ? (
@@ -282,15 +283,13 @@ function StoreDetailPage() {
           <section className="flex w-full justify-between items-center pr-16">
             <h1>{formData?.restaurantName}</h1>
             <div className="flex w-1/3 h-full items-center gap-2">
-              <div className="flex items-center gap-1 pointer-events-none">
+              <div className="flex items-center gap-1 ">
                 <FaStar className="text-yellow text-lg drop-shadow-sm mb-0.5" />
                 <p className="tracking-wide text-black text-base">
-                  {formData?.ratingAvg}
+                  {formData?.ratingAvg?.toFixed(1)}
                 </p>
               </div>
-              <p className="text-3xl text-darkGray pb-1.5 pointer-events-none">
-                ·
-              </p>
+              <p className="text-3xl text-darkGray pb-1.5 ">·</p>
               <div
                 className="flex text-nowrap text-base gap-1.5 items-center cursor-pointer"
                 onClick={() =>
@@ -310,7 +309,13 @@ function StoreDetailPage() {
               </div>
             </div>
           </section>
-          <div>{formData?.restaurantDescription}</div>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(
+                String(formData?.restaurantDescription),
+              ),
+            }}
+          />
           <h2>
             <LuMapPin />
             {formData?.restaurantAddress}

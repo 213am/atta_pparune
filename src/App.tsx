@@ -226,6 +226,14 @@ const App = (): JSX.Element => {
                   }
                 />
               </Route>
+              <Route
+                path="loading"
+                element={
+                  <UserLayout>
+                    <OrderLoading />
+                  </UserLayout>
+                }
+              />
             </Route>
             <Route path="restaurant">
               <Route
@@ -264,7 +272,7 @@ const App = (): JSX.Element => {
               </Route>
             </Route>
             <Route
-              path="review"
+              path="review/:id"
               element={
                 <UserLayout>
                   <WriteReview />
@@ -324,15 +332,14 @@ const App = (): JSX.Element => {
               }
             />
             <Route
-              path="loading"
+              path="request"
               element={
-                <StoreLayout>
-                  <OrderLoading />
-                </StoreLayout>
+                <UserLayout>
+                  <RequestPayment />
+                </UserLayout>
               }
             />
           </Route>
-
           {/* 서비스 소개 페이지 */}
           <Route path="/service">
             <Route index element={<ServiceMainPage />} />
