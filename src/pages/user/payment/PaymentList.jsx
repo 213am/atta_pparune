@@ -16,7 +16,6 @@ const OrderList = () => {
   const [paymentList, setPaymentList] = useState([]);
   const [activeList, setActiveList] = useState({});
 
-  // sessionStorage에 저장된 userId 값을 가져옴
   const sessionUserId = window.sessionStorage.getItem("userId");
   const accessToken = getCookie();
 

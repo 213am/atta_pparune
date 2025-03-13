@@ -10,32 +10,37 @@ import PwKeyboard from "../../../components/PwKeyboard";
 const OrderLoading = () => {
   const navigate = useNavigate();
   const [newTicketId, setTicketId] = useRecoilState(ticketIdAtom);
-  console.log(newTicketId);
 
   console.log(newTicketId);
 
-  useEffect(() => {
-    const usedCoupon = async () => {
-      try {
-        const res = await axios.patch(`/api/order/ticket?ticketId=19`, {});
-        console.log(res);
-        Swal.fire({
-          title: "식권 사용완료!",
-          icon: "success",
-          confirmButtonText: "확인",
-          showConfirmButton: true,
-          allowOutsideClick: false,
-        }).then(result => {
-          if (result.isConfirmed) {
-            navigate("/store");
-          }
-        });
-      } catch (error) {
-        console.log(error);
-      }
+  const usedCoupon = async () => {
+    const payload = {
+      ticketId: newTicketId,
+      restaurantId: 0,
+      paymentPassword: "",
     };
-    usedCoupon();
-  }, []);
+    try {
+      const res = await axios.patch(`/api/order/ticket`, payload, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(res);
+      Swal.fire({
+        title: "식권 사용완료!",
+        icon: "success",
+        confirmButtonText: "확인",
+        showConfirmButton: true,
+        allowOutsideClick: false,
+      }).then(result => {
+        if (result.isConfirmed) {
+          navigate("/store");
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="relative w-full h-dvh flex justify-center items-center overflow-x-hidden overflow-y-scroll scrollbar-hide">
