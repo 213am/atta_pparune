@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
-import axios from "axios";
+// import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { FaCameraRetro, FaCheckCircle, FaStar } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
-import { getCookie } from "../../../components/cookie";
+// import { getCookie } from "../../../components/cookie";
 // 스와이퍼
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
@@ -47,7 +47,7 @@ function WriteReview() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   // 별점 상태
   const [rating, setRating] = useState(0);
-  const accessToken = getCookie();
+  // const accessToken = getCookie();
 
   const addImgHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const inputfile = e.target.files && e.target.files;
@@ -65,17 +65,17 @@ function WriteReview() {
     }
   };
 
-  const postReviewHandler = async () => {
-    try {
-      const res = await axios.post("/api/user/v3/review", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const postReviewHandler = async () => {
+  //   try {
+  //     const res = await axios.post("/api/user/v3/review", {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const deleteImg = (url: string) => {
     // 클릭한 이미지의 인덱스를 찾음
