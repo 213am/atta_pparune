@@ -23,6 +23,7 @@ interface IRestaurantList {
   };
   restaurantId: number;
   restaurantName: string;
+  avgRating: number;
 }
 
 interface ISwiperData {
@@ -77,52 +78,40 @@ const UserMainPage = (): JSX.Element => {
     getSwiperList();
   }, []);
 
+  const getRestaurantList = async (page: number) => {
+    const params = {
+      categoryId: categoryId,
+      page: page,
+      filterType: filter,
+      size: 20,
+    };
+
+    console.log("쿼리 값 : ", params);
+
+    try {
+      const res = await axios.get("/api/restaurant/main", { params });
+      const result = res.data.resultData;
+
+      setRestaurantList(prevList =>
+        page === 1 ? result : [...prevList, ...result],
+      );
+    } catch (error) {
+      console.error("Error fetching restaurant list:", error);
+    }
+  };
+
   useEffect(() => {
     setPagenation(1);
-    const getRestaurantList = async () => {
-      const params = {
-        categoryId: categoryId,
-        page: 1,
-        filterType: filter,
-        size: 20,
-      };
-
-      console.log("params :", params);
-
-      try {
-        const res = await axios.get("/api/restaurant/main", { params });
-        const result = res.data.resultData;
-
-        setRestaurantList([...result]);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getRestaurantList();
+    getRestaurantList(1);
   }, [categoryId, filter]);
 
   useEffect(() => {
-    if (inView === true) {
-      console.log("inView true : ", inView);
-      setPagenation(prev => prev + 1);
-      const getRestaurantList = async () => {
-        const params = {
-          categoryId: categoryId,
-          page: pagenation,
-          size: 20,
-        };
-        try {
-          const res = await axios.get("/api/restaurant/main", { params });
-          const result = res.data.resultData;
-
-          setRestaurantList([...restaurantList, ...result]);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      getRestaurantList();
-    } else {
-      console.log("inView false : ", inView);
+    if (inView) {
+      setPagenation(prev => {
+        const nextPage = prev + 1;
+        getRestaurantList(nextPage);
+        return nextPage;
+      });
     }
   }, [inView]);
 
@@ -200,7 +189,7 @@ const UserMainPage = (): JSX.Element => {
         <h1>{inView}</h1>
         <div className="w-100% flex pl-5 pt-2 justify-between items-center">
           <form className="relative">
-            <span className="absolute left-1 top-1/2 transform -translate-y-1/2 pointer-events-none">
+            <span className="absolute left-1 top-1/2 transform -translate-y-1/2 ">
               <LuArrowDownUp />
             </span>
             <select
@@ -279,7 +268,9 @@ const UserMainPage = (): JSX.Element => {
                 <div className="w-1/3">
                   <span className="flex items-center gap-1 pl-2">
                     <FaStar className="text-yellow" />
-                    <span className="tracking-wide">4.8</span>
+                    <span className="tracking-wide">
+                      {data.avgRating.toFixed(1)}
+                    </span>
                   </span>
                   <p className="flex pl-2 font-semibold text-sm text-primary text-nowrap">
                     약 {data.avgRestaurant}분

@@ -1,6 +1,6 @@
 import { QRCodeSVG } from "qrcode.react";
 import React, { useEffect, useState, useLayoutEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import MenuBar from "../../../components/MenuBar";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -21,6 +21,8 @@ const QRCode = () => {
   });
   const [ticketStatus, setTicketStatus] = useState(0);
   const navigate = useNavigate();
+  const locate = useLocation();
+  const { id } = useParams();
 
   const visualRef = useRef(null);
   const infoRef = useRef(null);
@@ -103,7 +105,7 @@ const QRCode = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(res);
+      console.log("티켓 데이터 : ", res.data.resultData.ticket);
 
       setTicketData(res.data.resultData.ticket);
     } catch (error) {
@@ -184,7 +186,7 @@ const QRCode = () => {
         <div className="p-10 flex flex-col justify-center items-center bg-gray rounded-b-2xl">
           <div className="flex w-full justify-center items-center ">
             <QRCodeSVG
-              value={`${DOCKER_URL}/user/placetoorder`}
+              value={`${DOCKER_URL}/store/request?ticketId=${id}&restaurantId=${locate.state.restaurantId}`}
               size={180}
               bgColor="none"
             />

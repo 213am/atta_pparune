@@ -17,6 +17,7 @@ import RefundPage from "./pages/admin/refund/RefundPage";
 import TransactionPage from "./pages/admin/transaction/TransactionPage";
 import DetailPage from "./pages/service/notice/DetailPage";
 import OrderLoading from "./pages/user/order/OrderLoading";
+import RequestPayment from "./pages/user/payment/RequestPayment";
 
 const WritePostPage = lazy(
   () => import("./pages/service/notice/WritePostPage"),
@@ -224,6 +225,14 @@ const App = (): JSX.Element => {
                   }
                 />
               </Route>
+              <Route
+                path="loading"
+                element={
+                  <UserLayout>
+                    <OrderLoading />
+                  </UserLayout>
+                }
+              />
             </Route>
             <Route path="restaurant">
               <Route
@@ -262,7 +271,7 @@ const App = (): JSX.Element => {
               </Route>
             </Route>
             <Route
-              path="review"
+              path="review/:id"
               element={
                 <UserLayout>
                   <WriteReview />
@@ -322,15 +331,14 @@ const App = (): JSX.Element => {
               }
             />
             <Route
-              path="loading"
+              path="request"
               element={
-                <StoreLayout>
-                  <OrderLoading />
-                </StoreLayout>
+                <UserLayout>
+                  <RequestPayment />
+                </UserLayout>
               }
             />
           </Route>
-
           {/* 서비스 소개 페이지 */}
           <Route path="/service">
             <Route index element={<ServiceMainPage />} />

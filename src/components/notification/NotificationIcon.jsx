@@ -3,18 +3,18 @@ import { useEffect } from "react";
 import { FaCircle } from "react-icons/fa";
 import { FaBell } from "react-icons/fa6";
 import { useRecoilState } from "recoil";
+import Swal from "sweetalert2";
 import {
   isClickIcon,
   isWhiteIcon,
   noticeState,
-  priceNoticeAtom,
   orderNoticeAtom,
+  priceNoticeAtom,
 } from "../../atoms/noticeAtom";
 import { orderIdAtom } from "../../atoms/restaurantAtom";
+import { loginAtom } from "../../atoms/userAtom";
 import { getCookie } from "../cookie";
 import NotificationPage from "./NotificationPage";
-import { loginAtom } from "../../atoms/userAtom";
-import Swal from "sweetalert2";
 
 const Notification = () => {
   const [isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
@@ -25,7 +25,6 @@ const Notification = () => {
   const [isLogin, setIsLogin] = useRecoilState(loginAtom);
   const sessionId = sessionStorage.getItem("userId");
   const accessToken = getCookie();
-  const [orderId, setOrderId] = useRecoilState(orderIdAtom);
 
   const Toast = Swal.mixin({
     toast: true,
@@ -44,6 +43,8 @@ const Notification = () => {
       userId: sessionId,
     };
 
+    console.log("로그인 여부 확인 : ", isLogin);
+
     const getAlert = async () => {
       if (isLogin === true) {
         try {
@@ -53,7 +54,7 @@ const Notification = () => {
               Authorization: `Bearer ${accessToken}`,
             },
           });
-          console.log(res.data.resultData);
+          console.log("get 데이터 : ", res.data.resultData);
           const result = res.data.resultData;
           if (result[0]?.orderId) {
             setIsNotice(result);
@@ -78,6 +79,8 @@ const Notification = () => {
         } catch (error) {
           console.log(error);
         }
+      } else {
+        setIsNotice([]);
       }
     };
     getAlert();

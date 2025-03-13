@@ -27,31 +27,26 @@ const NotificationPage = () => {
       orderUserId: e.orderUserId,
     };
     try {
-      const res = await axios.get(
-        `/api/user/user-payment-member/getPaymentInfo`,
-        {
-          params,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+      const res = await axios.get(`/api/user/user-payment-member/my`, {
+        params,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
         },
-      );
-      console.log(res.data);
-      setMypaymentData(res.data.resultData);
+      });
+      console.log(res.data.resultData);
+      setMypaymentData({ ...res.data.resultData, orderId: e.orderId });
     } catch (error) {
       console.log(error);
     }
   };
 
-  const patchApproval = async userId => {
-    console.log(userId);
-
+  const patchApproval = async () => {
     const payload = {
-      orderId: myPaymentData.orderId,
-      userId: userId,
+      orderId: parseInt(myPaymentData.orderId),
+      userId: parseInt(loginUserId),
       approvalStatus: 1,
     };
-    console.log(payload);
+    console.log("보낼 데이터 : ", payload);
     setIsClick(false);
     try {
       const res = await axios.patch(`/api/user/user-payment-member`, payload, {
@@ -59,7 +54,7 @@ const NotificationPage = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(res.data);
+      console.log(res.data.resultData);
       setIsModalOpen(false);
       Swal.fire({
         title: "결제가 승인 되었습니다!",
@@ -82,24 +77,30 @@ const NotificationPage = () => {
   };
 
   const rejectApproval = async () => {
-    const userId = clickData.orderUserId;
     const payload = {
-      orderId: myPaymentData.orderId,
-      userId: userId,
+      orderId: parseInt(myPaymentData.orderId),
+      userId: parseInt(loginUserId),
       approvalStatus: 2,
     };
+    console.log("보낼 데이터 : ", payload);
     try {
       const res = await axios.patch(`/api/user/user-payment-member`, payload, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
+      console.log("api 연결 성공 후 response : ", res.data.result);
+
       setIsModalOpen(false);
       Swal.fire({
         title: "결제가 거절되었습니다.",
         icon: "error",
         confirmButtonText: "확인",
         allowOutsideClick: false,
+      }).then(result => {
+        if (result.isConfirmed) {
+          navigate("/user");
+        }
       });
     } catch (error) {
       console.log(error);
@@ -120,9 +121,6 @@ const NotificationPage = () => {
     console.log("데이터 불러오기", e);
     setClickData({ ...e });
   };
-
-  console.log(isNotice);
-  console.log(myPaymentData);
 
   return (
     <div className="absolute top-12 right-5 w-[80%] bg-white z-50 border-2 border-darkGray rounded-md pb-4 overflow-x-hidden over overflow-y-scroll scrollbar-hide">

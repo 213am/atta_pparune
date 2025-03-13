@@ -23,6 +23,7 @@ function EditInfoPage() {
   const [userData, setUserData] = useRecoilState(userDataAtom);
   const [isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
   const [isLogin, setIsLogin] = useRecoilState(loginAtom);
+  const [displayPhone, setDisplayPhone] = useState(null);
   const [inputPhone, setInputPhone] = useState(null);
   const [inputNickName, setInputNickName] = useState("");
   const [imageValue, setImageValue] = useState(null);
@@ -57,13 +58,16 @@ function EditInfoPage() {
           });
           const resultData = res.data.resultData;
           const phoneNumber = resultData.phone;
-          // .replace(/[^0-9]/g, "")
-          // .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
-          // .replace(/(-{1,2})$/g, "");
           const pointParse = resultData.point.toLocaleString("ko-KR");
+
           console.log(resultData);
 
           setUserData({ ...resultData, phone: phoneNumber, point: pointParse });
+          setDisplayPhone(
+            phoneNumber
+              .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/, "$1-$2-$3")
+              .replace(/(-{1,2})$/, ""),
+          );
         }
       } catch (error) {
         console.log(error);
@@ -101,19 +105,40 @@ function EditInfoPage() {
         phone: inputPhone || userData.phone,
       };
 
+      console.log(params);
+
       const blobData = new Blob([JSON.stringify(params)], {
         type: "application/json",
       });
+      console.log(imageValue);
 
       const formData = new FormData();
       formData.append("req", blobData);
-      formData.append("userPic", imageValue);
+      if (imageValue instanceof File) {
+        formData.append("userPic", imageValue);
+      } else {
+        const prevPic = `${USER_IMAGE_URL}/${userData.userId}/${userData.userPic}`;
+        try {
+          const resPic = await fetch(prevPic);
+          const blobPic = await resPic.blob();
+          const mimeType = blobPic.type;
+          const fileData = new File([blobPic], "prev-pic.jpg", {
+            type: mimeType,
+          });
+
+          formData.append("userPic", fileData);
+        } catch (error) {
+          console.error("Failed to fetch previous image:", error);
+          formData.append("userPicUrl", prevPic);
+        }
+      }
 
       const res = await axios.patch(`/api/user/v3/userInfo`, formData, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
+      console.log(res.data);
 
       Swal.fire({
         icon: "success",
@@ -167,21 +192,21 @@ function EditInfoPage() {
       .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/, "$1-$2-$3")
       .replace(/(-{1,2})$/, "");
 
-    setInputPhone(hypenPhone);
+    setDisplayPhone(hypenPhone);
+    setInputPhone(ruleNumber);
   };
 
   const changeImgHandler = e => {
     const file = e.target.files[0];
     if (!file) return;
 
+    console.log(file);
+
     setImageValue(file);
     const objectUrl = URL.createObjectURL(file);
     setPreviewImage(objectUrl);
     return () => URL.revokeObjectURL(objectUrl);
   };
-
-  const displayImage =
-    previewImage || `${userData?.userPic}` || "/profile.jpeg";
 
   return (
     <div className="h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide bg-white">
@@ -191,20 +216,26 @@ function EditInfoPage() {
           className="text-3xl cursor-pointer"
           onClick={() => navigate("/user")}
         />
-        <span className="text-xl font-semibold pointer-events-none">
-          회원 정보 수정
-        </span>
+        <span className="text-xl font-semibold ">회원 정보 수정</span>
         <span>&emsp;</span>
       </div>
       <div className="flex flex-col h-dvh justify-around mt-24 gap-10">
         <div className="w-full h-[30%] flex flex-col items-center gap-4">
           <label htmlFor="profile">
             <div className="relative cursor-pointer">
-              <img
-                src={`${USER_IMAGE_URL}/${userData.userId}/${displayImage}`}
-                alt="프로필 이미지"
-                className="w-32 h-32 rounded-full object-cover border border-gray shadow-lg"
-              />
+              {previewImage ? (
+                <img
+                  src={`${previewImage}`}
+                  alt="프로필 이미지"
+                  className="w-32 h-32 rounded-full object-cover border border-gray shadow-lg"
+                />
+              ) : (
+                <img
+                  src={`${USER_IMAGE_URL}/${userData.userId}/${userData.userPic}`}
+                  alt="프로필 이미지"
+                  className="w-32 h-32 rounded-full object-cover border border-gray shadow-lg"
+                />
+              )}
               <div className="absolute bottom-0 -right-1 text-xl bg-darkGray p-2 rounded-full border-4 border-white">
                 <FaCameraRetro className="text-white" />
               </div>
@@ -216,11 +247,11 @@ function EditInfoPage() {
             className="absolute left-[5000px] hidden"
             onChange={changeImgHandler}
           />
-          <div className="flex items-center pointer-events-none">
+          <div className="flex items-center ">
             <span className="pr-3">사용가능 포인트</span>
             <span className="font-bold text-2xl">{userData.point}</span>
           </div>
-          <span className="flex items-center gap-2 px-3 py-1 border-2 border-gray rounded-xl pointer-events-none">
+          <span className="flex items-center gap-2 px-3 py-1 border-2 border-gray rounded-xl ">
             <MdOutlineMail className="text-xl" />
             {userData.email}
           </span>
@@ -260,15 +291,13 @@ function EditInfoPage() {
                   />
                 )}
               </div>
-              <span className="pointer-events-none">{userData.name}</span>
-              <span className="pointer-events-none">{userData.uid}</span>
-              <span className="pointer-events-none">
-                {userData.companyName}
-              </span>
+              <span className="">{userData.name}</span>
+              <span className="">{userData.uid}</span>
+              <span className="">{userData.companyName}</span>
               <div className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="tel"
-                  value={inputPhone ? inputPhone : userData.phone}
+                  value={displayPhone}
                   onChange={changePhoneNumber}
                   className="flex w-48 border rounded-md px-2"
                 />

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import { MdOutlineRefresh } from "react-icons/md";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { ticketIdAtom, userDataAtom } from "../../../atoms/userAtom";
 import { getCookie } from "../../../components/cookie";
@@ -18,8 +18,11 @@ const OrderRequestPage = () => {
   const [newTicketId, setNewTicketId] = useRecoilState(ticketIdAtom);
   const sessionUserId = sessionStorage.getItem("userId");
   const navigate = useNavigate();
+  const locate = useLocation();
   const accessToken = getCookie();
   const { id } = useParams();
+  const resId = locate.state;
+  console.log("navigate 로 받아온 데이터 : ", resId);
 
   useEffect(() => {
     const params = {
@@ -89,7 +92,7 @@ const OrderRequestPage = () => {
         text: "식권이 생성되었습니다.",
         timer: 2000,
       });
-      navigate(`/user/placetoorder/coupon/${result}`);
+      navigate(`/user/placetoorder/coupon/${result}`, { state: {} });
     } catch (error) {
       console.log(error);
     }
@@ -111,21 +114,10 @@ const OrderRequestPage = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(res.data);
-      const result = res.data.resultData;
+      console.log("서버에서 온 결과값 : ", res.data);
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const inputChangeHandler = ({ target: { value } }, userId) => {
-    console.log(value);
-    console.log(userId);
-
-    setInputValues(prev => ({
-      ...prev,
-      [userId]: value,
-    }));
   };
 
   const inputApprovalHandler = userId => {
@@ -160,6 +152,10 @@ const OrderRequestPage = () => {
   const cancleButtonClick = sessionUserId => {
     setIsCompleted(!isCompleted);
     console.log(sessionUserId);
+  };
+
+  const linkToTicket = () => {
+    navigate();
   };
 
   const isDisabled = !priceList.every(item => item.approvalStatus === 1);
@@ -252,7 +248,7 @@ const OrderRequestPage = () => {
                   </span>
                 </div>
               ) : (
-                <div className="flex w-[20%] justify-center gap-2 text-nowrap items-center pointer-events-none">
+                <div className="flex w-[20%] justify-center gap-2 text-nowrap items-center ">
                   <span className="bg-blue px-2 text-white font-semibold rounded-md"></span>
                   <span className="bg-red px-2 text-white font-semibold rounded-md"></span>
                 </div>

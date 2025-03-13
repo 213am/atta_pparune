@@ -49,12 +49,10 @@ const RestaurantReviewPage = () => {
         >
           <IoIosArrowBack />
         </span>
-        <span className="flex w-[80%] justify-center text-lg pointer-events-none">
+        <span className="flex w-[80%] justify-center text-lg ">
           {reviewList.restaurantName} 리뷰
         </span>
-        <span className="flex w-[10%] justify-center text-lg pointer-events-none">
-          &nbsp;
-        </span>
+        <span className="flex w-[10%] justify-center text-lg ">&nbsp;</span>
       </div>
       <div className="flex w-[90%] bg-gray px-4 py-4 justify-betweem mx-auto rounded-sm">
         <div className="flex flex-col w-[30%] justify-center items-center text-nowrap">
@@ -105,7 +103,7 @@ const RestaurantReviewPage = () => {
               )}
 
               <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-1 text-lg pointer-events-none">
+                <div className="flex items-center gap-1 text-lg ">
                   <span className="font-semibold">{item.nickName}</span>
                 </div>
                 <div className="flex gap-4 items-center">
@@ -119,7 +117,7 @@ const RestaurantReviewPage = () => {
                       />
                     ))}
                   </span>
-                  <span className="text-xs pointer-events-none">
+                  <span className="text-xs ">
                     {dayjs(item.createdAt).format("YYYY-MM-DD")}
                   </span>
                 </div>
@@ -141,10 +139,10 @@ const RestaurantReviewPage = () => {
                 />
               ))}
             </div>
-            <div className="flex w-full pointer-events-none">
+            <div className="flex w-full ">
               <span>{item.reviewText}</span>
             </div>
-            <div className="flex w-full gap-4 items-center pointer-events-none">
+            <div className="flex w-full gap-4 items-center ">
               {item?.menuName.map((data, index) => (
                 <span
                   className="flex px-2 py-1 border bg-white rounded-xl"
@@ -177,8 +175,8 @@ const RestaurantReviewPage = () => {
                 <div className="flex flex-col border w-full">
                   <div
                     className="relative bg-white border border-black
-                after:content-[''] after:absolute after:pointer-events-none after:border-solid after:border-transparent after:h-0 after:w-0 after:right-full after:top-1/2 after:mt-[-10px] after:border-r-[#ffffff]
-                before:content-[''] before:absolute before:pointer-events-none before:border-solid before:border-transparent before:h-0 before:w-0 before:right-full before:top-5 before:border-[9px] before:mt-[-11px] before:border-r-black"
+                after:content-[''] after:absolute after: after:border-solid after:border-transparent after:h-0 after:w-0 after:right-full after:top-1/2 after:mt-[-10px] after:border-r-[#ffffff]
+                before:content-[''] before:absolute before: before:border-solid before:border-transparent before:h-0 before:w-0 before:right-full before:top-5 before:border-[9px] before:mt-[-11px] before:border-r-black"
                   >
                     <div className="flex items-center p-4 gap-4">
                       <span>사장님</span>

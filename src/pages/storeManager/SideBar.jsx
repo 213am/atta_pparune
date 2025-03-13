@@ -184,7 +184,7 @@ const SideBar = () => {
         로그아웃
       </div>
       <Modal>
-        <PwKeyboard />
+        <PwKeyboard mode="edit" close={close} />
       </Modal>
     </div>
   );

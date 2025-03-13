@@ -179,7 +179,7 @@ const DepositHistory = (): JSX.Element => {
     <div className="relative flex flex-col w-full h-dvh bg-white">
       <AdminHeader title={"거래내역"} />
       <div className="flex flex-col w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
-        <div className="flex flex-col w-[100%] h-[10%] px-10 pt-10 bg-white items-start pointer-events-none">
+        <div className="flex flex-col w-[100%] h-[10%] px-10 pt-10 bg-white items-start ">
           식당 입금내역
         </div>
         <div className="flex ag-theme-alpine w-full h-full justify-start px-10">

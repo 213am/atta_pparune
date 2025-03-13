@@ -2,8 +2,9 @@ import axios from "axios";
 import { useCallback, useState } from "react";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { getCookie } from "./cookie";
+import Swal from "sweetalert2";
 
-const PwKeyboard = () => {
+const PwKeyboard = ({ close, mode = "input", onSubmit }) => {
   const PASSWORD_MAX_LENGTH = 6;
   const nums_init = Array.from({ length: 10 }, (_, k) => k);
   const [nums, setNums] = useState(nums_init);
@@ -42,7 +43,7 @@ const PwKeyboard = () => {
     };
     try {
       const res = await axios.patch(
-        "/api/admin/restaurnat/v3/password",
+        "/api/admin/restaurant/v3/password",
         payload,
         {
           headers: {
@@ -51,33 +52,45 @@ const PwKeyboard = () => {
         },
       );
       console.log(res.data);
+      if (res.data.resultData === 1) {
+        close();
+        Swal.fire("비밀번호가 변경되었습니다!", "", "success");
+      }
     } catch (error) {
       console.log(error);
+      Swal.fire("비밀번호 변경 실패!", "다시 시도해주세요.", "error");
     }
   };
 
   const onClickSubmitButton = () => {
-    if (password.length === 0) {
-      alert("비밀번호를 입력 후 눌러주세요!");
+    if (password.length !== 6) {
+      alert("비밀번호 6자리를 모두 입력해주세요!");
+      return;
+    }
+
+    if (mode === "edit") {
+      editPinHandler(); // 비밀번호 변경 요청
     } else {
-      alert(password + "을 입력하셨습니다.");
-      editPinHandler();
+      onSubmit(password); // 부모 컴포넌트에서 전달받은 함수 실행
     }
   };
 
   return (
     <div className="flex flex-col w-full items-center p-4 justify-center">
       <div className="flex flex-col w-full items-center">
-        <span className="flex text-lg">
-          <strong className="text-primary pr-1 text-xl">ㅇㅇㅇ 님</strong> 의
+        <span className="flex text-2xl">
+          {mode === "edit"
+            ? "새 비밀번호를 입력하세요"
+            : "결제 비밀번호를 입력해주세요"}
         </span>
-        <span className="flex text-2xl">결제 비밀번호를 입력해주세요</span>
       </div>
       <div className="flex space-x-2 my-4">
         {[...Array(PASSWORD_MAX_LENGTH)].map((_, i) => (
           <div
             key={i}
-            className={`w-6 h-6 border rounded-full transition-all duration-300 ${i < password.length ? "bg-primary" : "bg-white"}`}
+            className={`w-6 h-6 border rounded-full transition-all duration-300 ${
+              i < password.length ? "bg-primary" : "bg-white"
+            }`}
           ></div>
         ))}
       </div>
