@@ -71,6 +71,7 @@ const OrderList = () => {
     getMyOrder();
   }, []);
   console.log("진행중인 주문내역 : ", activeList);
+  console.log("지난 주문 내역 : ", paymentList);
 
   const linkToTicket = e => {
     if (activeList.ticketId) {
@@ -281,16 +282,18 @@ const OrderList = () => {
                   </div>
                 </div>
               </div>
-              {/* 리뷰 있을때만 버튼 보이도록 처리할 예정 - 현재는 상태구분이 불가능 */}
-              {/* {item.} */}
-              <div className="flex justify-center h-1/4">
-                <button
-                  onClick={() => linkToReview(item)}
-                  className="w-1/4 h-2/3 flex px-4 py-1 border border-darkGray rounded-sm text-nowrap items-center justify-center hover:bg-primary hover:text-white"
-                >
-                  리뷰 작성
-                </button>
-              </div>
+              {item.reviewStatus === 1 ? (
+                <></>
+              ) : (
+                <div className="flex justify-center h-1/4">
+                  <button
+                    onClick={() => linkToReview(item)}
+                    className="w-1/4 h-2/3 flex px-4 py-1 border border-darkGray rounded-sm text-nowrap items-center justify-center hover:bg-primary hover:text-white"
+                  >
+                    리뷰 작성
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>

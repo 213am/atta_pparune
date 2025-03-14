@@ -45,9 +45,9 @@ const MyReviewPage = () => {
     }
   }, []);
 
-  const deleteReview = async () => {
+  const deleteReview = async id => {
     const params = {
-      orderId: 0, // orderId 들어오면 변경
+      orderId: id,
     };
     try {
       const res = await axios.delete(`/api/user/v3/review`, {
@@ -67,6 +67,10 @@ const MyReviewPage = () => {
     setPreviewImage(src);
   };
 
+  const linkToDetailPage = id => {
+    navigate(`/user/restaurant/detail/${id}`);
+  };
+
   return (
     <div className="flex flex-col w-full h-dvh">
       <div className="flex w-full px-4 py-4 justify-between items-center">
@@ -84,7 +88,10 @@ const MyReviewPage = () => {
       {/* 리뷰 1개 */}
       {myReviewList?.map((data, index) => (
         <div className="flex flex-col px-10 py-4 gap-2" key={index}>
-          <div className="flex items-center gap-1 text-lg cursor-pointer">
+          <div
+            onClick={() => linkToDetailPage(data.restaurantId)}
+            className="flex items-center gap-1 text-lg cursor-pointer"
+          >
             <span>{data.restaurantName}</span>
             <IoIosArrowForward className="font-semibold" />
           </div>
@@ -126,7 +133,7 @@ const MyReviewPage = () => {
           </div>
           <div className="flex w-full justify-end items-center">
             <div
-              onClick={deleteReview}
+              onClick={() => deleteReview(data.orderId)}
               className="flex items-center cursor-pointer gap-1"
             >
               <RiDeleteBin6Fill />
