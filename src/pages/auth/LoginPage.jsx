@@ -78,9 +78,12 @@ function LoginPage() {
 
         const restaurantId = result.divisionId || sessionRestaurantId;
         const adminId = result.adminId;
+        const coalitionState = result.coalitionState;
         const accessToken = result.accessToken;
         window.sessionStorage.setItem("adminId", adminId);
         window.sessionStorage.setItem("restaurantId", restaurantId);
+        // 제휴 상태 확인 Status
+        window.sessionStorage.setItem("coalitionState", coalitionState);
         setCookie(accessToken);
         setIsLoginStore(true);
         // subscribeStoreLogin(restaurantId);

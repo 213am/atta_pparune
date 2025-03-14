@@ -15,7 +15,7 @@ export interface RowDataT {
   isCompleted: string;
 }
 
-const PointHistory = (): JSX.Element => {
+const FranchiseeStorePage = (): JSX.Element => {
   const tableData = [
     {
       id: 1,
@@ -107,7 +107,7 @@ const PointHistory = (): JSX.Element => {
     {
       headerName: "순번",
       field: "id",
-      sortable: true,
+      sortable: false,
       filter: true,
       width: 100,
     },
@@ -155,7 +155,7 @@ const PointHistory = (): JSX.Element => {
       cellRenderer: (params: any) => {
         const buttonClass =
           params.value === "입금처리"
-            ? "flex w-full h-[80%] justify-center items-center bg-blue text-white rounded-md"
+            ? "flex h-[80%] justify-center items-center bg-blue text-white rounded-md px-3"
             : "";
 
         return (
@@ -173,8 +173,6 @@ const PointHistory = (): JSX.Element => {
   ];
 
   const handleButtonClick = (params: any) => {
-    console.log(params);
-
     console.log(`Button clicked for ${params.data.restaurantName}`);
   };
 
@@ -182,10 +180,10 @@ const PointHistory = (): JSX.Element => {
     <div className="flex">
       <AdminSideBar />
       <div className="relative flex flex-col w-full h-dvh bg-white">
-        <AdminHeader title={"거래내역"} />
+        <AdminHeader title={"가맹점 관리"} />
         <div className="flex flex-col w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">
-          <div className="flex flex-col w-[100%] h-[10%] px-10 pt-10 bg-white items-start pointer-events-none">
-            포인트 판매내역
+          <div className="flex flex-col w-[100%] h-[10%] px-10 pt-10 bg-white items-start ">
+            제휴 식당
           </div>
           <div className="flex ag-theme-alpine w-full h-full justify-start px-10">
             <AgGridReact
@@ -204,4 +202,4 @@ const PointHistory = (): JSX.Element => {
   );
 };
 
-export default PointHistory;
+export default FranchiseeStorePage;

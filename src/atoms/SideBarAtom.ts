@@ -23,3 +23,8 @@ export const adminSubMenuState = atom<number>({
   key: "adminSubMenuState",
   default: 0,
 });
+
+export const storeMenuState = atom<string>({
+  key: "storeMenuState",
+  default: "",
+});
