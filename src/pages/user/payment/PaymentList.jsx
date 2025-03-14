@@ -12,17 +12,23 @@ import QRCode from "../order/QRCode";
 import { DOCKER_URL } from "../../../constants/url";
 import dayjs from "dayjs";
 import { ClipLoader } from "react-spinners";
+import Notification from "../../../components/notification/NotificationIcon";
+import { isWhiteIcon } from "../../../atoms/noticeAtom";
+import { useRecoilState } from "recoil";
 
 const OrderList = () => {
   const navigate = useNavigate();
   const [isTap, setIsTap] = useState(true);
   const [paymentList, setPaymentList] = useState([]);
   const [activeList, setActiveList] = useState({});
+  const [isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
 
   const sessionUserId = window.sessionStorage.getItem("userId");
   const accessToken = getCookie();
 
   useEffect(() => {
+    setIsWhite(false);
+
     const getPaymentList = async () => {
       try {
         if (sessionUserId) {
@@ -65,6 +71,7 @@ const OrderList = () => {
     getMyOrder();
   }, []);
   console.log("진행중인 주문내역 : ", activeList);
+  console.log("지난 주문 내역 : ", paymentList);
 
   const linkToTicket = e => {
     if (activeList.ticketId) {
@@ -90,7 +97,13 @@ const OrderList = () => {
 
   return (
     <div className="w-full h-dvh flex flex-col justify-between overflow-x-hidden overflow-y-scroll scrollbar-hide bg-white">
-      <div className="absolute top-0 left-0 w-full flex justify-between border-b-2 border-gray border-opacity-70 bg-white">
+      <Notification />
+      <div className="absolute top-0 left-0 w-full flex justify-between items-center px-3 py-5 border-b-2 border-gray border-opacity-70 bg-white">
+        <span>&emsp;</span>
+        <span className="text-xl font-semibold tracking-wider">주문내역</span>
+        <span>&emsp;</span>
+      </div>
+      <div className="absolute top-16 left-0 w-full flex justify-between border-b-2 border-gray border-opacity-70 bg-white">
         <div
           onClick={() => setIsTap(true)}
           className={`w-1/2 text-center text-xl font-semibold py-3 ${isTap ? "border-b-2 border-black" : "text-darkGray font-normal"}`}
@@ -106,7 +119,7 @@ const OrderList = () => {
       </div>
       {isTap ? (
         activeList.orderId ? (
-          <div className="flex flex-col w-full h-dvh gap-10">
+          <div className="flex flex-col w-full h-dvh gap-10 pt-24">
             <div className="flex w-full h-[14%] justify-center items-end text-primary text-2xl font-semibold tracking-widest">
               {activeList.ticketId ? (
                 <div className="flex items-center gap-2">
@@ -215,7 +228,7 @@ const OrderList = () => {
           </div>
         )
       ) : (
-        <div className="flex flex-col w-full h-dvh justify-start items-center gap-5 mt-20 scrollbar-hide">
+        <div className="flex flex-col w-full h-dvh justify-start items-center gap-5 pt-40 scrollbar-hide">
           {/* 주문내역 카드 */}
           {paymentList.map((item, index) => (
             <div
@@ -269,16 +282,18 @@ const OrderList = () => {
                   </div>
                 </div>
               </div>
-              {/* 리뷰 있을때만 버튼 보이도록 처리할 예정 - 현재는 상태구분이 불가능 */}
-              {/* {item.} */}
-              <div className="flex justify-center h-1/4">
-                <button
-                  onClick={() => linkToReview(item)}
-                  className="w-1/4 h-2/3 flex px-4 py-1 border border-darkGray rounded-sm text-nowrap items-center justify-center hover:bg-primary hover:text-white"
-                >
-                  리뷰 작성
-                </button>
-              </div>
+              {item.reviewStatus === 1 ? (
+                <></>
+              ) : (
+                <div className="flex justify-center h-1/4">
+                  <button
+                    onClick={() => linkToReview(item)}
+                    className="w-1/4 h-2/3 flex px-4 py-1 border border-darkGray rounded-sm text-nowrap items-center justify-center hover:bg-primary hover:text-white"
+                  >
+                    리뷰 작성
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>

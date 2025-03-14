@@ -21,6 +21,11 @@ import DetailPage from "./pages/service/notice/DetailPage";
 import OrderLoading from "./pages/user/order/OrderLoading";
 import RequestPayment from "./pages/user/payment/RequestPayment";
 import FranchiseeCompanyPage from "./pages/admin/franchisee/FranchiseeCompanyPage";
+import CompanyLayout from "./components/layouts/CompanyLayout";
+import DashBoard from "./pages/company/dashboard/DashBoard";
+import CpTransaction from "./pages/company/toss/CpTransaction";
+import Member from "./pages/company/member/Member";
+import Account from "./pages/company/account/Account";
 
 // const SkeletonLoader = () => (
 //   <div style={{ width: "100%", height: "100vh", backgroundColor: "#f3f3f3" }}>
@@ -393,7 +398,38 @@ const App = (): JSX.Element => {
 
           {/* 회사 */}
           <Route path="/company">
-            <Route index element={<PaymentCheckoutPage />} />
+            <Route
+              index
+              element={
+                <CompanyLayout>
+                  <DashBoard />
+                </CompanyLayout>
+              }
+            />
+            <Route
+              path="transaction"
+              element={
+                <CompanyLayout>
+                  <CpTransaction />
+                </CompanyLayout>
+              }
+            />
+            <Route
+              path="member"
+              element={
+                <CompanyLayout>
+                  <Member />
+                </CompanyLayout>
+              }
+            />
+            <Route
+              path="account"
+              element={
+                <CompanyLayout>
+                  <Account />
+                </CompanyLayout>
+              }
+            />
           </Route>
 
           {/* 결제 성공 */}

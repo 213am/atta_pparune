@@ -24,9 +24,25 @@ export type RowDataT = {
   isCompleted: string;
 };
 
+export interface ChartProps {
+  enqCount: number[];
+}
+
+interface IEnquiryType {
+  id: number;
+  commentYn: number;
+  createdAt: string;
+  inquiryId: number;
+  name: string;
+  postCode: number;
+  roleCode: number;
+  year: string;
+}
+
 const Enquiry = (): JSX.Element => {
   // const navigate = useNavigate();
   const [enqCount, setEnqCount] = useState<number[]>([]);
+  const [enquiryList, setEnquiryList] = useState<IEnquiryType[]>([]);
   const accessToken = getCookie();
 
   useEffect(() => {
@@ -63,78 +79,16 @@ const Enquiry = (): JSX.Element => {
         },
       );
       console.log(res.data.resultData);
+      const result = res.data.resultData;
+
+      setEnquiryList([...result.selSystemPostResList]);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const tableData = [
-    {
-      id: 1,
-      date: "2025-02-11",
-      manageYear: "2025년",
-      name: "홍길동",
-      role: "사용자",
-      enquiryCode: "불편사항",
-      isCompleted: "답변완료",
-    },
-    {
-      id: 2,
-      date: "2025-02-11",
-      manageYear: "2025년",
-      name: "이길동",
-      role: "회사 관리자",
-      enquiryCode: "문의사항",
-      isCompleted: "답변예정",
-    },
-    {
-      id: 3,
-      date: "2025-02-12",
-      manageYear: "2025년",
-      name: "박길동",
-      role: "식당 관리자",
-      enquiryCode: "불편사항",
-      isCompleted: "답변예정",
-    },
-    {
-      id: 4,
-      date: "2025-02-12",
-      manageYear: "2025년",
-      name: "최길동",
-      role: "식당 관리자",
-      enquiryCode: "문의사항",
-      isCompleted: "답변예정",
-    },
-    {
-      id: 5,
-      date: "2025-02-13",
-      manageYear: "2025년",
-      name: "김길동",
-      role: "사용자",
-      enquiryCode: "불편사항",
-      isCompleted: "답변예정",
-    },
-    {
-      id: 6,
-      date: "2025-02-13",
-      manageYear: "2025년",
-      name: "장길동",
-      role: "사용자",
-      enquiryCode: "불편사항",
-      isCompleted: "답변예정",
-    },
-    {
-      id: 7,
-      date: "2025-02-14",
-      manageYear: "2025년",
-      name: "정길동",
-      role: "사용자",
-      enquiryCode: "문의사항",
-      isCompleted: "답변예정",
-    },
-  ];
-
-  const columnDefs: ColDef<RowDataT>[] = [
+  const tableData = enquiryList;
+  const columnDefs: ColDef<IEnquiryType>[] = [
     {
       headerName: "순번",
       field: "id",
@@ -144,14 +98,14 @@ const Enquiry = (): JSX.Element => {
     },
     {
       headerName: "접수일자",
-      field: "date",
+      field: "createdAt",
       sortable: true,
       filter: true,
       width: 200,
     },
     {
       headerName: "관리년도",
-      field: "manageYear",
+      field: "year",
       sortable: true,
       filter: true,
       width: 150,
@@ -165,21 +119,21 @@ const Enquiry = (): JSX.Element => {
     },
     {
       headerName: "사용자 구분",
-      field: "role",
+      field: "roleCode",
       sortable: true,
       filter: true,
       width: 200,
     },
     {
       headerName: "문의 구분",
-      field: "enquiryCode",
+      field: "postCode",
       sortable: true,
       filter: true,
       width: 200,
     },
     {
       headerName: "처리 상태",
-      field: "isCompleted",
+      field: "commentYn",
       sortable: true,
       filter: true,
       width: 200,
@@ -188,16 +142,17 @@ const Enquiry = (): JSX.Element => {
 
   const EMPTY_ROW_COUNT = 10;
 
-  const emptyRows: RowDataT[] = Array.from(
+  const emptyRows: IEnquiryType[] = Array.from(
     { length: EMPTY_ROW_COUNT },
     (_, index) => ({
       id: index + 1,
-      date: "",
-      manageYear: "",
+      commentYn: "",
+      createdAt: "",
+      inquiryId: "",
       name: "",
-      role: "",
-      enquiryCode: "",
-      isCompleted: "",
+      postCode: "",
+      roleCode: "",
+      year: "",
     }),
   );
   const rowDefs =
@@ -205,7 +160,7 @@ const Enquiry = (): JSX.Element => {
       ? [...tableData, ...emptyRows.slice(tableData.length)]
       : tableData;
 
-  const enquiryDetailHandler = (e: RowClickedEvent<RowDataT>) => {
+  const enquiryDetailHandler = (e: RowClickedEvent<IEnquiryType>) => {
     if (e.data) {
       console.log("해당 게시글로 이동", e.data.id);
     } else {

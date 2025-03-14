@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { ChartProps } from "./Enquiry";
 
 ChartJS.register(
   CategoryScale,
@@ -20,7 +21,7 @@ ChartJS.register(
   Legend,
 );
 
-const BarChart = ({ enqCount }: number[]): JSX.Element => {
+const BarChart = ({ enqCount }: ChartProps): JSX.Element => {
   const labels = ["불편사항", "문의사항"];
   const options: ChartOptions<"bar"> = {
     responsive: true,

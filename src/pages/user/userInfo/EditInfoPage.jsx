@@ -231,7 +231,11 @@ function EditInfoPage() {
                 />
               ) : (
                 <img
-                  src={`${USER_IMAGE_URL}/${userData.userId}/${userData.userPic}`}
+                  src={
+                    userData.userPic
+                      ? `${USER_IMAGE_URL}/${userData.userId}/${userData.userPic}`
+                      : "/profile.jpeg"
+                  }
                   alt="프로필 이미지"
                   className="w-32 h-32 rounded-full object-cover border border-gray shadow-lg"
                 />

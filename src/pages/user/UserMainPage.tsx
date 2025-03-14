@@ -5,6 +5,7 @@ import { LuArrowDownUp } from "react-icons/lu";
 import { useInView } from "react-intersection-observer";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
+import DOMPurify from "dompurify";
 import "swiper/swiper-bundle.css";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -39,14 +40,14 @@ interface ISwiperData {
 
 const UserMainPage = (): JSX.Element => {
   const [restaurantList, setRestaurantList] = useState<IRestaurantList[]>([]);
-  const [pagenation, setPagenation] = useState<number>(1);
+  const [_pagenation, setPagenation] = useState<number>(1);
   const [categoryId, setCategoryId] = useState<number>(1);
   const [filter, setFilter] = useState<null | number>(null);
   const [swiperData, setSwiperData] = useState<ISwiperData[]>([]);
   const navigate = useNavigate();
   const [_isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
   const [_isLogin, setIsLogin] = useRecoilState(loginAtom);
-  const [isClick, setIsClick] = useRecoilState(isClickIcon);
+  const [_isClick, setIsClick] = useRecoilState(isClickIcon);
 
   useEffect(() => {
     setIsWhite(true);
@@ -170,18 +171,24 @@ const UserMainPage = (): JSX.Element => {
               <img
                 src={`${STORE_IMAGE_URL}/${item.restaurantId}/${item.restaurantPic.filePath}`}
                 alt=""
+                className="w-full h-full object-cover"
               />
               <div className="absolute left-2 bottom-8 font-bold">
                 <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap ">
                   추천식당
                 </p>
-                <div className="flex flex-col ">
-                  <span className="pl-2 text-white text-2xl text-nowrap ">
+                <div className="flex flex-col">
+                  <span className="pl-2 text-white text-2xl text-nowrap">
                     {item.restaurantName}
                   </span>
-                  <span className="pl-2 text-white text-2xl text-nowrap ">
-                    호불호 없을 누구나 좋아하는 맛
-                  </span>
+                  <span
+                    className="flex w-full px-2 text-white text-2xl text-balance break-words"
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(
+                        String(item.restaurantDescription),
+                      ),
+                    }}
+                  ></span>
                 </div>
               </div>
             </SwiperSlide>

@@ -85,7 +85,7 @@ function IndexPage() {
       <Notification />
       <div className="absolute top-0 left-0 w-full flex justify-between items-center px-3 py-5 border-b-2 border-gray border-opacity-70 bg-white">
         <span>&emsp;</span>
-        <span className="text-xl font-semibold ">내 정보</span>
+        <span className="text-xl font-semibold tracking-wider">내 정보</span>
         <span>&emsp;</span>
       </div>
       <div className="flex flex-col h-dvh justify-around mt-24 gap-10">

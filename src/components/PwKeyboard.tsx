@@ -4,7 +4,18 @@ import { FaDeleteLeft } from "react-icons/fa6";
 import { getCookie } from "./cookie";
 import Swal from "sweetalert2";
 
-const PwKeyboard = ({ close, mode = "input", onSubmit }) => {
+interface PwKeyboardProps {
+  close: () => void;
+  mode?: "input" | "edit"; // mode가 가질 수 있는 값의 타입 지정
+  onSubmit: (value: string) => void;
+  enqCount: number[];
+}
+
+const PwKeyboard: React.FC<PwKeyboardProps> = ({
+  close,
+  mode = "input",
+  onSubmit,
+}) => {
   const PASSWORD_MAX_LENGTH = 6;
   const nums_init = Array.from({ length: 10 }, (_, k) => k);
   const [nums, setNums] = useState(nums_init);

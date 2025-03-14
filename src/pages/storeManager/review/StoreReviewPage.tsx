@@ -71,8 +71,6 @@ interface BlackListData {
 }
 
 function StoreReviewPage(): JSX.Element {
-  // 별점 상태
-  const rating = 5;
   // 댓글쓰기 버튼
   const [isClick, setIsClick] = useState(0);
   // 댓글 정보
