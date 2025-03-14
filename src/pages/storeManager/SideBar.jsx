@@ -90,22 +90,34 @@ const SideBar = () => {
   };
 
   const handleChangeCoalition = () => {
-    Swal.fire({
-      title: title,
-      icon: "question",
+    if (coalitionState === 0 || coalitionState === 1) {
+      Swal.fire({
+        title: title,
+        icon: "question",
 
-      showCancelButton: true,
-      confirmButtonColor: "#79BAF2",
-      cancelButtonColor: "#E44B58",
-      confirmButtonText: "확인",
-      cancelButtonText: "취소",
+        showCancelButton: true,
+        confirmButtonColor: "#79BAF2",
+        cancelButtonColor: "#E44B58",
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
 
-      reverseButtons: false,
-    }).then(result => {
-      if (result.isConfirmed) {
-        patchCoalition();
-      }
-    });
+        reverseButtons: false,
+      }).then(result => {
+        if (result.isConfirmed) {
+          patchCoalition();
+        }
+      });
+    } else if (coalitionState === 2) {
+      Swal.fire({
+        title: "제휴 해지 요청 처리중입니다.\n잠시만 기다려 주세요.",
+        icon: "info",
+      });
+    } else if (coalitionState === 3) {
+      Swal.fire({
+        title: "제휴 신청 요청 처리중입니다.\n잠시만 기다려 주세요.",
+        icon: "info",
+      });
+    }
   };
 
   useEffect(() => {

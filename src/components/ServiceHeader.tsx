@@ -1,10 +1,9 @@
+import { useEffect } from "react";
 import { IoMdLogIn } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { menuState } from "../atoms/serviceAtom";
-import { useEffect } from "react";
 import { roleAtom } from "../atoms/roleAtom";
-import { COMPANY } from "../constants/Role";
+import { menuState } from "../atoms/serviceAtom";
 
 const ServiceHeader = (): JSX.Element => {
   const [menu, setMenu] = useRecoilState(menuState);
@@ -61,7 +60,7 @@ const ServiceHeader = (): JSX.Element => {
         </li>
         <li
           onClick={() => {
-            setRole(COMPANY);
+            setRole("");
             navigate("/auth");
           }}
           className="flex items-center gap-1.5 px-4 py-1 cursor-pointer"

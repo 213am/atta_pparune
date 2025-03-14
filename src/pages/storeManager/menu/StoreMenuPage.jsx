@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { IoMdClose } from "react-icons/io";
@@ -16,8 +16,7 @@ import { DOCKER_URL } from "../../../constants/url";
 
 const LayoutDiv = styled.div`
   display: flex;
-  gap: 10px;
-  justify-content: space-between;
+  gap: 30px;
   background-color: #eee;
   max-height: 100vh;
   height: auto;
@@ -28,7 +27,7 @@ const ContentDiv = styled.div`
   flex-wrap: wrap;
   padding: 20px 0;
   padding-bottom: 30px;
-  width: 830px;
+  width: 100%;
   max-height: calc(100vh - 60px);
   overflow-y: auto;
 `;
@@ -38,14 +37,6 @@ const TitleDiv = styled.div`
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 20px;
-`;
-
-const SideBarRightDiv = styled.div`
-  box-shadow:
-    0px 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0px 10px 10px -5px rgba(0, 0, 0, 0.04);
-  width: 350px;
-  background-color: #fff;
 `;
 
 const MenuDiv = styled.div`
@@ -77,16 +68,6 @@ const MenuCostDiv = styled.div`
   margin-top: 5px;
   font-size: 14px;
   font-weight: 700;
-`;
-
-const RightMenuDiv = styled.div`
-  margin-bottom: 20px;
-  font-size: 20px;
-  font-weight: 700;
-  padding: 10px 0;
-  display: flex;
-  justify-content: center;
-  cursor: pointer;
 `;
 
 const MenuAddDiv = styled.div`
@@ -133,18 +114,15 @@ const MenuAddDiv = styled.div`
 `;
 
 const MenuSchema = yup.object({
-  restaurantId: yup.number(),
   categoryName: yup.string(),
   menuName: yup.string(),
-  price: yup.number(),
-  pic: yup.mixed(),
+  price: yup.string(),
 });
 
 function StoreMenuPage() {
   const restaurantId = sessionStorage.getItem("restaurantId");
   const accessToken = getCookie();
 
-  const [menuEdit, setMenuEdit] = useState(false);
   const [isClick, setIsClick] = useState({
     modal1: false,
     modal2: false,
@@ -153,16 +131,18 @@ function StoreMenuPage() {
 
   // 이미지 미리보기 state
   const [preview, setPreview] = useState();
+  // 이미지 파일 state
+  const [imgFile, setImgFile] = useState([]);
 
-  // 가져온 데이터
-  const [getData, setGetData] = useState({});
+  const fileInputRef = useRef(null);
 
   const [patchMenuData, setPatchMenuData] = useState({});
 
   // 수정할 메뉴 이미지
   const [menuEditPic, setMenuEditPic] = useState();
+
   const { register, handleSubmit, setValue } = useForm({
-    mode: "onChange",
+    mode: "onSubmit",
     resolver: yupResolver(MenuSchema),
   });
 
@@ -183,7 +163,6 @@ function StoreMenuPage() {
       );
       const result = res.data.resultData;
       // console.log("이거 써!", result);
-      setGetData(result);
       setMenuCateList(result.menuCateList);
     } catch (error) {
       console.log(error);
@@ -228,7 +207,13 @@ function StoreMenuPage() {
       });
       getStoreInfo();
     } catch (error) {
-      console.log(data);
+      Swal.fire({
+        title: "입력 데이터가 부족합니다.",
+        icon: "error",
+        confirmButtonText: "확인",
+        showConfirmButton: true, // ok 버튼 노출 여부
+        allowOutsideClick: false, // 외부 영역 클릭 방지
+      });
       console.log(error);
     }
   };
@@ -296,10 +281,14 @@ function StoreMenuPage() {
     const file = e.target.files[0];
     if (file) {
       setPreview(URL.createObjectURL(file));
-      setValue("pic", [file]);
+      setImgFile([file]);
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
+  // 폼 데이터 전송
   const handleSubmitForm = data => {
     console.log("폼데이터:", data);
 
@@ -307,13 +296,17 @@ function StoreMenuPage() {
 
     // JSON 형식으로 p 객체 추가
     const pData = {
-      restaurantId: data.restaurantId,
+      restaurantId: restaurantId,
       categoryName: data.categoryName,
       menuName: data.menuName,
-      price: data.price,
+      price: parseInt(data.price),
     };
-    console.log(data.pic);
-    postData.append("pic", data.pic[0]); // 파일 추가
+    console.log("이거 먼데??", imgFile);
+    if (imgFile) {
+      postData.append("pic", imgFile[0]); // 파일 추가
+    } else {
+      postData.append("pic", "");
+    }
     // JSON으로 변경
     postData.append(
       "p",
@@ -328,7 +321,11 @@ function StoreMenuPage() {
     };
 
     const patchImgData = new FormData();
-    patchImgData.append("pic", data.pic[0]);
+    if (imgFile) {
+      patchImgData.append("pic", imgFile[0]);
+    } else {
+      patchImgData.append("pic", []);
+    }
     patchImgData.append(
       "p",
       new Blob([JSON.stringify({ menuId: patchMenuData.menuId })], {
@@ -349,7 +346,6 @@ function StoreMenuPage() {
 
   useEffect(() => {
     getStoreInfo();
-    setValue("restaurantId", restaurantId);
   }, []);
 
   return (
@@ -358,6 +354,23 @@ function StoreMenuPage() {
         <SideBar />
         <div className="p-[10px]">
           <ContentDiv className="scrollbar-hide">
+            <div className="absolute right-0 mr-10">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsClick({ modal1: true });
+                  setValue("categoryName", "");
+                  setValue("menuName", "");
+                  setValue("price", "");
+                  setImgFile([]);
+                  setPreview(null);
+                  open();
+                }}
+                className="px-4 py-2 bg-primary text-white rounded-[5px] shadow-lg"
+              >
+                메뉴추가
+              </button>
+            </div>
             {menuCateList.map(item => (
               <div key={item.categoryId}>
                 <TitleDiv>{item.categoryName}</TitleDiv>
@@ -366,44 +379,39 @@ function StoreMenuPage() {
                     <MenuDiv key={menu.menuId}>
                       <MenuImg
                         src={`${DOCKER_URL}/pic/menu/${menu.menuId}/${menu?.menuPic}`}
-                        alt="없음"
                       />
                       <div className="flex items-center w-[210px] justify-between">
                         <MenuNameDiv>{menu.menuName}</MenuNameDiv>
-                        {menuEdit ? (
-                          <div className="flex items-center gap-[5px]">
-                            <FiEdit
-                              onClick={() => {
-                                setPatchMenuData(prev => ({
-                                  ...prev,
-                                  menuId: menu.menuId,
-                                  categoryId: item.categoryId,
-                                }));
-                                setMenuEditPic(
-                                  `${DOCKER_URL}/pic/menu/${menu.menuId}/${menu?.menuPic}`,
-                                );
-                                setIsClick({ modal2: true });
-                                setValue("categoryName", item.categoryName);
-                                setValue("menuName", menu.menuName);
-                                setValue("price", menu.price);
-                                setValue(
-                                  "pic",
-                                  `${DOCKER_URL}/pic/menu/${menu.menuId}/${menu?.menuPic}`,
-                                );
-                                open();
-                              }}
-                              className="w-5 h-5 cursor-pointer"
-                            />
-                            <IoMdClose
-                              onClick={() =>
-                                handleClickDelete(item.categoryId, menu.menuId)
-                              }
-                              className="w-6 h-6 cursor-pointer"
-                            />
-                          </div>
-                        ) : (
-                          <></>
-                        )}
+
+                        <div className="flex items-center gap-[5px]">
+                          <FiEdit
+                            onClick={() => {
+                              setPatchMenuData(prev => ({
+                                ...prev,
+                                menuId: menu.menuId,
+                                categoryId: item.categoryId,
+                              }));
+                              setMenuEditPic(
+                                `${DOCKER_URL}/pic/menu/${menu.menuId}/${menu?.menuPic}`,
+                              );
+                              setIsClick({ modal2: true });
+                              setValue("categoryName", item.categoryName);
+                              setValue("menuName", menu.menuName);
+                              setValue("price", menu.price);
+                              setImgFile(
+                                `${DOCKER_URL}/pic/menu/${menu.menuId}/${menu?.menuPic}`,
+                              );
+                              open();
+                            }}
+                            className="w-5 h-5 cursor-pointer"
+                          />
+                          <IoMdClose
+                            onClick={() =>
+                              handleClickDelete(item.categoryId, menu.menuId)
+                            }
+                            className="w-6 h-6 cursor-pointer"
+                          />
+                        </div>
                       </div>
                       <MenuCostDiv>{menu.price.toLocaleString()}원</MenuCostDiv>
                     </MenuDiv>
@@ -413,47 +421,6 @@ function StoreMenuPage() {
             ))}
           </ContentDiv>
         </div>
-        <SideBarRightDiv>
-          <div className="flex justify-center">
-            {/* <MenuImg
-              style={{ borderRadius: 100 }}
-              src={`${DOCKER_URL}/pic/restaurant/${getData.restaurantId}/${getData.restaurantPics?.filePath}`}
-              alt="없음"
-            /> */}
-          </div>
-          <TitleDiv
-            style={{
-              color: "#B3A1EC",
-              textAlign: "center",
-              marginBottom: 250,
-              marginTop: 40,
-            }}
-          >
-            {getData.restaurantName}
-          </TitleDiv>
-          <RightMenuDiv
-            onClick={() => {
-              setIsClick({ modal1: true });
-              setValue("categoryName", "");
-              setValue("menuName", "");
-              setValue("price", "");
-              setValue("pic", null);
-              setPreview(null);
-              open();
-            }}
-          >
-            메뉴 추가
-          </RightMenuDiv>
-          <RightMenuDiv
-            style={{
-              backgroundColor: menuEdit ? "#A28CE8" : "#fff",
-              color: menuEdit ? "#fff" : "#333",
-            }}
-            onClick={() => setMenuEdit(!menuEdit)}
-          >
-            메뉴 수정
-          </RightMenuDiv>
-        </SideBarRightDiv>
       </LayoutDiv>
       {isClick.modal1 && (
         <Modal>
@@ -469,7 +436,7 @@ function StoreMenuPage() {
                   id="menuImg"
                   className="opacity-0"
                   accept="image/png, image/jpeg"
-                  {...register("pic")}
+                  ref={fileInputRef}
                   onChange={e => handleChangePreview(e)}
                 />
               </p>
@@ -517,7 +484,7 @@ function StoreMenuPage() {
                   id="menuImg"
                   className="opacity-0"
                   accept="image/png, image/jpeg"
-                  {...register("pic")}
+                  ref={fileInputRef}
                   onChange={e => handleChangePreview(e)}
                 />
               </p>

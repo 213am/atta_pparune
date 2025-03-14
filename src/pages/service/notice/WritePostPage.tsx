@@ -1,19 +1,109 @@
-import { useState } from "react";
+import styled from "@emotion/styled";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa6";
+import { IoMdClose } from "react-icons/io";
 import { LuCircleUserRound } from "react-icons/lu";
 import { MdFileDownload } from "react-icons/md";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useNavigate } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
 import ServiceFooter from "../../../components/ServiceFooter";
 import ServiceHeader from "../../../components/ServiceHeader";
 import "./notice.css";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { getCookie } from "../../../components/cookie";
+
+interface Size {
+  width?: number;
+  height?: number;
+}
+
+const IconDiv = styled.div<Size>`
+  min-width: ${({ width }) => (width ? `${width}px` : "25px")};
+  min-height: ${({ height }) => (height ? `${height}px` : "25px")};
+  width: ${({ width }) => (width ? `${width}px` : "25px")};
+  height: ${({ height }) => (height ? `${height}px` : "25px")};
+`;
 
 const WritePostPage = (): JSX.Element => {
   // 구분 (질의응답, 불편사항)
   const [cate, setCate] = useState("구분");
   const [isClick, setIsClick] = useState(false);
   const navigate = useNavigate();
+  const accessToken = getCookie();
+
+  // 이미지 미리보기 state
+  const [preview, setPreview] = useState<string[]>([]);
+  // 이미지 파일 state
+  const [imgFile, setImgFile] = useState<File[]>([]);
+  // 파일 input value 값 추적
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const addImgHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputfile = e.target.files && e.target.files;
+    console.log(inputfile);
+
+    if (inputfile) {
+      const fileArray = Array.from(inputfile);
+      setImgFile(fileArray);
+      const imgURL = fileArray.map(data => URL.createObjectURL(data));
+      setPreview(imgURL);
+    }
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const deleteImg = (url: string) => {
+    // 클릭한 이미지의 인덱스를 찾음
+    const indexToDelete = preview.indexOf(url);
+
+    if (indexToDelete !== -1) {
+      // preview 배열에서 해당 URL 삭제
+      setPreview(prev => prev.filter((_, idx) => idx !== indexToDelete));
+      // imgFile 배열에서도 같은 인덱스의 파일 삭제
+      setImgFile(prev => prev.filter((_, idx) => idx !== indexToDelete));
+    }
+  };
+
+  // 게시글 등록
+  const postBoard = async () => {
+    const postData = {
+      postCode: "00202",
+      inquiryTitle: "안녕하세요",
+      inquiryDetail: "반갑습니다",
+      roleCode: "00104",
+      id: 1,
+    };
+
+    const formData = new FormData();
+    formData.append(
+      "req",
+      new Blob([JSON.stringify(postData)], { type: "application/json" }),
+    );
+    imgFile.forEach(file => {
+      formData.append("reviewPics", file);
+    });
+
+    try {
+      const res = await axios.post("/api/system/v3/post", formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      console.log("res : ", res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    console.log("프리뷰", preview);
+    console.log("이미지 파일", imgFile);
+  }, [imgFile, preview]);
 
   return (
     <div className="relative w-full h-dvh bg-white overflow-y-auto scrollbar-hide z-10 flex flex-col">
@@ -95,8 +185,8 @@ const WritePostPage = (): JSX.Element => {
               />
             </div>
           </div>
-          <div className="flex justify-center mt-16">
-            <div className="flex gap-5 w-[1280px] z-10 items-center">
+          <div className="flex justify-center mt-5">
+            <div className="flex gap-5 w-[1280px] h-[85px] z-10 items-center">
               <div className="text-[20px] text-black">첨부파일</div>
               <label
                 htmlFor="fileinput"
@@ -108,8 +198,38 @@ const WritePostPage = (): JSX.Element => {
               <input
                 type="file"
                 id="fileinput"
+                ref={fileInputRef}
+                onChange={e => addImgHandler(e)}
                 className="absolute left-[-5000px]"
               />
+              <Swiper
+                slidesPerView={2}
+                spaceBetween={"5px"}
+                className="w-[200px]"
+              >
+                {preview.map((url, index) => (
+                  <SwiperSlide className="min-w-[85px]">
+                    <IconDiv
+                      key={index}
+                      width={85}
+                      height={85}
+                      className="relative"
+                    >
+                      <img
+                        src={url}
+                        alt={`preview-${index}`}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="w-[24px] h-[24px] cursor-pointer absolute top-0 right-0 rounded-full bg-black text-white p-[2px]">
+                        <IoMdClose
+                          onClick={() => deleteImg(url)}
+                          className="w-full h-full"
+                        />
+                      </div>
+                    </IconDiv>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             </div>
           </div>
           <div className="flex justify-center mt-5">
