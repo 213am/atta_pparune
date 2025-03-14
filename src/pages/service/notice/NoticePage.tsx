@@ -1,9 +1,9 @@
 import { useRecoilState } from "recoil";
-import { boardState } from "../../../atoms/serviceAtom";
 import ServiceFooter from "../../../components/ServiceFooter";
 import ServiceHeader from "../../../components/ServiceHeader";
 import Board from "./Board";
 import Question from "./Question";
+import { boardState } from "../../../atoms/serviceAtom";
 
 const NoticePage = (): JSX.Element => {
   const [board, setBoard] = useRecoilState(boardState);

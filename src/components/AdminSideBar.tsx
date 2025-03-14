@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa6";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { IoCalculatorOutline } from "react-icons/io5";
@@ -7,6 +7,8 @@ import { LuTriangleAlert } from "react-icons/lu";
 import { RiStore2Line } from "react-icons/ri";
 import { TbCreditCardRefund } from "react-icons/tb";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { adminMenuState, adminSubMenuState } from "../atoms/SideBarAtom";
 
 interface AdminSideBarProps {
   children?: ReactNode;
@@ -16,14 +18,6 @@ interface AdminSideBarProps {
 interface Size {
   width?: number;
   height?: number;
-}
-
-interface Click {
-  first: boolean;
-  second: boolean;
-  third: boolean;
-  forth: boolean;
-  fifth: boolean;
 }
 
 const IconDiv = styled.div<Size>`
@@ -38,16 +32,10 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
   const location = useLocation();
 
   // 메인 메뉴 클릭 State
-  const [isClick, setIsClick] = useState<Click>({
-    first: true,
-    second: false,
-    third: false,
-    forth: false,
-    fifth: false,
-  });
+  const [isClick, setIsClick] = useRecoilState(adminMenuState);
 
   // 서브메뉴
-  const [subMenu, setSubMenu] = useState<number>();
+  const [subMenu, setSubMenu] = useRecoilState(adminSubMenuState);
 
   // 메인 메뉴 클릭 함수
   const handleClick = (menu: number) => {
@@ -58,8 +46,8 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
       case 1:
         setIsClick({
           first: true,
-          second: isClick.second,
-          third: isClick.third,
+          second: false,
+          third: false,
           forth: false,
           fifth: false,
         });
@@ -88,8 +76,8 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
       case 4:
         setIsClick({
           first: false,
-          second: isClick.second,
-          third: isClick.third,
+          second: false,
+          third: false,
           forth: true,
           fifth: false,
         });
@@ -99,8 +87,8 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
       case 5:
         setIsClick({
           first: false,
-          second: isClick.second,
-          third: isClick.third,
+          second: false,
+          third: false,
           forth: false,
           fifth: true,
         });
@@ -110,17 +98,52 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
     }
   };
 
+  // 서브메뉴 클릭 함수
   const handleSubClick = (sub: number) => {
     setSubMenu(sub);
-    setIsClick({
-      first: false,
-      second: isClick.second,
-      third: isClick.third,
-      forth: false,
-      fifth: false,
-    });
+    switch (sub) {
+      case 1:
+        setIsClick({
+          first: false,
+          second: true,
+          third: false,
+          forth: false,
+          fifth: false,
+        });
+        navigate("/admin/point");
+        break;
+      case 2:
+        setIsClick({
+          first: false,
+          second: true,
+          third: false,
+          forth: false,
+          fifth: false,
+        });
+        navigate("/admin/deposit");
+        break;
+      case 3:
+        setIsClick({
+          first: false,
+          second: false,
+          third: true,
+          forth: false,
+          fifth: false,
+        });
+        break;
+      case 4:
+        setIsClick({
+          first: false,
+          second: false,
+          third: true,
+          forth: false,
+          fifth: false,
+        });
+        break;
+    }
   };
 
+  // 새로고침 방지
   useEffect(() => {
     console.log(location.pathname);
 
@@ -220,10 +243,7 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
           <div>
             <div
               className="ml-7 mr-[20px] cursor-pointer"
-              onClick={() => {
-                handleSubClick(1);
-                navigate("/admin/point");
-              }}
+              onClick={() => handleSubClick(1)}
             >
               <div
                 className={`text-darkGray rounded-[2px] py-2 pl-14 ${subMenu === 1 && "bg-primary text-white"}`}
@@ -233,10 +253,7 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
             </div>
             <div
               className="ml-7 mr-[20px] cursor-pointer"
-              onClick={() => {
-                handleSubClick(2);
-                navigate("/admin/deposit");
-              }}
+              onClick={() => handleSubClick(2)}
             >
               <div
                 className={`text-darkGray rounded-[2px] py-2 pl-14 ${subMenu === 2 && "bg-primary text-white"}`}
