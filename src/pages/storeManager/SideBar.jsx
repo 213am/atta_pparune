@@ -29,7 +29,7 @@ const SideBar = () => {
   const [subMenuClick, setSubMenuClick] = useState(false);
   const [role, setRole] = useRecoilState(roleAtom);
   const { Modal, open, close } = useModal({
-    title: "결제 비밀번호 설정",
+    title: "결제 비밀번호 재설정",
     width: 450,
     height: 600,
   });

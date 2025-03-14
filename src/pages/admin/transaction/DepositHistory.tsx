@@ -199,6 +199,7 @@ const DepositHistory = (): JSX.Element => {
               modules={[ClientSideRowModelModule]}
               theme={"legacy"}
             />
+          </div>
         </div>
       </div>
     </div>
