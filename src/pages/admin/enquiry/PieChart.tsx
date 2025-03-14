@@ -1,24 +1,9 @@
+import axios from "axios";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
+import { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-
-export const data = {
-  labels: ["불편사항", "결제문의", "예약문의"],
-  datasets: [
-    {
-      label: "건수",
-      data: [21, 15, 9],
-      backgroundColor: [
-        "rgba(255, 99, 132, 0.2)",
-        "rgba(54, 162, 235, 0.2)",
-        "rgba(255, 206, 86, 0.2)",
-      ],
-      borderColor: ["#ffa0d7", "#4b87c0", "rgba(255, 206, 86, 1)"],
-      borderWidth: 2,
-    },
-  ],
-};
 
 export const options = {
   // 차트 크기 설정
@@ -41,7 +26,20 @@ export const options = {
   },
 };
 
-const PieChart = (): JSX.Element => {
+const PieChart = ({ enqCount }: number[]): JSX.Element => {
+  const data = {
+    labels: ["불편사항", "문의사항"],
+    datasets: [
+      {
+        label: "건수",
+        data: enqCount,
+        backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(54, 162, 235, 0.2)"],
+        borderColor: ["#ffa0d7", "#4b87c0"],
+        borderWidth: 4,
+      },
+    ],
+  };
+
   return <Pie data={data} options={options} />;
 };
 

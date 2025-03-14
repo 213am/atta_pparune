@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { roleAtom } from "../atoms/roleAtom";
-import { STORE, USER } from "../constants/Role";
+import { STORE, USER, COMPANY, SYSTEM } from "../constants/Role";
 
 const IndexPage = () => {
   const navigate = useNavigate();
@@ -42,6 +42,28 @@ const IndexPage = () => {
             }}
           >
             매장관리자
+          </button>
+          <button
+            className={
+              "px-6 py-2 text-xl font-bold tracking-widest text-white transition duration-200 bg-primary shadow-lg text-nowrap sm:text-2xl sm:px-6 sm:py-1.5 lg:text-3xl lg:px-8 lg:py-2 rounded-xl hover:bg-primaryFocus "
+            }
+            onClick={() => {
+              navigate("/auth");
+              setRole(COMPANY);
+            }}
+          >
+            회사관리자
+          </button>
+          <button
+            className={
+              "px-6 py-2 text-xl font-bold tracking-widest text-white transition duration-200 bg-primary shadow-lg text-nowrap sm:text-2xl sm:px-6 sm:py-1.5 lg:text-3xl lg:px-8 lg:py-2 rounded-xl hover:bg-primaryFocus "
+            }
+            onClick={() => {
+              navigate("/auth");
+              setRole(SYSTEM);
+            }}
+          >
+            시스템관리자
           </button>
         </div>
       </div>

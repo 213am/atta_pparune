@@ -9,7 +9,7 @@ import { isLoginStoreAtom } from "../../atoms/restaurantAtom";
 import { roleAtom } from "../../atoms/roleAtom";
 import { loginAtom, userDataAtom } from "../../atoms/userAtom";
 import { setCookie } from "../../components/cookie";
-import { COMPANY, STORE, USER } from "../../constants/Role";
+import { COMPANY, STORE, SYSTEM, USER } from "../../constants/Role";
 import {
   CloseDiv,
   FormDiv,
@@ -42,6 +42,10 @@ function LoginPage() {
       navigate("/user");
     } else if (role === STORE) {
       navigate("/store");
+    } else if (role === COMPANY) {
+      navigate("/company");
+    } else if (role === SYSTEM) {
+      navigate("/admin");
     }
   };
 
@@ -87,6 +91,16 @@ function LoginPage() {
         setCookie(accessToken);
         setIsLoginStore(true);
         // subscribeStoreLogin(restaurantId);
+      } else if (role === COMPANY) {
+        const res = await axios.post("/api/admin/sign-in", formData);
+      } else if (role === SYSTEM) {
+        const res = await axios.post("/api/admin/sign-in", formData);
+        console.log(res.data.resultData);
+        const result = res.data.resultData;
+        const adminId = result.adminId;
+        const accessToken = result.accessToken;
+        window.sessionStorage.setItem("adminId", adminId);
+        setCookie(accessToken);
       }
       setIsLogin(true);
       routeHandler();
@@ -133,7 +147,9 @@ function LoginPage() {
               ? "사장님"
               : role === COMPANY
                 ? "회사"
-                : ""}
+                : role === SYSTEM
+                  ? "시스템"
+                  : ""}
         </RoleDiv>
       </TitleDiv>
       <FormDiv>

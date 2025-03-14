@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Suspense, lazy, useEffect } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { useRecoilState } from "recoil";
@@ -21,14 +22,16 @@ import OrderLoading from "./pages/user/order/OrderLoading";
 import RequestPayment from "./pages/user/payment/RequestPayment";
 import FranchiseeCompanyPage from "./pages/admin/franchisee/FranchiseeCompanyPage";
 
-const SkeletonLoader = () => (
-  <div style={{ width: "100%", height: "100vh", backgroundColor: "#f3f3f3" }}>
-    <p style={{ textAlign: "center", paddingTop: "50px" }}>Loading...</p>
-  </div>
-);
+// const SkeletonLoader = () => (
+//   <div style={{ width: "100%", height: "100vh", backgroundColor: "#f3f3f3" }}>
+//     <p style={{ textAlign: "center", paddingTop: "50px" }}>Loading...</p>
+//   </div>
+// );
 
-const preload = importFunc =>
-  importFunc().then(module => ({ default: module.default }));
+const preload = (importFunc: () => Promise<{ default: any }>) =>
+  importFunc().then((module: { default: any }) => ({
+    default: module.default,
+  }));
 
 const IndexPage = lazy(() => import("./pages/IndexPage"));
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
@@ -134,6 +137,11 @@ const App = (): JSX.Element => {
           <Route path="/" element={<IndexPage />} />
           <Route path="/auth">
             <Route index element={<LoginPage />} />
+            {/* 임시 - 시스템 관리자 로그인 */}
+            <Route path="system" element={<LoginPage />} />
+            {/* 임시 - 회사 관리자 로그인 */}
+            <Route path="company" element={<LoginPage />} />
+
             <Route path="findid" element={<FindIdPage />} />
             <Route path="findpw" element={<FindPwPage />} />
             <Route path="editpw" element={<EditPwPage />} />
