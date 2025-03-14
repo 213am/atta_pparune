@@ -388,7 +388,7 @@ function RestaurantPage() {
         <div>
           <IoMdArrowBack
             style={{ width: 24, height: 24, cursor: "pointer" }}
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/user")}
           />
 
           <input

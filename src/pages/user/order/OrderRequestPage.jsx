@@ -169,7 +169,7 @@ const OrderRequestPage = () => {
         <span className="text-lg font-semibold">결제 상태</span>
         <div className="w-[15%]">
           <span className="text-center px-3 py-1 rounded-md text-white text-opacity-0">
-            ㅇ
+            &nbsp;
           </span>
         </div>
       </div>

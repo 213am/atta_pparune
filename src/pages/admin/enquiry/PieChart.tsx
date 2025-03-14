@@ -1,7 +1,6 @@
-import axios from "axios";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
-import { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
+import { ChartProps } from "./Enquiry";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -26,7 +25,7 @@ export const options = {
   },
 };
 
-const PieChart = ({ enqCount }: number[]): JSX.Element => {
+const PieChart = ({ enqCount }: ChartProps): JSX.Element => {
   const data = {
     labels: ["불편사항", "문의사항"],
     datasets: [

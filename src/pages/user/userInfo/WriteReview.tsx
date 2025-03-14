@@ -23,17 +23,17 @@ interface menuList {
   price: number;
 }
 
-interface OrderData {
-  createdAt: string;
-  menuTotalPrice: number;
-  orderId: number;
-  pastDtoList: menuList[];
-  pic: null;
-  reservationYn: number;
-  restaurantId: number;
-  restaurantName: string;
-  reviewStatus: number;
-}
+// interface OrderData {
+//   createdAt: string;
+//   menuTotalPrice: number;
+//   orderId: number;
+//   pastDtoList: menuList[];
+//   pic: null;
+//   reservationYn: number;
+//   restaurantId: number;
+//   restaurantName: string;
+//   reviewStatus: number;
+// }
 
 const HeaderDiv = styled.div`
   display: flex;
