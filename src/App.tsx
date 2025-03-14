@@ -20,6 +20,27 @@ import DetailPage from "./pages/service/notice/DetailPage";
 import OrderLoading from "./pages/user/order/OrderLoading";
 import RequestPayment from "./pages/user/payment/RequestPayment";
 
+const SkeletonLoader = () => (
+  <div style={{ width: "100%", height: "100vh", backgroundColor: "#f3f3f3" }}>
+    <p style={{ textAlign: "center", paddingTop: "50px" }}>Loading...</p>
+  </div>
+);
+
+const preload = importFunc =>
+  importFunc().then(module => ({ default: module.default }));
+
+const IndexPage = lazy(() => import("./pages/IndexPage"));
+const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
+const UserMainPage = lazy(() =>
+  preload(() => import("./pages/user/UserMainPage")),
+);
+const FindIdPage = lazy(() => import("./pages/auth/FindIdPage"));
+const FindPwPage = lazy(() => import("./pages/auth/FindPwPage"));
+const EditPwPage = lazy(() => import("./pages/auth/EditPwPage"));
+const PolicyPage = lazy(() => import("./pages/auth/PolicyPage"));
+const SignUpPage = lazy(() => import("./pages/auth/SignUpPage"));
+const EmailAuthPage = lazy(() => import("./pages/auth/EmailAuthPage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 const WritePostPage = lazy(
   () => import("./pages/service/notice/WritePostPage"),
 );
@@ -33,7 +54,7 @@ const AboutPage = lazy(() => import("./pages/service/AboutPage"));
 const ServiceMainPage = lazy(() => import("./pages/service/IndexPage"));
 const AddCompanyPage = lazy(() => import("./pages/service/AddCompanyPage"));
 const NoticePage = lazy(() => import("./pages/service/notice/NoticePage"));
-// 타입스크립트 lazy Loading
+// JSX lazy Loading
 const PaymentCheckoutPage = lazy(() =>
   import("./pages/company/toss/PaymentCheckoutPage").then(module => ({
     default: module.PaymentCheckoutPage,
@@ -44,7 +65,6 @@ const WidgetSuccessPage = lazy(() =>
     default: module.WidgetSuccessPage,
   })),
 );
-
 const TableComponent = lazy(
   () => import("./pages/admin/franchisee/Franchisee"),
 );
@@ -54,14 +74,10 @@ const RestaurantReviewPage = lazy(
   () => import("./pages/user/restaurant/RestaurantReviewPage"),
 );
 const WriteReview = lazy(() => import("./pages/user/userInfo/WriteReview"));
-const IndexPage = lazy(() => import("./pages/IndexPage"));
-const EditPwPage = lazy(() => import("./pages/auth/EditPwPage"));
-const FindIdPage = lazy(() => import("./pages/auth/FindIdPage"));
-const FindPwPage = lazy(() => import("./pages/auth/FindPwPage"));
-const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
-const SignUpPage = lazy(() => import("./pages/auth/SignUpPage"));
 const Order = lazy(() => import("./pages/user/payment/PaymentList"));
-const Restaurant = lazy(() => import("./pages/user/restaurant/RestaurantPage"));
+const Restaurant = lazy(() =>
+  preload(() => import("./pages/user/restaurant/RestaurantPage")),
+);
 const Store = lazy(() => import("./pages/storeManager/StorePage"));
 const MenuPage = lazy(() => import("./pages/storeManager/menu/StoreMenuPage"));
 const StoreSales = lazy(
@@ -72,16 +88,13 @@ const OrderPage = lazy(
 );
 const EditInfoPage = lazy(() => import("./pages/user/userInfo/EditInfoPage"));
 const UserInfo = lazy(() => import("./pages/user/userInfo/IndexPage"));
-const EmailAuthPage = lazy(() => import("./pages/auth/EmailAuthPage"));
-const PolicyPage = lazy(() => import("./pages/auth/PolicyPage"));
 const PlaceToOrder = lazy(() => import("./pages/user/order/PlaceToOrder"));
 const MealTicketPage = lazy(() => import("./pages/user/order/QRCode"));
 const StoreInfoPage = lazy(
   () => import("./pages/storeManager/storeAuth/StoreInfoPage"),
 );
-const UserMainPage = lazy(() => import("./pages/user/UserMainPage"));
-const RestaurantDetailPage = lazy(
-  () => import("./pages/user/restaurant/RestaurantDetailPage"),
+const RestaurantDetailPage = lazy(() =>
+  preload(() => import("./pages/user/restaurant/RestaurantDetailPage")),
 );
 const AddStorePage = lazy(() => import("./pages/service/AddStorePage"));
 const OrderMemberPage = lazy(
@@ -91,7 +104,6 @@ const OrderPricePage = lazy(() => import("./pages/user/order/OrderPricePage"));
 const MenuSelectPage = lazy(
   () => import("./pages/user/restaurant/MenuSelectPage"),
 );
-const NotFound = lazy(() => import("./pages/NotFound"));
 const OrderRequestPage = lazy(
   () => import("./pages/user/order/OrderRequestPage"),
 );
