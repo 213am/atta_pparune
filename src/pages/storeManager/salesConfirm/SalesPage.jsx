@@ -60,11 +60,6 @@ function SalesPage() {
   const sessionRestaurantId = sessionStorage.getItem("restaurantId");
   const accessToken = getCookie();
 
-  console.log(startDate);
-  console.log(endDate);
-  console.log(today);
-  console.log(tomorrow);
-
   useEffect(() => {
     const params = {
       restaurantId: sessionRestaurantId,
@@ -74,8 +69,6 @@ function SalesPage() {
       size: 15,
     };
     const getSalesList = async () => {
-      console.log(params);
-
       try {
         const res = await axios.get(`/api/admin/restaurant/order/list`, {
           params,
@@ -83,8 +76,6 @@ function SalesPage() {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-
-        console.log("이거 뭐야?", res.data);
         const result = res.data.resultData;
         setSalesList([...result]);
       } catch (error) {
@@ -113,8 +104,6 @@ function SalesPage() {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-
-        console.log("이거 뭐야?", res.data);
         const result = res.data.resultData;
         setSalesList([...result]);
       } catch (error) {
@@ -166,9 +155,9 @@ function SalesPage() {
         <TopTitleDiv style={{ border: "none" }}>주문 종류</TopTitleDiv>
       </TableTopDiv>
       {/* 여기부터 map 돌리기 */}
-      {salesList.map(item => (
+      {salesList.map((item, index) => (
         <TableTopDiv key={item.orderId} style={{ backgroundColor: "#fff" }}>
-          <ContentDiv>{item.orderId}</ContentDiv>
+          <ContentDiv>{index + 1}</ContentDiv>
           <TopTitleDiv>
             <span>{dayjs(item.createdAt).format("YYYY-MM-DD")}</span>
             <span>{dayjs(item.createdAt).format("HH : mm")}</span>
