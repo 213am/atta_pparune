@@ -10,6 +10,9 @@ import { IoIosArrowForward } from "react-icons/io";
 import AdminHeader from "../../../components/AdminHeader";
 import BarChart from "./BarChart";
 import PieChart from "./PieChart";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { getCookie } from "../../../components/cookie";
 
 export type RowDataT = {
   id: number;
@@ -23,6 +26,47 @@ export type RowDataT = {
 
 const Enquiry = (): JSX.Element => {
   // const navigate = useNavigate();
+  const [enqCount, setEnqCount] = useState<number[]>([]);
+  const accessToken = getCookie();
+
+  useEffect(() => {
+    const getEnquiryCount = async () => {
+      try {
+        const res = await axios.get("/api/admin/system/v3/systemPost-count", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        console.log("get 요청 성공 : ", res.data.resultData);
+        const result = res.data.resultData;
+        const countArr = [
+          result.countForInconvenience ?? 0,
+          result.countForInquiry ?? 0,
+        ];
+        setEnqCount([...countArr]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getEnquiryCount();
+    getEnquiryList();
+  }, []);
+
+  const getEnquiryList = async () => {
+    try {
+      const res = await axios.get(
+        "/api/admin/system/v3/systemPost-management?page=1&size=15",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      console.log(res.data.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const tableData = [
     {
@@ -179,7 +223,7 @@ const Enquiry = (): JSX.Element => {
               불만 접수 현황(누계)
             </span>
             <div className="flex w-full h-full justify-center">
-              <PieChart />
+              <PieChart enqCount={enqCount} />
             </div>
           </div>
           <div className="flex flex-col w-[50%] h-full bg-white">
@@ -187,7 +231,7 @@ const Enquiry = (): JSX.Element => {
               연도별 불만 처리 건수
             </span>
             <div className="flex w-full h-full justify-center">
-              <BarChart />
+              <BarChart enqCount={enqCount} />
             </div>
           </div>
         </div>

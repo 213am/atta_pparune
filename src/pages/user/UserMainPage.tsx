@@ -8,7 +8,7 @@ import { useRecoilState } from "recoil";
 import "swiper/swiper-bundle.css";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { isWhiteIcon } from "../../atoms/noticeAtom";
+import { isClickIcon, isWhiteIcon } from "../../atoms/noticeAtom";
 import { loginAtom } from "../../atoms/userAtom";
 import MenuBar from "../../components/MenuBar";
 import Notification from "../../components/notification/NotificationIcon";
@@ -46,6 +46,7 @@ const UserMainPage = (): JSX.Element => {
   const navigate = useNavigate();
   const [_isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
   const [_isLogin, setIsLogin] = useRecoilState(loginAtom);
+  const [isClick, setIsClick] = useRecoilState(isClickIcon);
 
   useEffect(() => {
     setIsWhite(true);
@@ -116,6 +117,7 @@ const UserMainPage = (): JSX.Element => {
   }, [inView]);
 
   const detailNavigateHandler = (e: IRestaurantList) => {
+    setIsClick(false);
     navigate(`/user/restaurant/detail/${e.restaurantId}`, {
       state: {
         restaurantId: e.restaurantId,
@@ -160,9 +162,10 @@ const UserMainPage = (): JSX.Element => {
             <SwiperSlide
               key={index}
               className="relative cursor-pointer"
-              onClick={() =>
-                navigate(`/user/restaurant/detail/${item.restaurantId}`)
-              }
+              onClick={() => {
+                setIsClick(false);
+                navigate(`/user/restaurant/detail/${item.restaurantId}`);
+              }}
             >
               <img
                 src={`${STORE_IMAGE_URL}/${item.restaurantId}/${item.restaurantPic.filePath}`}

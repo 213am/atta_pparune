@@ -3,6 +3,9 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { AgGridReact } from "ag-grid-react";
 import AdminHeader from "../../components/AdminHeader";
+import axios from "axios";
+import { getCookie } from "../../components/cookie";
+import { useEffect } from "react";
 
 export interface RowDataT {
   id: number;
@@ -80,6 +83,7 @@ const Calculation = (): JSX.Element => {
       isCompleted: "입금처리",
     },
   ];
+  const accessToken = getCookie();
 
   const EMPTY_ROW_COUNT = 10;
 
@@ -170,6 +174,22 @@ const Calculation = (): JSX.Element => {
       },
     },
   ];
+  // 0314 오류
+  useEffect(() => {
+    const getSettlementList = async () => {
+      try {
+        const res = await axios.get("/api/admin/system/v3/settlement-list", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        console.log(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getSettlementList();
+  }, []);
 
   const handleButtonClick = (params: any) => {
     console.log(`Button clicked for ${params.data.restaurantName}`);

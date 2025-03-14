@@ -128,7 +128,7 @@ function IndexPage() {
               <span>소속</span>
               <span>휴대폰</span>
             </div>
-            <div className="flex flex-col w-[80%] gap-6 font-medium text-lg h-full text-no">
+            <div className="flex flex-col w-[80%] gap-6 font-medium text-lg h-full text-nowrap">
               {userData?.nickName ? (
                 <span>{userData.nickName}</span>
               ) : (
