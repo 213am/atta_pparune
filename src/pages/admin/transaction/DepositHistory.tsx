@@ -176,13 +176,9 @@ const DepositHistory = (): JSX.Element => {
     console.log(`Button clicked for ${params.data.restaurantName}`);
   };
 
-  const clickHandler = () => {
-    console.log("2 : 거래내역");
-  };
-
   return (
     <div className="flex">
-      <AdminSideBar onMenuClick={clickHandler} />
+      <AdminSideBar />
       <div className="relative flex flex-col w-full h-dvh bg-white">
         <AdminHeader title={"거래내역"} />
         <div className="flex flex-col w-full h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide">

@@ -12,13 +12,14 @@ import {
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
 import EnquiryPage from "./pages/admin/enquiry/EnquiryPage";
-import FranchiseePage from "./pages/admin/franchisee/FranchiseePage";
+import FranchiseeStorePage from "./pages/admin/franchisee/FranchiseeStorePage";
 import RefundPage from "./pages/admin/refund/RefundPage";
 import DepositHistory from "./pages/admin/transaction/DepositHistory";
 import PointHistory from "./pages/admin/transaction/PointHistory";
 import DetailPage from "./pages/service/notice/DetailPage";
 import OrderLoading from "./pages/user/order/OrderLoading";
 import RequestPayment from "./pages/user/payment/RequestPayment";
+import FranchiseeCompanyPage from "./pages/admin/franchisee/FranchiseeCompanyPage";
 
 const SkeletonLoader = () => (
   <div style={{ width: "100%", height: "100vh", backgroundColor: "#f3f3f3" }}>
@@ -66,7 +67,7 @@ const WidgetSuccessPage = lazy(() =>
   })),
 );
 const TableComponent = lazy(
-  () => import("./pages/admin/franchisee/Franchisee"),
+  () => import("./pages/admin/franchisee/FranchiseeStorePage"),
 );
 const AdminPage = lazy(() => import("./pages/admin/AdminPage"));
 const MyReviewPage = lazy(() => import("./pages/user/userInfo/MyReviewPage"));
@@ -372,7 +373,11 @@ const App = (): JSX.Element => {
           <Route path="/admin">
             <Route index element={<AdminPage />} />
             <Route path="enquiry" element={<EnquiryPage />} />
-            <Route path="franchisee" element={<FranchiseePage />} />
+            <Route path="franchisee-store" element={<FranchiseeStorePage />} />
+            <Route
+              path="franchisee-company"
+              element={<FranchiseeCompanyPage />}
+            />
             <Route path="refund" element={<RefundPage />} />
             <Route path="deposit" element={<DepositHistory />} />
             <Route path="point" element={<PointHistory />} />

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa6";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { IoCalculatorOutline } from "react-icons/io5";
@@ -9,11 +9,6 @@ import { TbCreditCardRefund } from "react-icons/tb";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { adminMenuState, adminSubMenuState } from "../atoms/SideBarAtom";
-
-interface AdminSideBarProps {
-  children?: ReactNode;
-  onMenuClick: (menu: number) => void;
-}
 
 interface Size {
   width?: number;
@@ -27,7 +22,7 @@ const IconDiv = styled.div<Size>`
   height: ${({ height }) => (height ? `${height}px` : "25px")};
 `;
 
-const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
+const AdminSideBar = (): JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -39,9 +34,6 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
 
   // 메인 메뉴 클릭 함수
   const handleClick = (menu: number) => {
-    if (onMenuClick) {
-      onMenuClick(menu);
-    }
     switch (menu) {
       case 1:
         setIsClick({
@@ -71,7 +63,7 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
           forth: isClick.forth,
           fifth: isClick.fifth,
         });
-        navigate("/admin/franchisee");
+
         break;
       case 4:
         setIsClick({
@@ -130,6 +122,7 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
           forth: false,
           fifth: false,
         });
+        navigate("/admin/franchisee-store");
         break;
       case 4:
         setIsClick({
@@ -139,6 +132,7 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
           forth: false,
           fifth: false,
         });
+        navigate("/admin/franchisee-company");
         break;
     }
   };
@@ -151,8 +145,8 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
       case "/admin":
         setIsClick({
           first: true,
-          second: isClick.second,
-          third: isClick.third,
+          second: false,
+          third: false,
           forth: false,
           fifth: false,
         });
@@ -160,8 +154,8 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
       case "/admin/enquiry":
         setIsClick({
           first: false,
-          second: isClick.second,
-          third: isClick.third,
+          second: false,
+          third: false,
           forth: true,
           fifth: false,
         });
@@ -169,8 +163,8 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
       case "/admin/refund":
         setIsClick({
           first: false,
-          second: isClick.second,
-          third: isClick.third,
+          second: false,
+          third: false,
           forth: false,
           fifth: true,
         });
@@ -194,6 +188,26 @@ const AdminSideBar = ({ onMenuClick }: AdminSideBarProps): JSX.Element => {
           fifth: false,
         });
         setSubMenu(2);
+        break;
+      case "/admin/franchisee-store":
+        setIsClick({
+          first: false,
+          second: false,
+          third: true,
+          forth: false,
+          fifth: false,
+        });
+        setSubMenu(3);
+        break;
+      case "/admin/franchisee-company":
+        setIsClick({
+          first: false,
+          second: false,
+          third: true,
+          forth: false,
+          fifth: false,
+        });
+        setSubMenu(4);
         break;
     }
   }, [location]);

@@ -10,10 +10,16 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import Swal from "sweetalert2";
 import { roleAtom } from "../../atoms/roleAtom";
-import { removeCookie, removeCookieRefresh } from "../../components/cookie";
+import { storeMenuState } from "../../atoms/SideBarAtom";
+import {
+  getCookie,
+  removeCookie,
+  removeCookieRefresh,
+} from "../../components/cookie";
+import PwKeyboard from "../../components/PwKeyboard";
 import useModal from "../../components/useModal";
 import { STORE } from "../../constants/Role";
-import PwKeyboard from "../../components/PwKeyboard";
+import axios from "axios";
 
 const SubMenuDiv = styled.div`
   padding: 5px 10px;
@@ -25,14 +31,19 @@ const SubMenuDiv = styled.div`
 
 const SideBar = () => {
   const navigate = useNavigate();
-  const [activeMenu, setActiveMenu] = useState("");
+  const [activeMenu, setActiveMenu] = useRecoilState(storeMenuState);
   const [subMenuClick, setSubMenuClick] = useState(false);
-  const [role, setRole] = useRecoilState(roleAtom);
+  const [_, setRole] = useRecoilState(roleAtom);
   const { Modal, open, close } = useModal({
     title: "결제 비밀번호 재설정",
     width: 450,
     height: 600,
   });
+  const [title, setTitle] = useState("");
+
+  const accessToken = getCookie();
+  const adminId = parseInt(sessionStorage.getItem("adminId"));
+  const coalitionState = parseInt(sessionStorage.getItem("coalitionState"));
 
   useEffect(() => {
     const pathToMenuMap = {
@@ -53,10 +64,57 @@ const SideBar = () => {
     navigate(path);
   };
 
-  const editHandler = () => {
-    setSubMenuClick(!subMenuClick);
-    navigate("/store/info");
+  const patchCoalition = async () => {
+    const data = { adminId };
+
+    try {
+      await axios.patch("/api/admin/v3/coalition-request", data, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (coalitionState === 0) {
+        Swal.fire({
+          title: "제휴 해지 요청이\n정상적으로 접수되었습니다.",
+          icon: "success",
+        });
+      } else if (coalitionState === 1) {
+        Swal.fire({
+          title: "제휴 신청이\n성공적으로 완료되었습니다",
+          icon: "success",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const handleChangeCoalition = () => {
+    Swal.fire({
+      title: title,
+      icon: "question",
+
+      showCancelButton: true,
+      confirmButtonColor: "#79BAF2",
+      cancelButtonColor: "#E44B58",
+      confirmButtonText: "확인",
+      cancelButtonText: "취소",
+
+      reverseButtons: false,
+    }).then(result => {
+      if (result.isConfirmed) {
+        patchCoalition();
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (coalitionState === 0) {
+      setTitle("제휴 해지 신청을 하시겠습니까?");
+    } else if (coalitionState === 1) {
+      setTitle("제휴 신청을 하시겠습니까?");
+    }
+  }, []);
 
   return (
     <div className="flex flex-col w-44 h-dvh items-center bg-primaryFocus">
@@ -157,7 +215,9 @@ const SideBar = () => {
             >
               비밀번호 변경
             </SubMenuDiv>
-            <SubMenuDiv>제휴상태 변경</SubMenuDiv>
+            <SubMenuDiv onClick={() => handleChangeCoalition()}>
+              제휴상태 변경
+            </SubMenuDiv>
           </>
         )}
       </div>
@@ -165,6 +225,7 @@ const SideBar = () => {
         onClick={() => {
           window.sessionStorage.removeItem("adminId");
           window.sessionStorage.removeItem("restaurantId");
+          window.sessionStorage.removeItem("coalitionState");
           removeCookie();
           removeCookieRefresh();
           Swal.fire({
