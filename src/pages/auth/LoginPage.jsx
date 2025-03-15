@@ -93,6 +93,14 @@ function LoginPage() {
         // subscribeStoreLogin(restaurantId);
       } else if (role === COMPANY) {
         const res = await axios.post("/api/admin/sign-in", formData);
+        console.log(res.data.resultData);
+        const result = res.data.resultData;
+        const adminId = result.adminId;
+        const companyId = result.divisionId;
+        const accessToken = result.accessToken;
+        window.sessionStorage.setItem("adminId", adminId);
+        window.sessionStorage.setItem("companyId", companyId);
+        setCookie(accessToken);
       } else if (role === SYSTEM) {
         const res = await axios.post("/api/admin/sign-in", formData);
         console.log(res.data.resultData);

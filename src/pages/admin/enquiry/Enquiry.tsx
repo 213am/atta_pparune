@@ -28,7 +28,7 @@ export interface ChartProps {
   enqCount: number[];
 }
 
-interface IEnquiryType {
+export interface IEnquiryType {
   id: number;
   commentYn: number;
   createdAt: string;

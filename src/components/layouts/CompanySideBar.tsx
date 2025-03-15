@@ -6,6 +6,8 @@ import { LuTriangleAlert } from "react-icons/lu";
 import { RiStore2Line } from "react-icons/ri";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
+import { adminMenuState, adminSubMenuState } from "../../atoms/SideBarAtom";
+import { removeCookie, removeCookieRefresh } from "../cookie";
 import { companyMenuState } from "../../atoms/SideBarAtom";
 
 interface Size {
@@ -67,6 +69,16 @@ const CompanySideBar = (): JSX.Element => {
         navigate("/company/account");
         break;
     }
+  };
+
+
+  const signoutHandler = () => {
+    sessionStorage.removeItem("adminId");
+    sessionStorage.removeItem("companyId");
+    removeCookie();
+    removeCookieRefresh();
+
+    navigate("/");
   };
 
   // 새로고침 방지
@@ -197,6 +209,14 @@ const CompanySideBar = (): JSX.Element => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="flex w-full justify-center">
+        <span
+          onClick={signoutHandler}
+          className="text-white border px-10 py-2 rounded-md cursor-pointer"
+        >
+          로그아웃
+        </span>
       </div>
     </div>
   );
