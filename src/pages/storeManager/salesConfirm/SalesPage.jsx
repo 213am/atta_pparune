@@ -53,10 +53,10 @@ const ContentDiv = styled(TopTitleDiv)`
 
 function SalesPage() {
   const today = dayjs().format("YYYY-MM-DD");
-  const tomorrow = dayjs(today).add(1, "day").format("YYYY-MM-DD");
+  const yesterday = dayjs(today).add(-1, "day").format("YYYY-MM-DD");
   const [salesList, setSalesList] = useState([]);
-  const [startDate, setStartDate] = useState(today);
-  const [endDate, setEndDate] = useState(tomorrow);
+  const [startDate, setStartDate] = useState(yesterday);
+  const [endDate, setEndDate] = useState(today);
   const sessionRestaurantId = sessionStorage.getItem("restaurantId");
   const accessToken = getCookie();
 

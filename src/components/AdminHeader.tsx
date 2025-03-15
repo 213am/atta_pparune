@@ -4,7 +4,7 @@ interface AdminHeaderI {
 
 const AdminHeader = ({ title }: AdminHeaderI) => {
   return (
-    <div className="abosolute top-0 left-0 flex w-full h-[8%] border-b justify-between items-center px-10 bg-white">
+    <div className="abosolute top-0 left-0 flex w-full h-[75px] min-h-[75px] border-b justify-between items-center px-10 bg-white">
       <div>
         <span className="text-2xl font-semibold tracking-widest">{title}</span>
       </div>

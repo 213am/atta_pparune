@@ -74,9 +74,13 @@ export function PaymentCheckoutPage() {
     }
   }
   return (
-    // 결제하기 버튼
-    <button className="button" onClick={() => postPayment()}>
-      결제하기
+    // 토스 페이먼트 모달창 띄우기 버튼
+    <button
+      type="button"
+      className="px-4 py-2 rounded-[5px] bg-primary text-white"
+      onClick={() => postPayment()}
+    >
+      포인트구매
     </button>
   );
 }
