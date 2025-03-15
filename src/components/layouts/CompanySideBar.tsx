@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { adminMenuState, adminSubMenuState } from "../../atoms/SideBarAtom";
 import { removeCookie, removeCookieRefresh } from "../cookie";
+import { companyMenuState } from "../../atoms/SideBarAtom";
 
 interface Size {
   width?: number;
@@ -23,9 +24,10 @@ const IconDiv = styled.div<Size>`
 
 const CompanySideBar = (): JSX.Element => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // 메인 메뉴 클릭 State
-  const [isClick, setIsClick] = useRecoilState(adminMenuState);
+  const [isClick, setIsClick] = useRecoilState(companyMenuState);
 
   // 메인 메뉴 클릭 함수
   const handleClick = (menu: number) => {
@@ -36,7 +38,6 @@ const CompanySideBar = (): JSX.Element => {
           second: false,
           third: false,
           forth: false,
-          fifth: false,
         });
         navigate("/company");
         break;
@@ -46,7 +47,6 @@ const CompanySideBar = (): JSX.Element => {
           second: true,
           third: false,
           forth: false,
-          fifth: false,
         });
         navigate("/company/transaction");
         break;
@@ -56,7 +56,6 @@ const CompanySideBar = (): JSX.Element => {
           second: false,
           third: true,
           forth: false,
-          fifth: false,
         });
         navigate("/company/member");
         break;
@@ -66,12 +65,12 @@ const CompanySideBar = (): JSX.Element => {
           second: false,
           third: false,
           forth: true,
-          fifth: false,
         });
         navigate("/company/account");
         break;
     }
   };
+
 
   const signoutHandler = () => {
     sessionStorage.removeItem("adminId");
@@ -81,6 +80,46 @@ const CompanySideBar = (): JSX.Element => {
 
     navigate("/");
   };
+
+  // 새로고침 방지
+  useEffect(() => {
+    console.log(location.pathname);
+
+    switch (location.pathname) {
+      case "/company":
+        setIsClick({
+          first: true,
+          second: false,
+          third: false,
+          forth: false,
+        });
+        break;
+      case "/company/transaction":
+        setIsClick({
+          first: false,
+          second: true,
+          third: false,
+          forth: false,
+        });
+        break;
+      case "/company/member":
+        setIsClick({
+          first: false,
+          second: false,
+          third: true,
+          forth: false,
+        });
+        break;
+      case "/company/account":
+        setIsClick({
+          first: false,
+          second: false,
+          third: false,
+          forth: true,
+        });
+        break;
+    }
+  }, [location]);
 
   return (
     <div className="bg-black w-[300px] h-[100vh] py-3">

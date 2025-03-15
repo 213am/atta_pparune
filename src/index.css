@@ -70,3 +70,8 @@ html::after {
   inset: 0;
   opacity: 0.4;
 }
+
+/* ag Grid 제목 가운데 정렬 */
+.ag-theme-alpine .ag-header-cell-label {
+  justify-content: center;
+}

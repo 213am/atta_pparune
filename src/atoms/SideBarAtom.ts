@@ -5,7 +5,7 @@ interface AdminMenu {
   second: boolean;
   third: boolean;
   forth: boolean;
-  fifth: boolean;
+  fifth?: boolean;
 }
 
 export const adminMenuState = atom<AdminMenu>({
@@ -27,4 +27,14 @@ export const adminSubMenuState = atom<number>({
 export const storeMenuState = atom<string>({
   key: "storeMenuState",
   default: "",
+});
+
+export const companyMenuState = atom<AdminMenu>({
+  key: "companyMenuState",
+  default: {
+    first: true,
+    second: false,
+    third: false,
+    forth: false,
+  },
 });
