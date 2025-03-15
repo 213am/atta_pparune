@@ -21,6 +21,7 @@ export default {
         red: "#E44B58",
         blue: "#79BAF2",
         yellow: "#FFD400",
+        green: "#3CB371",
       },
     },
     screens: {

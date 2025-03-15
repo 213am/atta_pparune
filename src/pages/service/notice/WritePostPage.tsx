@@ -13,6 +13,9 @@ import ServiceHeader from "../../../components/ServiceHeader";
 import "./notice.css";
 import axios from "axios";
 import { getCookie } from "../../../components/cookie";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface Size {
   width?: number;
@@ -25,6 +28,15 @@ const IconDiv = styled.div<Size>`
   width: ${({ width }) => (width ? `${width}px` : "25px")};
   height: ${({ height }) => (height ? `${height}px` : "25px")};
 `;
+
+const boardSchema = yup.object({
+  postCode: yup.string(),
+  inquiryTitle: yup.string(),
+  inquiryDetail: yup.string(),
+  roleCode: yup.string(),
+  id: yup.number(),
+  postType: yup.number(),
+});
 
 const WritePostPage = (): JSX.Element => {
   // 구분 (질의응답, 불편사항)
@@ -39,6 +51,10 @@ const WritePostPage = (): JSX.Element => {
   const [imgFile, setImgFile] = useState<File[]>([]);
   // 파일 input value 값 추적
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { handleSubmit, setValue, watch } = useForm({
+    resolver: yupResolver(boardSchema),
+  });
 
   const addImgHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const inputfile = e.target.files && e.target.files;

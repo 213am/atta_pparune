@@ -23,7 +23,7 @@ import RequestPayment from "./pages/user/payment/RequestPayment";
 import FranchiseeCompanyPage from "./pages/admin/franchisee/FranchiseeCompanyPage";
 import CompanyLayout from "./components/layouts/CompanyLayout";
 import DashBoard from "./pages/company/dashboard/DashBoard";
-import CpTransaction from "./pages/company/toss/CpTransaction";
+import CpTransaction from "./pages/company/transaction/CpTransaction";
 import Member from "./pages/company/member/Member";
 import Account from "./pages/company/account/Account";
 
@@ -64,13 +64,8 @@ const ServiceMainPage = lazy(() => import("./pages/service/IndexPage"));
 const AddCompanyPage = lazy(() => import("./pages/service/AddCompanyPage"));
 const NoticePage = lazy(() => import("./pages/service/notice/NoticePage"));
 // JSX lazy Loading
-const PaymentCheckoutPage = lazy(() =>
-  import("./pages/company/toss/PaymentCheckoutPage").then(module => ({
-    default: module.PaymentCheckoutPage,
-  })),
-);
 const WidgetSuccessPage = lazy(() =>
-  import("./pages/company/toss/WidgetSuccess").then(module => ({
+  import("./pages/company/transaction/toss/WidgetSuccess").then(module => ({
     default: module.WidgetSuccessPage,
   })),
 );
