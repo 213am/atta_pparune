@@ -94,17 +94,15 @@ const Notification = () => {
           onClick={() => setIsClick(!isClick)}
           className="absolute right-5 top-5 z-50 cursor-pointer"
         >
-          {isNotice.length !== 0 ? (
+          {isNotice.length !== 0 && (
             <FaCircle className="absolute -right-0 -top-1 text-xs text-red animate-ping" />
-          ) : (
-            <></>
           )}
           <FaBell
-            className={`size-6 ${isWhite ? "text-white" : "text-black"}`}
+            className={`size-6 drop-shadow-xl ${isWhite ? "text-white" : "text-black"}`}
           />
         </div>
       </div>
-      {isClick ? <NotificationPage /> : <></>}
+      {isClick && <NotificationPage />}
     </div>
   );
 };

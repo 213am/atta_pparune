@@ -31,7 +31,7 @@ const EnquiryHistory = (): JSX.Element => {
             },
           },
         );
-        console.log(res.data);
+        console.log("문의사항 내역 : ", res.data);
       } catch (error) {
         console.log(error);
       }

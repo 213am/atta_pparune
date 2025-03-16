@@ -94,13 +94,13 @@ function IndexPage() {
             <img
               src={`${USER_IMAGE_URL}/${userData.userId}/${userData.userPic}`}
               alt="프로필 이미지"
-              className="w-32 h-32 rounded-full object-cover"
+              className="w-32 h-32 rounded-full object-cover border border-gray shadow-lg"
             />
           ) : (
             <img
               src="/profile.jpeg"
               alt="프로필 이미지"
-              className="w-32 h-32 rounded-full object-cover"
+              className="w-32 h-32 rounded-full object-cover border border-gray shadow-lg"
             />
           )}
           <div className="flex items-center ">
