@@ -230,72 +230,80 @@ const OrderList = () => {
       ) : (
         <div className="flex flex-col w-full h-dvh justify-start items-center gap-5 pt-40 scrollbar-hide">
           {/* 주문내역 카드 */}
-          {paymentList.map((item, index) => (
-            <div
-              key={index}
-              className="w-full h-1/4 bg-white shadow-lg border-y border-y-gray"
-            >
-              <div className="w-full h-1/4 flex justify-between items-center px-5 py-3">
-                <span className="text-darkGray">
-                  {dayjs(item.createdAt).format("YYYY-MM-DD")}
-                </span>
-                <span className="font-semibold">
-                  {item.reservationYn > 0 ? "예약주문" : "현장결제"}
-                </span>
-              </div>
-              <div className="w-full h-2/4 flex justify-start items-center gap-5 px-5">
-                <img
-                  src={
-                    item.pic === null
-                      ? `/restaurant_default.png`
-                      : `${DOCKER_URL}/pic/restaurant/${item?.restaurantId}/${item?.pic}`
-                  }
-                  alt="식당이미지"
-                  className="w-16 h-16 rounded-xl border border-neutral-200 object-cover shadow-sm"
-                />
-                <div className="flex flex-col w-[60%]">
-                  <div
-                    onClick={() =>
-                      navigate(`/user/restaurant/detail/${item.restaurantId}`)
+          {paymentList.length === 0 ? (
+            <div className="flex w-full h-1/4 justify-center text-xl">
+              아직 주문 내역이 없습니다
+            </div>
+          ) : (
+            paymentList.map((item, index) => (
+              <div
+                key={index}
+                className="w-full h-1/4 bg-white shadow-lg border-y border-y-gray"
+              >
+                <div className="w-full h-1/4 flex justify-between items-center px-5 py-3">
+                  <span className="text-darkGray">
+                    {dayjs(item.createdAt).format("YYYY-MM-DD")}
+                  </span>
+                  <span className="font-semibold">
+                    {item.reservationYn > 0 ? "예약주문" : "현장결제"}
+                  </span>
+                </div>
+                <div className="w-full h-2/4 flex justify-start items-center gap-5 px-5">
+                  <img
+                    src={
+                      item.pic === null
+                        ? `/restaurant_default.png`
+                        : `${DOCKER_URL}/pic/restaurant/${item?.restaurantId}/${item?.pic}`
                     }
-                    className="flex items-center gap-2 font-semibold text-2xl cursor-pointer"
-                  >
-                    <span>{item.restaurantName}</span>
-                    <IoIosArrowForward />
-                  </div>
-                  <div className="flex items-center gap-5 mt-1 justify-between">
-                    {item.pastDtoList.map(data => (
-                      <div
-                        key={data.menuId}
-                        className="flex w-full gap-4 items-center"
-                      >
-                        <span className="text-nowrap">{data.menuName}</span>
-                        <span className="text-nowrap">{data.menuCount}개</span>
+                    alt="식당이미지"
+                    className="w-16 h-16 rounded-xl border border-neutral-200 object-cover shadow-sm"
+                  />
+                  <div className="flex flex-col w-[60%]">
+                    <div
+                      onClick={() =>
+                        navigate(`/user/restaurant/detail/${item.restaurantId}`)
+                      }
+                      className="flex items-center gap-2 font-semibold text-2xl cursor-pointer"
+                    >
+                      <span>{item.restaurantName}</span>
+                      <IoIosArrowForward />
+                    </div>
+                    <div className="flex items-center gap-5 mt-1 justify-between">
+                      {item.pastDtoList.map(data => (
+                        <div
+                          key={data.menuId}
+                          className="flex w-full gap-4 items-center"
+                        >
+                          <span className="text-nowrap">{data.menuName}</span>
+                          <span className="text-nowrap">
+                            {data.menuCount}개
+                          </span>
+                        </div>
+                      ))}
+                      <div className="flex text-nowrap gap-2 items-center">
+                        <span className="text-darkGray">총 가격</span>
+                        <span className="text-lg">
+                          {item.menuTotalPrice.toLocaleString("ko-KR")}원
+                        </span>
                       </div>
-                    ))}
-                    <div className="flex text-nowrap gap-2 items-center">
-                      <span className="text-darkGray">총 가격</span>
-                      <span className="text-lg">
-                        {item.menuTotalPrice.toLocaleString("ko-KR")}원
-                      </span>
                     </div>
                   </div>
                 </div>
+                {item.reviewStatus === 1 ? (
+                  <></>
+                ) : (
+                  <div className="flex justify-center h-1/4">
+                    <button
+                      onClick={() => linkToReview(item)}
+                      className="w-1/4 h-2/3 flex px-4 py-1 border border-darkGray rounded-sm text-nowrap items-center justify-center hover:bg-primary hover:text-white"
+                    >
+                      리뷰 작성
+                    </button>
+                  </div>
+                )}
               </div>
-              {item.reviewStatus === 1 ? (
-                <></>
-              ) : (
-                <div className="flex justify-center h-1/4">
-                  <button
-                    onClick={() => linkToReview(item)}
-                    className="w-1/4 h-2/3 flex px-4 py-1 border border-darkGray rounded-sm text-nowrap items-center justify-center hover:bg-primary hover:text-white"
-                  >
-                    리뷰 작성
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
+            ))
+          )}
         </div>
       )}
       <MenuBar />

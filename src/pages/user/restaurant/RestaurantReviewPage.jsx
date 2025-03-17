@@ -140,7 +140,11 @@ const RestaurantReviewPage = () => {
               ))}
             </div>
             <div className="flex w-full">
-              <span>{item.reviewText}</span>
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(String(item.reviewText)),
+                }}
+              ></span>
             </div>
             <div className="flex w-full gap-4 items-center ">
               {item?.menuName.map((data, index) => (
@@ -190,7 +194,7 @@ const RestaurantReviewPage = () => {
                         dangerouslySetInnerHTML={{
                           __html: DOMPurify.sanitize(String(item.commentText)),
                         }}
-                      />
+                      ></span>
                     </div>
                   </div>
                 </div>

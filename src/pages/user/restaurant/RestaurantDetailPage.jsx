@@ -269,7 +269,7 @@ function StoreDetailPage() {
       <BackDiv>
         <IoMdArrowBack
           style={{ width: "100%", height: "100%" }}
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/user/restaurant")}
         />
       </BackDiv>
       <TitleDiv onClick={() => console.log(menu)}>
@@ -331,7 +331,6 @@ function StoreDetailPage() {
       <LineDiv />
       <ContentDiv>
         <h1>메뉴</h1>
-
         {menu.map((item, index) => (
           <div key={index}>
             {item.menuList.map((list, index) => (
