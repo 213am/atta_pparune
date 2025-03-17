@@ -10,6 +10,7 @@ import { getCookie } from "../../../components/cookie";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import DOMPurify from "dompurify";
+import { REVIEW_IMAGE_URL } from "../../../constants/url";
 
 const MyReviewPage = () => {
   const [previewImage, setPreviewImage] = useState(null);
@@ -114,15 +115,15 @@ const MyReviewPage = () => {
               </span>
               <span className="text-sm">{data.createdAt}</span>
             </div>
-            {myReviewList?.reviewPic?.map((item, index) => (
-              <div className="flex w-full cursor-pointer" key={index}>
+            {data?.reviewPic?.map((pic, index) => (
+              <div className="flex w-full" key={index}>
                 <img
-                  src={`${REVIEW_IMAGE_URL}/${myReviewList.orderId}/${item}`}
+                  src={`${REVIEW_IMAGE_URL}/${data.orderId}/${pic}`}
                   alt=""
-                  className="flex w-1/3"
+                  className="flex w-1/3 h-28 cursor-pointer"
                   onClick={() =>
                     handleImageClick(
-                      `${REVIEW_IMAGE_URL}/${myReviewList.orderId}/${item}`,
+                      `${REVIEW_IMAGE_URL}/${data.orderId}/${pic}`,
                     )
                   }
                 />

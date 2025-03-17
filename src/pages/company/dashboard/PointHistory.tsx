@@ -1,20 +1,30 @@
-import {
-  ClientSideRowModelModule,
-  ColDef,
-  RowClickedEvent,
-} from "ag-grid-community";
-import { IEnquiryType } from "../../admin/enquiry/Enquiry";
-import { getCookie } from "../../../components/cookie";
-import { useEffect, useState } from "react";
+import { ClientSideRowModelModule, ColDef } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { getCookie } from "../../../components/cookie";
+
+interface PointHistoryI {
+  id: number | null;
+  adminId: number | null;
+  cashAmount: number | null;
+  code: string;
+  codeName: string;
+  companyId: number | null;
+  createdAt: string;
+  name: string;
+  note: string;
+  pk: number | null;
+  pointAmount: number | null;
+  userId: number | null;
+}
 
 const PointHistory = (): JSX.Element => {
-  const [enqCount, setEnqCount] = useState<number[]>([]);
-  const [enquiryList, setEnquiryList] = useState<IEnquiryType[]>([]);
+  // const [enqCount, setEnqCount] = useState<number[]>([]);
+  const [pointList, _setPointList] = useState<PointHistoryI[]>([]);
   const accessToken = getCookie();
   const adminId = sessionStorage.getItem("adminId");
-  const tableData = enquiryList;
+  const tableData = pointList;
 
   useEffect(() => {
     const getEnquiryData = async () => {
@@ -39,7 +49,7 @@ const PointHistory = (): JSX.Element => {
     getEnquiryData();
   }, []);
 
-  const columnDefs: ColDef<IEnquiryType>[] = [
+  const columnDefs: ColDef<PointHistoryI>[] = [
     {
       headerName: "순번",
       field: "id",
@@ -48,62 +58,52 @@ const PointHistory = (): JSX.Element => {
       width: 80,
     },
     {
-      headerName: "접수일자",
-      field: "createdAt",
-      sortable: true,
-      filter: true,
-      width: 100,
-    },
-    {
-      headerName: "관리년도",
-      field: "year",
-      sortable: true,
-      filter: true,
-      width: 100,
-    },
-    {
-      headerName: "고객명",
+      headerName: "이름",
       field: "name",
       sortable: true,
       filter: true,
       width: 100,
     },
     {
-      headerName: "사용자 구분",
-      field: "roleCode",
-      sortable: true,
-      filter: true,
-      width: 120,
-    },
-    {
-      headerName: "문의 구분",
-      field: "postCode",
+      headerName: "금액",
+      field: "pointAmount",
       sortable: true,
       filter: true,
       width: 100,
     },
     {
-      headerName: "처리 상태",
-      field: "commentYn",
+      headerName: "일시",
+      field: "createdAt",
       sortable: true,
       filter: true,
-      width: 150,
+      width: 100,
+    },
+    {
+      headerName: "구분",
+      field: "code",
+      sortable: true,
+      filter: true,
+      width: 120,
     },
   ];
 
   const EMPTY_ROW_COUNT = 10;
 
-  const emptyRows: IEnquiryType[] = Array.from(
+  const emptyRows: PointHistoryI[] = Array.from(
     { length: EMPTY_ROW_COUNT },
     (_, index) => ({
-      id: "",
-      commentYn: "",
-      createdAt: "",
-      inquiryId: "",
+      id: index + 1,
+      adminId: null,
       name: "",
-      postCode: "",
-      roleCode: "",
-      year: "",
+      pointAmount: null,
+      cashAmount: null,
+      createdAt: "",
+      code: "",
+      codeName: "",
+      note: "",
+      pk: null,
+      userId: null,
+      companyId: null,
     }),
   );
   const rowDefs =
@@ -111,13 +111,13 @@ const PointHistory = (): JSX.Element => {
       ? [...tableData, ...emptyRows.slice(tableData.length)]
       : tableData;
 
-  const enquiryDetailHandler = (e: RowClickedEvent<IEnquiryType>) => {
-    if (e.data) {
-      console.log("해당 게시글로 이동", e.data.id);
-    } else {
-      console.log("해당 게시글을 찾을 수 없습니다");
-    }
-  };
+  // const enquiryDetailHandler = (e: RowClickedEvent<IEnquiryType>) => {
+  //   if (e.data) {
+  //     console.log("해당 게시글로 이동", e.data.id);
+  //   } else {
+  //     console.log("해당 게시글을 찾을 수 없습니다");
+  //   }
+  // };
 
   return (
     <div className="flex w-1/2 pb-20">

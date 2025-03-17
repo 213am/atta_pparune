@@ -34,7 +34,7 @@ const QRCode = () => {
     const visualH = visual.clientHeight;
     const infoH = info.clientHeight;
 
-    visual.style.clipPath = `path('M0 0 L0 ${visualH - 10} Q10 ${visualH - 10} 10 ${visualH} L ${couponW - 10} ${visualH} Q${couponW - 10} ${visualH - 10} ${couponW} ${visualH - 10} L${couponW} 0 Z')`;
+    visual.style.clipPath = `path('M0 0 L0 ${visualH - 5} Q10 ${visualH - 5} 10 ${visualH} L ${couponW - 10} ${visualH} Q${couponW - 10} ${visualH - 5} ${couponW} ${visualH - 5} L${couponW} 0 Z')`;
     info.style.clipPath = `path('M10 0 Q10 10 0 10 L0 ${infoH} L${couponW} ${infoH} L${couponW} 10 Q${couponW - 10} 10 ${couponW - 10} 0 Z')`;
   };
 
@@ -154,7 +154,7 @@ const QRCode = () => {
   return (
     <div className="flex flex-col w-full h-dvh px-10 pt-20 overflow-x-hidden overflow-y-scroll scrollbar-hide">
       {/* 시각적 요소 섹션 */}
-      <section id="visual" ref={visualRef}>
+      <section id="visual" ref={visualRef} className="overflow-visible">
         <div className="gap-4 pb-4 flex flex-col items-center justify-center bg-gray rounded-t-2xl border-b-4 border-dotted border-darkGray">
           <div className="w-full text-center bg-primary rounded-t-2xl p-6 text-white font-bold">
             <span className="font-bold text-4xl text-nowrap">
@@ -173,7 +173,10 @@ const QRCode = () => {
             </div>
           </div>
           <div className="flex flex-col w-full items-center gap-2">
-            <span className="text-2xl">{newTicketData.menuNames}</span>
+            <span className="text-2xl">
+              {newTicketData.menuNames[0]}외 &nbsp;
+              {newTicketData.menuNames.length - 1}개
+            </span>
             <span className="text-4xl font-bold tracking-wider">
               {newTicketData.totalAmount.toLocaleString("ko-KR")}원
             </span>
