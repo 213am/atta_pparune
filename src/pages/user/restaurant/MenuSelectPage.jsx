@@ -163,6 +163,18 @@ function MenuSelectPage() {
       console.log(res.data.resultData);
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        title: `주문에 실패했습니다`,
+        text: "다시 한번 시도해주세요",
+        icon: "error",
+        confirmButtonText: "확인",
+        showConfirmButton: true, // ok 버튼 노출 여부
+        allowOutsideClick: false, // 외부 영역 클릭 방지
+      }).then(result => {
+        if (result.isConfirmed) {
+          return;
+        }
+      });
     }
   };
 
@@ -217,6 +229,18 @@ function MenuSelectPage() {
       }
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        title: `예약에 실패했습니다`,
+        text: "다시 한번 시도해주세요",
+        icon: "error",
+        confirmButtonText: "확인",
+        showConfirmButton: true, // ok 버튼 노출 여부
+        allowOutsideClick: false, // 외부 영역 클릭 방지
+      }).then(result => {
+        if (result.isConfirmed) {
+          return;
+        }
+      });
     }
   };
 

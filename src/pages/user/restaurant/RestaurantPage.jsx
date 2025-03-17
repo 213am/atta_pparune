@@ -299,6 +299,19 @@ function RestaurantPage() {
     return <div>지도를 불러오는 중입니다...</div>;
   }
 
+  const detailNavigateHandler = e => {
+    if (typeof e !== "number") {
+      navigate("/notfound");
+      return;
+    }
+
+    navigate(`/user/restaurant/detail/${e}`, {
+      state: {
+        from: "/user/restaurant",
+      },
+    });
+  };
+
   return (
     <div
       className="w-full h-dvh overflow-hidden overflow-y-scroll scrollbar-hide relative"
@@ -452,9 +465,7 @@ function RestaurantPage() {
           {restaurantList.map(item => (
             <div
               key={item.restaurantId}
-              onClick={() =>
-                navigate(`/user/restaurant/detail/${item.restaurantId}`)
-              }
+              onClick={() => detailNavigateHandler(item.restaurantId)}
               className="mb-5 cursor-pointer"
             >
               <FlexDiv>

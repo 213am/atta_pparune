@@ -127,7 +127,7 @@ const QRCode = () => {
           },
         });
         const ticket = res.data.resultData.ticket;
-        console.log(ticket.ticketStatus);
+        console.log("티켓 데이터 : ", ticket.ticketStatus);
 
         if (ticket.ticketStatus === 1) {
           setTicketStatus(1);
@@ -186,7 +186,7 @@ const QRCode = () => {
         <div className="p-10 flex flex-col justify-center items-center bg-gray rounded-b-2xl">
           <div className="flex w-full justify-center items-center ">
             <QRCodeSVG
-              value={`${DOCKER_URL}/store/request?ticketId=${id}&restaurantId=${locate.state.restaurantId}`}
+              value={`${DOCKER_URL}/store/request?ticketId=${id}&restaurantId=${newTicketData.restaurantId}`}
               size={180}
               bgColor="none"
             />

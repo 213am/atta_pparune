@@ -6,7 +6,7 @@ import { IoMdArrowBack, IoMdClose } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { FaStar } from "react-icons/fa";
 import { LuMapPin } from "react-icons/lu";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import DOMPurify from "dompurify";
 import Swal from "sweetalert2";
@@ -171,6 +171,10 @@ function StoreDetailPage() {
   const [isReserve, setIsReserve] = useRecoilState(reserveState);
   const [reserveInfo, setReserveInfo] = useState({});
   const [menu, setMenu] = useState([]);
+  const location = useLocation();
+  const fromPath = location.state?.from || "/user/restaurant";
+
+  console.log("이전 경로는 : ", fromPath);
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -269,7 +273,7 @@ function StoreDetailPage() {
       <BackDiv>
         <IoMdArrowBack
           style={{ width: "100%", height: "100%" }}
-          onClick={() => navigate("/user/restaurant")}
+          onClick={() => navigate(fromPath)}
         />
       </BackDiv>
       <TitleDiv onClick={() => console.log(menu)}>

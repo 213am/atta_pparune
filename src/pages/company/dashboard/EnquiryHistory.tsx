@@ -3,11 +3,18 @@ import {
   ColDef,
   RowClickedEvent,
 } from "ag-grid-community";
-import { IEnquiryType } from "../../admin/enquiry/Enquiry";
 import { getCookie } from "../../../components/cookie";
 import { useEffect, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import axios from "axios";
+
+interface IEnquiryType {
+  id: string;
+  enquiryTitle: string;
+  createdAt: string;
+  postCode: string;
+  commentState: string;
+}
 
 const EnquiryHistory = (): JSX.Element => {
   const [enqCount, setEnqCount] = useState<number[]>([]);
@@ -48,46 +55,32 @@ const EnquiryHistory = (): JSX.Element => {
       width: 80,
     },
     {
-      headerName: "접수일자",
+      headerName: "제목",
+      field: "enquiryTitle",
+      sortable: true,
+      filter: true,
+      width: 200,
+    },
+    {
+      headerName: "작성일자",
       field: "createdAt",
       sortable: true,
       filter: true,
-      width: 100,
+      width: 150,
     },
     {
-      headerName: "관리년도",
-      field: "year",
-      sortable: true,
-      filter: true,
-      width: 100,
-    },
-    {
-      headerName: "고객명",
-      field: "name",
-      sortable: true,
-      filter: true,
-      width: 100,
-    },
-    {
-      headerName: "사용자 구분",
-      field: "roleCode",
-      sortable: true,
-      filter: true,
-      width: 120,
-    },
-    {
-      headerName: "문의 구분",
+      headerName: "종류",
       field: "postCode",
       sortable: true,
       filter: true,
       width: 100,
     },
     {
-      headerName: "처리 상태",
-      field: "commentYn",
+      headerName: "답변 여부",
+      field: "commentState",
       sortable: true,
       filter: true,
-      width: 150,
+      width: 100,
     },
   ];
 
@@ -97,15 +90,13 @@ const EnquiryHistory = (): JSX.Element => {
     { length: EMPTY_ROW_COUNT },
     (_, index) => ({
       id: "",
-      commentYn: "",
+      enquiryTitle: "",
       createdAt: "",
-      inquiryId: "",
-      name: "",
       postCode: "",
-      roleCode: "",
-      year: "",
+      commentState: "",
     }),
   );
+
   const rowDefs =
     tableData.length < EMPTY_ROW_COUNT
       ? [...tableData, ...emptyRows.slice(tableData.length)]

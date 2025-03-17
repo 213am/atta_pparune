@@ -37,18 +37,32 @@ const TopTitleDiv = styled.div`
   flex-direction: column;
   width: 20%;
   text-align: center;
+  align-items: center;
+  justify-content: center;
   padding: 10px 10px;
   border-right: 1px solid #929292;
 `;
 
 const ContentDiv = styled(TopTitleDiv)`
   padding: 0 10px;
-  height: 70px;
+  align-items: center;
+  justify-content: center;
   line-height: 70px;
   white-space: nowrap;
   overflow: hidden;
-  display: block;
+  display: flex;
   text-overflow: ellipsis;
+`;
+
+const MenuListDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 10px;
+  border-right: 1px solid #929292;
 `;
 
 function SalesPage() {
@@ -163,7 +177,18 @@ function SalesPage() {
             <span>{dayjs(item.createdAt).format("HH : mm")}</span>
           </TopTitleDiv>
           <ContentDiv>{item.userName}</ContentDiv>
-          <ContentDiv>{item.orderDetails[0].menuName}</ContentDiv>
+          <MenuListDiv>
+            {item.orderDetails.map(menu => (
+              <div key={menu.menuId} className="flex w-full">
+                <span className="flex w-[80%] justify-center text-nowrap">
+                  {menu.menuName}
+                </span>
+                <span className="flex w-[20%] justify-start text-nowrap">
+                  {menu.menuCount}개
+                </span>
+              </div>
+            ))}
+          </MenuListDiv>
           <ContentDiv style={{ border: "none" }}>
             {item.reservationYnStr}
           </ContentDiv>

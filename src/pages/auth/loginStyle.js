@@ -67,7 +67,7 @@ export const LoginBtn = styled.button`
   color: #fff;
   border-radius: 5px;
   margin-bottom: 30px;
-  width: 500px;
+  width: ${({ width }) => width || "500px"};
   padding: 15px 0;
   font-size: 24px;
   margin-top: 40px;
@@ -78,7 +78,7 @@ export const LoginBtn = styled.button`
     margin-top: 25px;
   }
   @media (max-width: 1400px) and (min-width: 431px) {
-    width: 500px;
+    width: ${({ width }) => width || "500px"};
     padding: 15px 0;
     font-size: 24px;
     margin-top: 40px;
@@ -177,7 +177,7 @@ export const RoleDiv = styled.div`
 export const SignUpInput = styled.input`
   border-bottom: 1px solid #bababa;
   color: #bababa;
-  width: 500px;
+  width: ${({ width }) => width || "500px"};
   font-size: 24px;
   padding: 15px 0;
   @media (max-width: 430px) {
@@ -187,7 +187,7 @@ export const SignUpInput = styled.input`
     padding: 10px 0;
   }
   @media (max-width: 1400px) and (min-width: 431px) {
-    width: 500px;
+    width: ${({ width }) => width || "500px"};
     font-size: 24px;
     padding: 15px 0;
   }

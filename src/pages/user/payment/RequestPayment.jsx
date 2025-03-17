@@ -40,6 +40,18 @@ const RequestPayment = () => {
       });
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        title: "결제 중 오류 발생",
+        text: "한번 더 결제 요청을 보내시겠습니까?",
+        icon: "info",
+        confirmButtonText: "확인",
+        showConfirmButton: true,
+        allowOutsideClick: false,
+      }).then(result => {
+        if (result.isConfirmed) {
+          usedCoupon();
+        }
+      });
     }
   };
 

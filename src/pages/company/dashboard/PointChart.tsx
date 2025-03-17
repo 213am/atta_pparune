@@ -20,6 +20,12 @@ interface ChartDataI {
   ];
 }
 
+interface PointTypeI {
+  allowPoint: number;
+  buyPoint: number;
+  currentPoint: number;
+}
+
 const PointChart = (): JSX.Element => {
   const [chartDataArr, setChartDataArr] = useState<ChartDataI[]>([]);
   const [chartLabel, _setChartLabel] = useState([
@@ -27,16 +33,26 @@ const PointChart = (): JSX.Element => {
     "02월 포인트 지출",
     "현재 포인트",
   ]);
+  const [chartPoint, setChartPoint] = useState<PointTypeI>({
+    allowPoint: 0,
+    buyPoint: 0,
+    currentPoint: 0,
+  });
   const companyId = sessionStorage.getItem("adminId");
   const accessToken = getCookie();
+  const nowMonth = dayjs().format("MM");
+  const prevMonth = dayjs().subtract(1, "month").format("MM");
 
   const dataArr: ChartDataI[] = [
     {
-      labels: ["02월 포인트 구매", "이전 잔여 포인트"],
+      labels: [`${nowMonth}월 포인트 구매`, `${prevMonth}월 이월 포인트`],
       datasets: [
         {
           label: `금액(원)`,
-          data: [3000000, 500000],
+          data: [
+            chartPoint?.buyPoint, // 이번달 구매한 포인트
+            chartPoint?.currentPoint - chartPoint?.allowPoint, // 총구매 + 이월 포인트
+          ],
           backgroundColor: ["rgba(0, 162, 255,1)", "rgba(204, 204, 204,1)"],
           borderColor: ["rgba(54, 162, 235, 1)", "rgb(204, 204, 204)"],
           borderWidth: 0,
@@ -44,11 +60,14 @@ const PointChart = (): JSX.Element => {
       ],
     },
     {
-      labels: ["02월 포인트 지출", "현재 포인트"],
+      labels: [`${nowMonth}월 포인트 지출`, "현재 잔여 포인트"],
       datasets: [
         {
           label: `금액(원)`,
-          data: [1460000, 5000000],
+          data: [
+            chartPoint?.allowPoint, // 이번달 지출한 포인트
+            chartPoint?.currentPoint - chartPoint?.allowPoint, // 현재 잔여 포인트
+          ],
           backgroundColor: ["rgba(255, 94, 0,1)", "rgba(204, 204, 204,1)"],
           borderColor: ["#eb6f36", "rgba(204, 204, 204,1)"],
           borderWidth: 0,
@@ -56,11 +75,11 @@ const PointChart = (): JSX.Element => {
       ],
     },
     {
-      labels: ["현재 포인트", "사용 포인트"],
+      labels: ["남은 포인트", "사용한 포인트"],
       datasets: [
         {
           label: `금액(원)`,
-          data: [5460000, 500000],
+          data: [chartPoint?.currentPoint, chartPoint?.allowPoint],
           backgroundColor: ["rgba(0, 255, 115,1)", "rgba(204, 204, 204,1)"],
           borderColor: ["#00ff95", "rgba(204, 204, 204,1)"],
           borderWidth: 0,
@@ -89,6 +108,9 @@ const PointChart = (): JSX.Element => {
           },
         );
         console.log("포인트 차트 데이터 : ", res.data);
+        const result = res.data.resultData;
+
+        setChartPoint({ ...result });
       } catch (error) {
         console.log(error);
       }
@@ -109,7 +131,7 @@ const PointChart = (): JSX.Element => {
               <div className="absolute top-1/2 flex flex-col text-center -mt-3">
                 <span className="text-sm">{item.labels[0]}</span>
                 <span className="text-2xl font-semibold tracking-wide">
-                  {item.datasets[0].data[0].toLocaleString("ko-kr")}원
+                  {item.datasets[0]?.data[0]?.toLocaleString("ko-kr")}원
                 </span>
               </div>
             </div>

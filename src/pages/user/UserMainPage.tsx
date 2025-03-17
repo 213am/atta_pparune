@@ -121,7 +121,7 @@ const UserMainPage = (): JSX.Element => {
     setIsClick(false);
     navigate(`/user/restaurant/detail/${e.restaurantId}`, {
       state: {
-        restaurantId: e.restaurantId,
+        from: "/user",
       },
     });
   };

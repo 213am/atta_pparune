@@ -9,6 +9,7 @@ import axios from "axios";
 import { getCookie } from "../../../components/cookie";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import DOMPurify from "dompurify";
 
 const MyReviewPage = () => {
   const [previewImage, setPreviewImage] = useState(null);
@@ -73,17 +74,17 @@ const MyReviewPage = () => {
 
   return (
     <div className="flex flex-col w-full h-dvh">
-      <div className="flex w-full px-4 py-4 justify-between items-center">
+      <div className="flex w-full px-3 py-5 justify-between items-center border-b-2 border-gray border-opacity-70 bg-white">
         <span
           onClick={() => navigate("/user/userInfo")}
           className="flex w-[10%] justify-center text-2xl cursor-pointer"
         >
           <IoMdArrowBack />
         </span>
-        <span className="flex w-[80%] justify-center text-lg ">
+        <span className="text-xl font-semibold tracking-wider">
           내가 쓴 리뷰
         </span>
-        <span className="flex w-[10%] justify-center text-lg ">&nbsp;</span>
+        <span className="flex w-[10%] justify-center text-lg">&nbsp;</span>
       </div>
       {/* 리뷰 1개 */}
       {myReviewList.length === 0 ? (
@@ -116,17 +117,23 @@ const MyReviewPage = () => {
             {myReviewList?.reviewPic?.map((item, index) => (
               <div className="flex w-full cursor-pointer" key={index}>
                 <img
-                  src={`${REVIEW_IMAGE_URL}/${0}/${item}`} // res 에 orderId 추가 되면 변경
+                  src={`${REVIEW_IMAGE_URL}/${myReviewList.orderId}/${item}`}
                   alt=""
                   className="flex w-1/3"
-                  onClick={
-                    () => handleImageClick(`${REVIEW_IMAGE_URL}/${0}/${item}`) // res 에 orderId 추가 되면 변경
+                  onClick={() =>
+                    handleImageClick(
+                      `${REVIEW_IMAGE_URL}/${myReviewList.orderId}/${item}`,
+                    )
                   }
                 />
               </div>
             ))}
             <div className="flex w-full">
-              <span>{data.reviewText}</span>
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(String(data.reviewText)),
+                }}
+              ></span>
             </div>
             <div className="flex w-full gap-4 items-center">
               {data.menuName?.map((name, index) => (
@@ -147,32 +154,31 @@ const MyReviewPage = () => {
                 <span>삭제</span>
               </div>
             </div>
-            {/* 식당 리뷰 답글 - 추가되면 작업 */}
-            <div className="flex w-full gap-3">
-              <img
-                src="/restaurant_default.png"
-                alt=""
-                className="flex w-10 h-10 object-cover border rounded-full"
-              />
-              <div className="flex flex-col border w-full">
-                <div
-                  className="relative bg-white border border-black
+            {/* 식당 관리자의 댓글 */}
+            {data.commentCreatedAt && (
+              <div className="flex w-full gap-3">
+                <img
+                  src="/restaurant_default.png"
+                  alt=""
+                  className="flex w-10 h-10 object-cover border rounded-full"
+                />
+                <div className="flex flex-col border w-full">
+                  <div
+                    className="relative bg-white border border-black
                 after:content-[''] after:absolute after: after:border-solid after:border-transparent after:h-0 after:w-0 after:right-full after:top-1/2 after:mt-[-10px] after:border-r-[#ffffff]
                 before:content-[''] before:absolute before: before:border-solid before:border-transparent before:h-0 before:w-0 before:right-full before:top-5 before:border-[9px] before:mt-[-11px] before:border-r-black"
-                >
-                  <div className="flex items-center p-4 gap-4">
-                    <span>사장님</span>
-                    <span className="text-sm">1일전</span>
-                  </div>
-                  <div className="flex p-4">
-                    <span>
-                      리뷰 내용리뷰 내용리뷰 내용리뷰 내용리뷰 내용리뷰 내용리뷰
-                      내용리뷰 내용리뷰 내용리뷰 내용리뷰 내용리뷰 내용리뷰 내용
-                    </span>
+                  >
+                    <div className="flex items-center p-4 gap-4">
+                      <span>사장님</span>
+                      <span className="text-sm">{data.createdAt}</span>
+                    </div>
+                    <div className="flex p-4">
+                      <span>{data.commentText}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         ))
       )}
