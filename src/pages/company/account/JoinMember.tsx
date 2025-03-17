@@ -1,8 +1,22 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import { getCookie } from "../../../components/cookie";
+
+interface IFormDataType {
+  adminId: number;
+  companyId: number;
+  name: string;
+  employeeNum: string;
+  upw: string;
+  email: string;
+  phone: string;
+}
 
 const signupSchema = yup.object({
+  adminId: yup.number().required(),
+  companyId: yup.number().required(),
   name: yup.string().required("이름은 필수입력 항목입니다"),
   employeeNum: yup.string().required("사원번호는 필수입력 항목입니다"),
   upw: yup.string().required("비밀번호는 필수입력 항목입니다"),
@@ -14,6 +28,9 @@ const signupSchema = yup.object({
 });
 
 const JoinMember = (): JSX.Element => {
+  const accessToken = getCookie();
+  const adminId = sessionStorage.getItem("adminId") as string;
+  const companyId = sessionStorage.getItem("companyId") as string;
   const {
     register,
     handleSubmit,
@@ -24,18 +41,40 @@ const JoinMember = (): JSX.Element => {
     mode: "onChange",
   });
 
-  const formSubmitHandler = data => {
-    console.log(data);
+  const formSubmitHandler = async (data: IFormDataType) => {
+    console.log("사원 계정 데이터 : ", data);
+    const payload = { ...data };
+
+    try {
+      const res = await axios.post("/api/admin/company/v3/employee", payload, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log("사원 계정 생성요청 : ", res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <div className="flex flex-col w-full h-full">
       <form
         onSubmit={handleSubmit(formSubmitHandler)}
-        className="flex flex-col w-1/4 h-2/3 gap-10 p-5 border rounded-md"
+        className="flex flex-col w-1/3 h-2/3 gap-10 p-5 border rounded-md tb:w-1/4"
       >
         <span>사원 계정 생성</span>
         <div className="flex flex-col w-full h-full justify-between">
+          <input
+            type="hidden"
+            value={parseInt(adminId)}
+            {...register("adminId")}
+          />
+          <input
+            type="hidden"
+            value={parseInt(companyId)}
+            {...register("companyId")}
+          />
           <div className="w-full h-1/5">
             <div className="flex items-center pb-1">
               <label htmlFor="name" className="flex w-[30%]">
@@ -104,7 +143,12 @@ const JoinMember = (): JSX.Element => {
           </div>
         </div>
         <div className="flex w-full justify-center">
-          <button type="submit">생성하기</button>
+          <button
+            type="submit"
+            className="px-4 py-1.5 border rounded-sm bg-white tracking-wide hover:bg-primary hover:text-white"
+          >
+            생성하기
+          </button>
         </div>
       </form>
     </div>

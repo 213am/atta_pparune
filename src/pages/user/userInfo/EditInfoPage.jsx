@@ -203,11 +203,12 @@ function EditInfoPage() {
     <div className="h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide bg-white">
       <Notification />
       <div className="absolute top-0 left-0 w-full flex justify-between items-center px-3 py-5 border-b-2 border-gray border-opacity-70 bg-white">
-        <IoMdArrowBack
-          className="text-3xl cursor-pointer"
-          onClick={linkToInfo}
-        />
-        <span className="text-xl font-semibold ">회원 정보 수정</span>
+        <span className="flex w-[10%] justify-center text-2xl cursor-pointer">
+          <IoMdArrowBack onClick={linkToInfo} />
+        </span>
+        <span className="text-xl font-semibold tracking-wider">
+          회원 정보 수정
+        </span>
         <span>&emsp;</span>
       </div>
       <div className="flex flex-col h-dvh justify-around mt-24 gap-10">

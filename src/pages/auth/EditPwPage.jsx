@@ -130,6 +130,7 @@ function FindPwPage() {
             <SignUpInput
               type="password"
               placeholder="새 비밀번호"
+              width={role === USER ? "100%" : undefined}
               {...register("newUpw")}
             />
             <YupDiv>{errors.newUpw?.message}</YupDiv>
@@ -138,6 +139,7 @@ function FindPwPage() {
             <SignUpInput
               type="password"
               placeholder="새 비밀번호 확인"
+              width={role === USER ? "100%" : undefined}
               {...register("pwConfirm")}
             />
             <YupDiv>{errors.pwConfirm?.message}</YupDiv>
@@ -150,6 +152,7 @@ function FindPwPage() {
                 backgroundColor: hasVal ? "#6F4CDB" : "#ddd",
                 cursor: hasVal ? "pointer" : "not-allowed",
               }}
+              width={role === USER ? "100%" : undefined}
               disabled={!hasVal}
             >
               확인
