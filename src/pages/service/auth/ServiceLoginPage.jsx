@@ -5,11 +5,10 @@ import { IoMdClose } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Swal from "sweetalert2";
-import { isLoginStoreAtom } from "../../atoms/restaurantAtom";
-import { roleAtom } from "../../atoms/roleAtom";
-import { loginAtom, userDataAtom } from "../../atoms/userAtom";
-import { setCookie } from "../../components/cookie";
-import { COMPANY, STORE, SYSTEM, USER } from "../../constants/Role";
+import { isLoginStoreAtom } from "../../../atoms/restaurantAtom";
+import { roleAtom } from "../../../atoms/roleAtom";
+import { loginAtom } from "../../../atoms/userAtom";
+import { MANAGER, STORE, USER } from "../../../constants/Role";
 import {
   CloseDiv,
   FormDiv,
@@ -18,35 +17,26 @@ import {
   LayoutDiv,
   LoginBtn,
   LogoImg,
-  RoleDiv,
   SignUpInput,
-  TextSpan,
   TitleDiv,
-} from "./loginStyle";
+} from "../../auth/loginStyle";
+import { setCookie } from "../../../components/cookie";
 
-function LoginPage() {
+function ServiceLoginPage() {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useRecoilState(loginAtom);
   const [isLoginStore, setIsLoginStore] = useRecoilState(isLoginStoreAtom);
-  const [userData, setUserData] = useRecoilState(userDataAtom);
   const [formData, setFormData] = useState({ id: "", pw: "" });
   const [hasVal, setHasVal] = useState(false);
   const sessionUserId = sessionStorage.getItem("userId");
-  const sessionRestaurantId = sessionStorage.getItem("restaurantId");
+  const sessionAdminId = sessionStorage.getItem("adminId");
 
   const { handleSubmit } = useForm();
 
   const role = useRecoilValue(roleAtom);
+
   const routeHandler = () => {
-    if (role === USER) {
-      navigate("/user");
-    } else if (role === STORE) {
-      navigate("/store");
-    } else if (role === COMPANY) {
-      navigate("/company");
-    } else if (role === SYSTEM) {
-      navigate("/admin");
-    }
+    navigate(-1);
   };
 
   const postLogin = async () => {
@@ -55,62 +45,22 @@ function LoginPage() {
         const res = await axios.post("/api/user/sign-in", formData);
 
         const result = res.data.resultData;
-        setUserData({
-          companyId: result.companyId,
-          companyName: result.companyName,
-          email: result.email,
-          name: result.name,
-          phone: result.phone,
-          pic: result.pic,
-          point: result.point,
-          roleId: result.roleId,
-          uid: result.uid,
-          userId: result.userId,
-        });
-
         console.log(result);
         const userId = result.userId || sessionUserId;
         const accessToken = result.accessToken;
         window.sessionStorage.setItem("userId", userId);
         setCookie(accessToken);
         setIsLogin(true);
-        // subscribeUserLogin(userId);
-      } else if (role === STORE) {
+      } else if (role === MANAGER) {
         const res = await axios.post("/api/admin/sign-in", formData);
         console.log(res.data.resultData);
         const result = res.data.resultData;
-
-        const restaurantId = result.divisionId || sessionRestaurantId;
-        const adminId = result.adminId;
-        const coalitionState = result.coalitionState;
+        const adminId = result.adminId || sessionAdminId;
         const accessToken = result.accessToken;
         window.sessionStorage.setItem("adminId", adminId);
-        window.sessionStorage.setItem("restaurantId", restaurantId);
-        // 제휴 상태 확인 Status
-        window.sessionStorage.setItem("coalitionState", coalitionState);
         setCookie(accessToken);
         setIsLoginStore(true);
-        // subscribeStoreLogin(restaurantId);
-      } else if (role === COMPANY) {
-        const res = await axios.post("/api/admin/sign-in", formData);
-        console.log(res.data.resultData);
-        const result = res.data.resultData;
-        const adminId = result.adminId;
-        const companyId = result.divisionId;
-        const accessToken = result.accessToken;
-        window.sessionStorage.setItem("adminId", adminId);
-        window.sessionStorage.setItem("companyId", companyId);
-        setCookie(accessToken);
-      } else if (role === SYSTEM) {
-        const res = await axios.post("/api/admin/sign-in", formData);
-        console.log(res.data.resultData);
-        const result = res.data.resultData;
-        const adminId = result.adminId;
-        const accessToken = result.accessToken;
-        window.sessionStorage.setItem("adminId", adminId);
-        setCookie(accessToken);
       }
-      setIsLogin(true);
       routeHandler();
     } catch (error) {
       Swal.fire({
@@ -142,23 +92,12 @@ function LoginPage() {
         <CloseDiv>
           <IoMdClose
             style={{ width: "100%", height: "100%", cursor: "pointer" }}
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/service")}
           />
         </CloseDiv>
       </HeaderDiv>
       <TitleDiv>
         <LogoImg src="/logo.png" alt="로고" />
-        <RoleDiv>
-          {role === USER
-            ? "사용자"
-            : role === STORE
-              ? "사장님"
-              : role === COMPANY
-                ? "회사"
-                : role === SYSTEM
-                  ? "시스템"
-                  : ""}
-        </RoleDiv>
       </TitleDiv>
       <FormDiv>
         <form onSubmit={handleSubmit(handleSubmitForm)}>
@@ -191,24 +130,8 @@ function LoginPage() {
           </div>
         </form>
       </FormDiv>
-      <TextSpan onClick={() => navigate("/auth/findid")}>아이디 찾기</TextSpan>
-      <TextSpan style={{ color: "#bababa" }}>I</TextSpan>
-      <TextSpan onClick={() => navigate("/auth/findpw")}>
-        비밀번호 찾기
-      </TextSpan>
-      {/* {role === STORE && (
-        <>
-          <TextSpan style={{ color: "#bababa" }}>I</TextSpan>
-          <TextSpan
-            style={{ marginRight: 25 }}
-            onClick={() => navigate("/auth/policy")}
-          >
-            회원가입
-          </TextSpan>
-        </>
-      )} */}
     </LayoutDiv>
   );
 }
 
-export default LoginPage;
+export default ServiceLoginPage;

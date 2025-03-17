@@ -211,6 +211,7 @@ function StoreDetailPage() {
       } else {
         Swal.fire({
           title: "로그인이 필요한 서비스입니다.",
+          text: "확인을 누르면 로그인으로 이동합니다.",
           icon: "error",
           confirmButtonText: "확인",
           showConfirmButton: true,
@@ -228,6 +229,7 @@ function StoreDetailPage() {
       } else {
         Swal.fire({
           title: "로그인이 필요한 서비스입니다.",
+          text: "확인을 누르면 로그인으로 이동합니다.",
           icon: "error",
           confirmButtonText: "확인",
           showConfirmButton: true,

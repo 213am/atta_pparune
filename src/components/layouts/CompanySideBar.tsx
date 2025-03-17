@@ -6,9 +6,8 @@ import { LuTriangleAlert } from "react-icons/lu";
 import { RiStore2Line } from "react-icons/ri";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { adminMenuState, adminSubMenuState } from "../../atoms/SideBarAtom";
-import { removeCookie, removeCookieRefresh } from "../cookie";
 import { companyMenuState } from "../../atoms/SideBarAtom";
+import { removeCookie, removeCookieRefresh } from "../cookie";
 
 interface Size {
   width?: number;
@@ -121,30 +120,28 @@ const CompanySideBar = (): JSX.Element => {
   }, [location]);
 
   return (
-    <div className="bg-black w-[300px] h-[100vh] py-3">
-      <div className="flex flex-col w-full h-[90%]">
-        <div className="w-[200px] h-[35px] mx-6 my-3">
-          <img src="/adminLogo.png" className="w-full h-full" />
-        </div>
-        <div className="mt-[100px]">
-          {/* 대시보드 */}
-          <div
-            className={`flex gap-4 items-center pl-7 py-5 cursor-pointer ${isClick.first ? "bg-primary" : "bg-none"}`}
-            onClick={() => handleClick(1)}
-          >
-            <div className="flex gap-4 items-center pl-7 py-2">
-              <IconDiv
-                width={40}
-                height={40}
-                className={isClick.first ? "text-white" : "text-darkGray"}
-              >
-                <IoCalculatorOutline className="w-full h-full" />
-              </IconDiv>
-              <div
-                className={`text-[20px] tracking-wide ${isClick.first ? "text-white font-semibold" : "text-darkGray"}`}
-              >
-                대시보드
-              </div>
+    <div className="bg-black w-[300px] h-[100vh] py-3 flex flex-col">
+      <div className="w-[200px] h-[35px] mx-6 my-3">
+        <img src="/adminLogo.png" className="w-full h-full" />
+      </div>
+      <div className="mt-[100px] flex-grow">
+        {/* 대시보드 */}
+        <div
+          className={`flex gap-4 items-center pl-7 py-5 cursor-pointer ${isClick.first ? "bg-primary" : "bg-none"}`}
+          onClick={() => handleClick(1)}
+        >
+          <div className="flex gap-4 items-center pl-7 py-2">
+            <IconDiv
+              width={40}
+              height={40}
+              className={isClick.first ? "text-white" : "text-darkGray"}
+            >
+              <IoCalculatorOutline className="w-full h-full" />
+            </IconDiv>
+            <div
+              className={`text-[20px] tracking-wide ${isClick.first ? "text-white font-semibold" : "text-darkGray"}`}
+            >
+              대시보드
             </div>
           </div>
 
@@ -211,7 +208,7 @@ const CompanySideBar = (): JSX.Element => {
           </div>
         </div>
       </div>
-      <div className="flex w-full justify-center">
+      <div className="flex w-full justify-center mb-6">
         <span
           onClick={signoutHandler}
           className="text-white border px-10 py-2 rounded-md cursor-pointer ease-in-out hover:bg-primary hover:border-primary hover:font-semibold hover:scale-110"

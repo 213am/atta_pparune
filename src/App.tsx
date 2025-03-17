@@ -26,6 +26,7 @@ import DashBoard from "./pages/company/dashboard/DashBoard";
 import CpTransaction from "./pages/company/transaction/CpTransaction";
 import Member from "./pages/company/member/Member";
 import Account from "./pages/company/account/Account";
+import ServiceLoginPage from "./pages/service/auth/ServiceLoginPage";
 
 // const SkeletonLoader = () => (
 //   <div style={{ width: "100%", height: "100vh", backgroundColor: "#f3f3f3" }}>
@@ -375,6 +376,7 @@ const App = (): JSX.Element => {
               <Route path="writepost" element={<WritePostPage />} />
               <Route path="detail" element={<DetailPage />} />
             </Route>
+            <Route path="auth" element={<ServiceLoginPage />} />
           </Route>
           <Route path="/storeManage" element={<TableComponent />}></Route>
 
