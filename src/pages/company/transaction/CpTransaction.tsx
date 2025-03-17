@@ -7,7 +7,7 @@ import { PaymentCheckoutPage } from "./toss/PaymentCheckoutPage";
 
 const CpTransaction = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
-  const [point, setPoint] = useState<string>("");
+  const [point, setPoint] = useState("");
 
   return (
     <div className="relative flex flex-col w-full h-dvh bg-white">
