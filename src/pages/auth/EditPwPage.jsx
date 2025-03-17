@@ -22,6 +22,7 @@ import { useRecoilValue } from "recoil";
 import { roleAtom } from "../../atoms/roleAtom";
 import { STORE, USER } from "../../constants/Role";
 import Swal from "sweetalert2";
+import UserLayout from "../../components/layouts/UserLayout";
 
 const editPwSchema = yup.object({
   newUpw: yup
@@ -73,7 +74,7 @@ function FindPwPage() {
           allowOutsideClick: false, // 외부 영역 클릭 방지
         }).then(result => {
           if (result.isConfirmed) {
-            navigate("/user");
+            navigate("/user/userInfo");
           }
         });
       } else if (role === STORE) {
@@ -109,56 +110,61 @@ function FindPwPage() {
   const hasVal = pwVal && pwConfirmVal;
 
   useEffect(() => {
-    console.log(role);
+    console.log("계정 role 확인 : ", role);
   }, []);
 
-  return (
-    <div>
-      <LayoutDiv style={{ position: "relative" }}>
-        <HeaderDiv>
-          <CloseDiv>
-            <IoMdArrowBack
-              style={{ width: "100%", height: "100%", cursor: "pointer" }}
-              onClick={() => navigate(-1)}
+  const FormContent = (
+    <LayoutDiv style={{ position: "relative" }}>
+      <HeaderDiv>
+        <CloseDiv>
+          <IoMdArrowBack
+            style={{ width: "100%", height: "100%", cursor: "pointer" }}
+            onClick={() => navigate(-1)}
+          />
+        </CloseDiv>
+      </HeaderDiv>
+      <FormDiv>
+        <form onSubmit={handleSubmit(handleSubmitForm)}>
+          <TitleDiv>비밀번호 변경</TitleDiv>
+          <InputYupDiv>
+            <SignUpInput
+              type="password"
+              placeholder="새 비밀번호"
+              {...register("newUpw")}
             />
-          </CloseDiv>
-        </HeaderDiv>
-        <FormDiv>
-          <form onSubmit={handleSubmit(handleSubmitForm)}>
-            <TitleDiv>비밀번호 변경</TitleDiv>
-            <InputYupDiv>
-              <SignUpInput
-                type="password"
-                placeholder="새 비밀번호"
-                {...register("newUpw")}
-              />
-              <YupDiv>{errors.newUpw?.message}</YupDiv>
-            </InputYupDiv>
-            <InputYupDiv>
-              <SignUpInput
-                type="password"
-                placeholder="새 비밀번호 확인"
-                {...register("pwConfirm")}
-              />
-              <YupDiv>{errors.pwConfirm?.message}</YupDiv>
-            </InputYupDiv>
+            <YupDiv>{errors.newUpw?.message}</YupDiv>
+          </InputYupDiv>
+          <InputYupDiv>
+            <SignUpInput
+              type="password"
+              placeholder="새 비밀번호 확인"
+              {...register("pwConfirm")}
+            />
+            <YupDiv>{errors.pwConfirm?.message}</YupDiv>
+          </InputYupDiv>
 
-            <div style={{ marginLeft: 20, marginRight: 20 }}>
-              <LoginBtn
-                type="submit"
-                style={{
-                  backgroundColor: hasVal ? "#6F4CDB" : "#ddd",
-                }}
-                disabled={!hasVal}
-              >
-                확인
-              </LoginBtn>
-            </div>
-          </form>
-        </FormDiv>
-      </LayoutDiv>
+          <div style={{ marginLeft: 20, marginRight: 20 }}>
+            <LoginBtn
+              type="submit"
+              style={{
+                backgroundColor: hasVal ? "#6F4CDB" : "#ddd",
+                cursor: hasVal ? "pointer" : "not-allowed",
+              }}
+              disabled={!hasVal}
+            >
+              확인
+            </LoginBtn>
+          </div>
+        </form>
+      </FormDiv>
+    </LayoutDiv>
+  );
+
+  return (
+    <>
+      {role === USER ? <UserLayout>{FormContent}</UserLayout> : FormContent}
       {isSubmit && <Loading />}
-    </div>
+    </>
   );
 }
 

@@ -28,7 +28,6 @@ function EditInfoPage() {
   const [inputNickName, setInputNickName] = useState("");
   const [imageValue, setImageValue] = useState(null);
   const [previewImage, setPreviewImage] = useState("");
-  const [cropImage, setCropImage] = useState(null);
 
   // sessionStorage에 저장된 userId 값을 가져옴
   const sessionUserId = window.sessionStorage.getItem("userId");
@@ -75,25 +74,6 @@ function EditInfoPage() {
     };
     getUserInfo();
   }, []);
-
-  const logoutHandler = () => {
-    removeCookie();
-    removeCookieRefresh();
-    window.sessionStorage.removeItem("userId");
-    setIsLogin(false);
-
-    Swal.fire({
-      title: "로그아웃 되었습니다.",
-      icon: "success",
-      confirmButtonText: "확인",
-      showConfirmButton: true,
-      allowOutsideClick: false,
-    }).then(result => {
-      if (result.isConfirmed) {
-        navigate("/user");
-      }
-    });
-  };
 
   const editSubmitHandler = async e => {
     e.preventDefault();
@@ -208,13 +188,24 @@ function EditInfoPage() {
     return () => URL.revokeObjectURL(objectUrl);
   };
 
+  const linkToInfo = () => {
+    Swal.fire({
+      icon: "warning",
+      title: "수정이 취소되었습니다.",
+      showConfirmButton: false,
+      timer: 1500,
+    }).then(() => {
+      navigate("/user/userInfo");
+    });
+  };
+
   return (
     <div className="h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide bg-white">
       <Notification />
       <div className="absolute top-0 left-0 w-full flex justify-between items-center px-3 py-5 border-b-2 border-gray border-opacity-70 bg-white">
         <IoMdArrowBack
           className="text-3xl cursor-pointer"
-          onClick={() => navigate("/user")}
+          onClick={linkToInfo}
         />
         <span className="text-xl font-semibold ">회원 정보 수정</span>
         <span>&emsp;</span>
@@ -259,7 +250,10 @@ function EditInfoPage() {
             <MdOutlineMail className="text-xl" />
             {userData.email}
           </span>
-          <div className="flex items-center gap-1 cursor-pointer">
+          <div
+            onClick={() => navigate("/user/userInfo/myreview")}
+            className="flex items-center gap-1 cursor-pointer"
+          >
             <span className="text-lg font-semibold">내가 작성한 리뷰</span>
             <IoIosArrowForward className="text-xl font-semibold" />
           </div>
