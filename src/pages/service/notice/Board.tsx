@@ -1,10 +1,13 @@
+import { Pagination, PaginationProps } from "antd";
 import axios from "axios";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { FiEdit } from "react-icons/fi";
-import { GoChevronRight, GoLock } from "react-icons/go";
+import { GoLock } from "react-icons/go";
 import { IoVolumeMediumOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { getCookie } from "../../../components/cookie";
 
 interface BoardType {
   createdAt: string;
@@ -18,11 +21,10 @@ const Board = (): JSX.Element => {
   const [boardList, setBoardList] = useState<BoardType[]>([]);
   // 총 페이지 수
   const [totalPage, setTotalPage] = useState(0);
-
-  // 현재 페이지
-  const [page, setPage] = useState(1);
   const navigate = useNavigate();
-  const getBoard = async () => {
+  const accessToken = getCookie();
+
+  const getBoard = async (page: number) => {
     const params = {
       page,
       size: 10,
@@ -84,9 +86,29 @@ const Board = (): JSX.Element => {
         return "[불편사항]";
     }
   };
+
+  // antDesign
+  const itemRender: PaginationProps["itemRender"] = (
+    _,
+    type,
+    originalElement,
+  ) => {
+    if (type === "prev") {
+      return <a>{`<`}</a>;
+    }
+    if (type === "next") {
+      return <a>{`>`}</a>;
+    }
+    return originalElement;
+  };
+
+  const handlePageChange = (page: number) => {
+    getBoard(page);
+  };
+
   useEffect(() => {
-    getBoard();
-  }, [page]);
+    getBoard(1);
+  }, []);
 
   return (
     <div className="h-[510px] flex flex-col">
@@ -238,26 +260,35 @@ const Board = (): JSX.Element => {
 
       <div className="flex justify-center bottom-0">
         <div className="relative flex w-[1400px] justify-center text-center items-center py-2 gap-5">
-          {[...Array(totalPage)].map((_, index) => {
-            const startIndex = index + 1;
-            return (
-              <div
-                style={{
-                  color: page === startIndex ? "#333" : "#929292",
-                  cursor: "pointer",
-                }}
-                onClick={() => setPage(startIndex)}
-              >
-                {startIndex}
-              </div>
-            );
-          })}
-          <GoChevronRight />
+          <Pagination
+            total={totalPage * 15}
+            itemRender={itemRender}
+            showSizeChanger={false}
+            onChange={handlePageChange}
+            pageSize={15}
+          />
           <div
             className={
               "flex absolute right-0 items-center gap-[5px] bg-gray px-4 py-2 rounded-[5px] cursor-pointer"
             }
-            onClick={() => navigate("/service/notice/writepost")}
+            onClick={() => {
+              if (accessToken) {
+                navigate("/service/notice/writepost");
+              } else {
+                Swal.fire({
+                  title: "로그인이 필요한 서비스입니다!",
+                  text: "확인을 누르면 로그인으로 이동합니다.",
+                  icon: "error",
+                  confirmButtonText: "확인",
+                  showConfirmButton: true, // ok 버튼 노출 여부
+                  allowOutsideClick: false, // 외부 영역 클릭 방지
+                }).then(result => {
+                  if (result.isConfirmed) {
+                    navigate("/service/auth");
+                  }
+                });
+              }
+            }}
           >
             <FiEdit />
             <button>글쓰기</button>

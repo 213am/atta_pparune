@@ -1,20 +1,21 @@
-import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
+import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import axios from "axios";
 import { useEffect, useState } from "react";
 // ------  SDK 초기화 ------
 // @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
 const clientKey = "test_ck_P9BRQmyarY9Gnq5Yy99ZrJ07KzLN";
 const customerKey = "rBINQlZyv9LSwkeaLhrZa";
-export function PaymentCheckoutPage() {
+export function PaymentCheckoutPage({ point }) {
   const [payment, setPayment] = useState(null);
-  const [amount] = useState({
+  const amount = {
     currency: "KRW",
-    value: 50000,
-  });
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
-  function selectPaymentMethod(method) {
-    setSelectedPaymentMethod(method);
-  }
+    value: parseInt(point),
+  };
+
+  useEffect(() => {
+    console.log(point);
+  }, []);
+
   useEffect(() => {
     async function fetchPayment() {
       try {
@@ -54,7 +55,7 @@ export function PaymentCheckoutPage() {
           method: "CARD", // 카드 및 간편결제
           amount: amount,
           orderId: orderId, // 고유 주문번호
-          orderName: "포인트 구매",
+          orderName: "아따빠르네 포인트 구매",
           successUrl: window.location.origin + "/success", // 결제 요청이 성공하면 리다이렉트되는 URL
           failUrl: window.location.origin + "/fail", // 결제 요청이 실패하면 리다이렉트되는 URL
           customerEmail: "customer123@gmail.com",
@@ -80,7 +81,7 @@ export function PaymentCheckoutPage() {
       className="px-4 py-2 rounded-[5px] bg-primary text-white"
       onClick={() => postPayment()}
     >
-      포인트구매
+      결제하기
     </button>
   );
 }

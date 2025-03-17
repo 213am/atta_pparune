@@ -2,9 +2,18 @@ import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { FiEdit } from "react-icons/fi";
 import { IoIosSearch } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { getCookie } from "../../../components/cookie";
+import Swal from "sweetalert2";
+import { useEffect } from "react";
 
 const Question = (): JSX.Element => {
   const navigate = useNavigate();
+  const accessToken = getCookie();
+
+  useEffect(() => {
+    console.log("이게 머임????", accessToken);
+  }, [accessToken]);
+
   return (
     <div className="h-[510px] flex flex-col">
       <div className="flex-grow">
@@ -67,15 +76,6 @@ const Question = (): JSX.Element => {
           <div className="flex items-center border border-darkGray rounded-[5px] px-4 py-1 gap-2 h-[40px]">
             <input type="text" placeholder="검색어를 입력해 주세요" />
             <IoIosSearch className="text-darkGray cursor-pointer" />
-          </div>
-          <div
-            className={
-              "flex absolute right-0 items-center gap-[5px] bg-gray px-4 py-2 rounded-[5px] cursor-pointer"
-            }
-            onClick={() => navigate("/service/notice/writepost")}
-          >
-            <FiEdit />
-            <button>글쓰기</button>
           </div>
         </div>
       </div>

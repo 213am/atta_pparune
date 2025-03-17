@@ -1,5 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AgGridReact } from "ag-grid-react";
-import { ClientSideRowModelModule, ColDef } from "ag-grid-community";
+import {
+  ClientSideRowModelModule,
+  ColDef,
+  GridOptions,
+} from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { useEffect, useState } from "react";
@@ -7,6 +12,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import type { PaginationProps } from "antd";
 import { Pagination } from "antd";
+import { getCookie } from "../../../components/cookie";
 
 interface BuyPointType {
   id: number;
@@ -17,6 +23,8 @@ interface BuyPointType {
 const BuyPoint = (): JSX.Element => {
   const [pointList, setPointList] = useState<BuyPointType[]>([]);
   const [totalPage, setTotalPage] = useState(0);
+  const accessToken = getCookie();
+  const companyId = sessionStorage.getItem("companyId");
 
   const EMPTY_ROW_COUNT = 15;
   const tableData = pointList;
@@ -72,11 +80,12 @@ const BuyPoint = (): JSX.Element => {
     const params = {
       page: page,
       size: 15,
-      companyId: 1,
+      companyId,
     };
     try {
       const res = await axios.get("/api/admin/company/v3/purchaseHistory", {
         params,
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
       console.log("구매내역 조회", res.data.resultData);
       setTotalPage(res.data.resultData.totalPageCount);
@@ -116,6 +125,11 @@ const BuyPoint = (): JSX.Element => {
     getBuyPoint(page);
   };
 
+  const gridOptions: GridOptions = {
+    pagination: true,
+    rowSelection: "multiple",
+  };
+
   useEffect(() => {
     getBuyPoint(1);
   }, []);
@@ -130,6 +144,7 @@ const BuyPoint = (): JSX.Element => {
           domLayout="print"
           modules={[ClientSideRowModelModule]}
           theme={"legacy"}
+          gridOptions={gridOptions}
         />
       </div>
       <div className="flex justify-center">
