@@ -1,13 +1,18 @@
-import { ClientSideRowModelModule, ColDef } from "ag-grid-community";
+import {
+  ClientSideRowModelModule,
+  ColDef,
+  GridOptions,
+} from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import axios from "axios";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { getCookie } from "../../../components/cookie";
 
 interface PointHistoryI {
   id: number | null;
   adminId: number | null;
-  cashAmount: number | null;
+  cashAmount: number | string;
   code: string;
   codeName: string;
   companyId: number | null;
@@ -15,13 +20,12 @@ interface PointHistoryI {
   name: string;
   note: string;
   pk: number | null;
-  pointAmount: number | null;
+  pointAmount: number | string;
   userId: number | null;
 }
 
 const PointHistory = (): JSX.Element => {
-  // const [enqCount, setEnqCount] = useState<number[]>([]);
-  const [pointList, _setPointList] = useState<PointHistoryI[]>([]);
+  const [pointList, setPointList] = useState<PointHistoryI[]>([]);
   const accessToken = getCookie();
   const adminId = sessionStorage.getItem("adminId");
   const tableData = pointList;
@@ -42,12 +46,58 @@ const PointHistory = (): JSX.Element => {
           },
         );
         console.log("최근 포인트 거래내역 : ", res.data);
+
+        const result = res.data.resultData.map(
+          (data: PointHistoryI, index: number) => ({
+            ...data,
+            id: index + 1,
+            code: data.code === "00301" ? "지급" : "회수",
+            name: data.name === null ? "회사" : data.name,
+            createdAt: dayjs(data.createdAt).format("YYYY-MM-DD HH:mm"),
+            cashAmount: data.cashAmount.toLocaleString("ko-kr"),
+            pointAmount: data.pointAmount.toLocaleString("ko-kr"),
+          }),
+        );
+        setPointList(result);
       } catch (error) {
         console.log(error);
       }
     };
     getEnquiryData();
   }, []);
+
+  // 포인트 및 금액 정렬 및 색상
+  const pointAmountRenderer = (props: any) => {
+    console.log("얼마지? : ", props);
+
+    return (
+      <div className="text-right">
+        {props.value === "0" ? (
+          <span className="text-black font-bold italic">{props.value}</span>
+        ) : props.data.codeName === "지급" ? (
+          <span className="text-red font-bold italic">-{props.value}</span>
+        ) : (
+          <span className="text-green font-bold italic">+{props.value}</span>
+        )}
+      </div>
+    );
+  };
+
+  const cashAmountRenderer = (props: any) => {
+    console.log("얼마지? : ", props);
+
+    return (
+      <div className="text-right">
+        {props.value === "0" ? (
+          <span className="text-black font-bold italic">{props.value}</span>
+        ) : props.data.codeName === "구매" ? (
+          <span className="text-red font-bold italic">-{props.value}</span>
+        ) : (
+          <span className="text-green font-bold italic">+{props.value}</span>
+        )}
+      </div>
+    );
+  };
 
   const columnDefs: ColDef<PointHistoryI>[] = [
     {
@@ -65,29 +115,38 @@ const PointHistory = (): JSX.Element => {
       width: 100,
     },
     {
-      headerName: "금액",
+      headerName: "포인트",
       field: "pointAmount",
       sortable: true,
       filter: true,
       width: 100,
+      cellRenderer: pointAmountRenderer,
+    },
+    {
+      headerName: "현금",
+      field: "cashAmount",
+      sortable: true,
+      filter: true,
+      width: 100,
+      cellRenderer: cashAmountRenderer,
     },
     {
       headerName: "일시",
       field: "createdAt",
       sortable: true,
       filter: true,
-      width: 100,
+      width: 150,
     },
     {
       headerName: "구분",
-      field: "code",
+      field: "codeName",
       sortable: true,
       filter: true,
-      width: 120,
+      width: 100,
     },
   ];
 
-  const EMPTY_ROW_COUNT = 10;
+  const EMPTY_ROW_COUNT = 15;
 
   const emptyRows: PointHistoryI[] = Array.from(
     { length: EMPTY_ROW_COUNT },
@@ -95,8 +154,8 @@ const PointHistory = (): JSX.Element => {
       id: index + 1,
       adminId: null,
       name: "",
-      pointAmount: null,
-      cashAmount: null,
+      pointAmount: "",
+      cashAmount: "",
       createdAt: "",
       code: "",
       codeName: "",
@@ -111,13 +170,10 @@ const PointHistory = (): JSX.Element => {
       ? [...tableData, ...emptyRows.slice(tableData.length)]
       : tableData;
 
-  // const enquiryDetailHandler = (e: RowClickedEvent<IEnquiryType>) => {
-  //   if (e.data) {
-  //     console.log("해당 게시글로 이동", e.data.id);
-  //   } else {
-  //     console.log("해당 게시글을 찾을 수 없습니다");
-  //   }
-  // };
+  const gridOptions: GridOptions = {
+    pagination: true,
+    rowSelection: "multiple",
+  };
 
   return (
     <div className="flex w-1/2 pb-20">
@@ -126,15 +182,14 @@ const PointHistory = (): JSX.Element => {
           최근 포인트 거래내역
         </span>
         <div>
-          <div className="ag-theme-alpine w-full h-full justify-start">
+          <div className="ag-theme-alpine flex flex-col justify-center text-center">
             <AgGridReact
               columnDefs={columnDefs}
               rowData={rowDefs}
-              pagination={true}
-              paginationPageSize={10}
               domLayout="autoHeight"
               modules={[ClientSideRowModelModule]}
               theme={"legacy"}
+              gridOptions={gridOptions}
             />
           </div>
         </div>

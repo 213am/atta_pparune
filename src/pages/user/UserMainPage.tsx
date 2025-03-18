@@ -182,7 +182,7 @@ const UserMainPage = (): JSX.Element => {
                     {item.restaurantName}
                   </span>
                   <span
-                    className="flex w-full px-2 text-white text-2xl text-balance break-words"
+                    className="flex flex-col w-full px-2 text-white text-2xl text-balance break-words"
                     dangerouslySetInnerHTML={{
                       __html: DOMPurify.sanitize(
                         String(item.restaurantDescription),

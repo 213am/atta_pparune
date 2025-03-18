@@ -202,7 +202,7 @@ function EditInfoPage() {
   return (
     <div className="h-dvh overflow-x-hidden overflow-y-scroll scrollbar-hide bg-white">
       <Notification />
-      <div className="absolute top-0 left-0 w-full flex justify-between items-center px-3 py-5 border-b-2 border-gray border-opacity-70 bg-white">
+      <div className="absolute top-0 left-0 w-full flex justify-between items-center px-3 py-5 border-b-2 border-gray border-opacity-70 bg-white z-50">
         <span className="flex w-[10%] justify-center text-2xl cursor-pointer">
           <IoMdArrowBack onClick={linkToInfo} />
         </span>
