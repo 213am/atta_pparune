@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { AnimatePresence } from "framer-motion";
 import { Suspense, lazy, useEffect } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { isLoginStoreAtom } from "./atoms/restaurantAtom";
 import { loginAtom } from "./atoms/userAtom";
+import CompanyLayout from "./components/layouts/CompanyLayout";
 import StoreLayout from "./components/layouts/StoreLayout";
 import UserLayout from "./components/layouts/UserLayout";
 import Loading from "./components/Loading";
@@ -13,26 +15,19 @@ import {
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
 import EnquiryPage from "./pages/admin/enquiry/EnquiryPage";
+import FranchiseeCompanyPage from "./pages/admin/franchisee/FranchiseeCompanyPage";
 import FranchiseeStorePage from "./pages/admin/franchisee/FranchiseeStorePage";
 import RefundPage from "./pages/admin/refund/RefundPage";
 import DepositHistory from "./pages/admin/transaction/DepositHistory";
 import PointHistory from "./pages/admin/transaction/PointHistory";
+import Account from "./pages/company/account/Account";
+import DashBoard from "./pages/company/dashboard/DashBoard";
+import Member from "./pages/company/member/Member";
+import CpTransaction from "./pages/company/transaction/CpTransaction";
+import ServiceLoginPage from "./pages/service/auth/ServiceLoginPage";
 import DetailPage from "./pages/service/notice/DetailPage";
 import OrderLoading from "./pages/user/order/OrderLoading";
 import RequestPayment from "./pages/user/payment/RequestPayment";
-import FranchiseeCompanyPage from "./pages/admin/franchisee/FranchiseeCompanyPage";
-import CompanyLayout from "./components/layouts/CompanyLayout";
-import DashBoard from "./pages/company/dashboard/DashBoard";
-import CpTransaction from "./pages/company/transaction/CpTransaction";
-import Member from "./pages/company/member/Member";
-import Account from "./pages/company/account/Account";
-import ServiceLoginPage from "./pages/service/auth/ServiceLoginPage";
-import {
-  getCookie,
-  removeCookie,
-  removeCookieRefresh,
-} from "./components/cookie";
-import { AnimatePresence } from "framer-motion";
 
 const preload = (importFunc: () => Promise<{ default: any }>) =>
   importFunc().then((module: { default: any }) => ({
