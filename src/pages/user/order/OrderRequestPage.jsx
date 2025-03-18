@@ -92,7 +92,7 @@ const OrderRequestPage = () => {
         text: "식권이 생성되었습니다.",
         timer: 2000,
       });
-      navigate(`/user/placetoorder/coupon/${result}`, { state: {} });
+      navigate(`/user/order`);
     } catch (error) {
       console.log(error);
     }
@@ -223,7 +223,7 @@ const OrderRequestPage = () => {
 
                       <div>
                         <span className="text-end px-1 text-nowrap">
-                          {item.point}
+                          {item.point.toLocaleString()}
                         </span>
                         <span>원</span>
                       </div>
@@ -232,7 +232,7 @@ const OrderRequestPage = () => {
                 )}
               </div>
               {/* 현재 사용자와 일치하지 않는 경우에만 버튼 표시 */}
-              {item.userId === parseInt(sessionUserId) ? (
+              {/* {item.userId === parseInt(sessionUserId) ? (
                 <div className="flex w-[20%] justify-center gap-2 text-nowrap items-center">
                   <span
                     onClick={() => inputApprovalHandler(item.userId)}
@@ -252,7 +252,7 @@ const OrderRequestPage = () => {
                   <span className="bg-blue px-2 text-white font-semibold rounded-md"></span>
                   <span className="bg-red px-2 text-white font-semibold rounded-md"></span>
                 </div>
-              )}
+              )} */}
             </div>
           ))}
         <div className="flex w-full justify-center gap-10">

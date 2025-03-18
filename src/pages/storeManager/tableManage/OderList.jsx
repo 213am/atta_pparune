@@ -24,22 +24,20 @@ const OrderList = () => {
           params,
         });
         const result = res.data.resultData;
-        console.log(res);
-        console.log(result);
+
+        console.log("api 요청 성공 : ", result);
         const menuList = result.map(item => {
           return item.orderDetails ? item.orderDetails : [];
         });
-        console.log(menuList.flat());
 
         setOrderDataList([...result]);
         setOrderMenuList([...menuList.flat()]);
-        triggerReload();
       } catch (error) {
         console.log(error);
       }
     };
     getOrderList();
-  }, []);
+  }, [reloadOrders]);
 
   const triggerReload = () => setReloadOrders(prev => !prev);
 
@@ -56,15 +54,22 @@ const OrderList = () => {
         payload,
       );
       console.log(res);
-      Swal.fire({
-        title: "주문을 승인했습니다!",
-        text: "사용자 결제완료 후 테이블 목록에 추가됩니다",
-        icon: "success",
-      });
-      close();
-      triggerReload();
+      if (res.data.resultData === 1) {
+        Swal.fire({
+          title: "주문을 승인했습니다!",
+          text: "사용자 결제완료 후 테이블 목록에 추가됩니다",
+          icon: "success",
+        });
+        close();
+        triggerReload();
+      }
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        title: "에러 발생",
+        text: "처리 중 문제가 발생했습니다. 다시 시도해주세요.",
+        icon: "error",
+      });
     }
   };
 
@@ -167,7 +172,9 @@ const OrderList = () => {
               <div className="flex w-full h-[20%] px-10 gap-3 items-center">
                 <span className="flex w-[25%]">인원 수</span>
                 <span className="text-xl">
-                  {eventData?.reservationPeopleCount} 명
+                  {eventData?.reservationPeopleCount === 0
+                    ? `앉아서 주문`
+                    : `${eventData?.reservationPeopleCount}명`}
                 </span>
               </div>
             </div>

@@ -11,10 +11,10 @@ import {
   orderNoticeAtom,
   priceNoticeAtom,
 } from "../../atoms/noticeAtom";
-import { orderIdAtom } from "../../atoms/restaurantAtom";
 import { loginAtom } from "../../atoms/userAtom";
 import { getCookie } from "../cookie";
 import NotificationPage from "./NotificationPage";
+import { getAlert } from "./getAlert";
 
 const Notification = () => {
   const [isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
@@ -26,66 +26,80 @@ const Notification = () => {
   const sessionId = sessionStorage.getItem("userId");
   const accessToken = getCookie();
 
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top",
-    showConfirmButton: false,
-    timer: 2000,
-    timerProgressBar: true,
-    didOpen: toast => {
-      toast.onmouseenter = Swal.stopTimer;
-      toast.onmouseleave = Swal.resumeTimer;
-    },
-  });
+  // const Toast = Swal.mixin({
+  //   toast: true,
+  //   position: "top",
+  //   showConfirmButton: false,
+  //   timer: 2000,
+  //   timerProgressBar: true,
+  //   didOpen: toast => {
+  //     toast.onmouseenter = Swal.stopTimer;
+  //     toast.onmouseleave = Swal.resumeTimer;
+  //   },
+  // });
+
+  // const getAlert = async () => {
+  //   const params = {
+  //     userId: sessionId,
+  //   };
+  //   if (isLogin === true) {
+  //     try {
+  //       const res = await axios.get(`/api/user/alert`, {
+  //         params,
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       });
+  //       console.log("get 데이터 : ", res.data.resultData);
+  //       const result = res.data.resultData;
+  //       if (result[0]?.orderId) {
+  //         setIsNotice(result);
+  //         console.log("결제 승인 요청이 왔습니다");
+  //         setIsPriceNotice(true);
+  //         Toast.fire({
+  //           title: "결제 승인 요청이 왔습니다!",
+  //           text: "알림 메세지를 확인해주세요",
+  //           icon: "info",
+  //           customClass: {
+  //             popup: "flex w-[90%]",
+  //             title: "text-2xl",
+  //           },
+  //         });
+  //       } else if (result[1]?.orderId) {
+  //         setIsNotice(result);
+  //         setIsOrderNotice(true);
+  //       } else if (result.length === 0) {
+  //         setIsPriceNotice(false);
+  //         setIsOrderNotice(false);
+  //         setIsNotice([]);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   } else {
+  //     setIsNotice([]);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     getAlert();
+  //   }, 3000); // 5초마다 실행
+  //   console.log("알림 데이터 불러오기");
+
+  //   return () => clearInterval(interval); // 언마운트 시 해제
+  // }, [isLogin, accessToken]);
 
   useEffect(() => {
-    const params = {
-      userId: sessionId,
-    };
-
-    console.log("로그인 여부 확인 : ", isLogin);
-
-    const getAlert = async () => {
-      if (isLogin === true) {
-        try {
-          const res = await axios.get(`/api/user/alert`, {
-            params,
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-          console.log("get 데이터 : ", res.data.resultData);
-          const result = res.data.resultData;
-          if (result[0]?.orderId) {
-            setIsNotice(result);
-            console.log("결제 승인 요청이 왔습니다");
-            setIsPriceNotice(true);
-            Toast.fire({
-              title: "결제 승인 요청이 왔습니다!",
-              text: "알림 메세지를 확인해주세요",
-              icon: "info",
-              customClass: {
-                popup: "flex w-[90%]",
-                title: "text-2xl",
-              },
-            });
-          } else if (result[1]?.orderId) {
-            setIsNotice(result);
-            setIsOrderNotice(true);
-          } else if (result.length === 0) {
-            setIsPriceNotice(false);
-            setIsOrderNotice(false);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        setIsNotice([]);
-      }
-    };
-    getAlert();
+    getAlert({
+      sessionId,
+      accessToken,
+      isLogin,
+      setIsNotice,
+      setIsPriceNotice,
+      setIsOrderNotice,
+    });
   }, []);
-  console.log(isNotice);
 
   return (
     <div>
@@ -95,7 +109,7 @@ const Notification = () => {
           className="absolute right-5 top-5 z-50 cursor-pointer"
         >
           {isNotice.length !== 0 && (
-            <FaCircle className="absolute -right-0 -top-1 text-xs text-red animate-ping" />
+            <FaCircle className="absolute -right-0 -top-1 text-xs text-red animate-ping z-50" />
           )}
           <FaBell
             className={`size-6 drop-shadow-xl ${isWhite ? "text-white" : "text-black"}`}

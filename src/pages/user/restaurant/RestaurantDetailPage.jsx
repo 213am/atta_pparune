@@ -1,14 +1,13 @@
 import styled from "@emotion/styled";
 import axios from "axios";
+import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { BsFillTelephoneFill } from "react-icons/bs";
-import { IoMdArrowBack, IoMdClose } from "react-icons/io";
-import { IoIosArrowForward } from "react-icons/io";
 import { FaStar } from "react-icons/fa";
+import { IoIosArrowForward, IoMdArrowBack, IoMdClose } from "react-icons/io";
 import { LuMapPin } from "react-icons/lu";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import DOMPurify from "dompurify";
 import Swal from "sweetalert2";
 import { reserveState } from "../../../atoms/restaurantAtom";
 import { getCookie } from "../../../components/cookie";
@@ -171,10 +170,6 @@ function StoreDetailPage() {
   const [isReserve, setIsReserve] = useRecoilState(reserveState);
   const [reserveInfo, setReserveInfo] = useState({});
   const [menu, setMenu] = useState([]);
-  const location = useLocation();
-  const fromPath = location.state?.from || "/user/restaurant";
-
-  console.log("이전 경로는 : ", fromPath);
 
   const navigate = useNavigate();
   const { id } = useParams();

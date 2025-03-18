@@ -212,7 +212,7 @@ function EditInfoPage() {
         <span>&emsp;</span>
       </div>
       <div className="flex flex-col h-dvh justify-around mt-24 gap-10">
-        <div className="w-full h-[30%] flex flex-col items-center gap-4">
+        <div className="w-full h-[35%] flex flex-col items-center gap-4">
           <label htmlFor="profile">
             <div className="relative cursor-pointer">
               {previewImage ? (
