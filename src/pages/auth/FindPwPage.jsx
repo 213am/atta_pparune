@@ -54,7 +54,7 @@ function FindPwPage() {
   const findPw = async data => {
     try {
       if (role === USER) {
-        await axios.put("/api/user/v3/find-passowrd", data);
+        await axios.put("/api/user/v3/find-password", data);
         Swal.fire({
           title: `${data.email}로 비밀번호가 전송되었습니다.`,
           icon: "success",

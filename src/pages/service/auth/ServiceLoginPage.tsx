@@ -3,12 +3,11 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoMdClose } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import Swal from "sweetalert2";
-import { isLoginStoreAtom } from "../../../atoms/restaurantAtom";
 import { roleAtom } from "../../../atoms/roleAtom";
-import { loginAtom } from "../../../atoms/userAtom";
-import { MANAGER, STORE, USER } from "../../../constants/Role";
+import { getCookie, setCookie } from "../../../components/cookie";
+import { MANAGER, USER } from "../../../constants/Role";
 import {
   CloseDiv,
   FormDiv,
@@ -20,12 +19,9 @@ import {
   SignUpInput,
   TitleDiv,
 } from "../../auth/loginStyle";
-import { setCookie } from "../../../components/cookie";
 
 function ServiceLoginPage() {
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useRecoilState(loginAtom);
-  const [isLoginStore, setIsLoginStore] = useRecoilState(isLoginStoreAtom);
   const [formData, setFormData] = useState({ id: "", pw: "" });
   const [hasVal, setHasVal] = useState(false);
   const sessionUserId = sessionStorage.getItem("userId");
@@ -39,6 +35,7 @@ function ServiceLoginPage() {
     navigate(-1);
   };
 
+  // 로그인
   const postLogin = async () => {
     try {
       if (role === USER) {
@@ -50,7 +47,6 @@ function ServiceLoginPage() {
         const accessToken = result.accessToken;
         window.sessionStorage.setItem("userId", userId);
         setCookie(accessToken);
-        setIsLogin(true);
       } else if (role === MANAGER) {
         const res = await axios.post("/api/admin/sign-in", formData);
         console.log(res.data.resultData);
@@ -59,7 +55,6 @@ function ServiceLoginPage() {
         const accessToken = result.accessToken;
         window.sessionStorage.setItem("adminId", adminId);
         setCookie(accessToken);
-        setIsLoginStore(true);
       }
       routeHandler();
     } catch (error) {

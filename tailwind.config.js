@@ -19,9 +19,11 @@ export default {
         tableGray: "#A9A9A9",
         gray: "#eeeeee",
         red: "#E44B58",
+        redHover: "#db2131",
         blue: "#79BAF2",
         yellow: "#FFD400",
         green: "#3CB371",
+        greenHover: "#2f8d59",
       },
     },
     screens: {

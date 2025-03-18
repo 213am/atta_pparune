@@ -1,9 +1,30 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ServiceFooter from "../../../components/ServiceFooter";
 import ServiceHeader from "../../../components/ServiceHeader";
+import { useEffect } from "react";
+import axios from "axios";
 
 const DetailPage = (): JSX.Element => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const inquiryId = searchParams.get("inquiryId");
+
+  const getBoardDetail = async () => {
+    const params = {
+      inquiryId,
+    };
+    try {
+      await axios.get("/api/system/v3/post/detail", { params });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    console.log(inquiryId);
+    getBoardDetail();
+  }, []);
+
   return (
     <div className="relative w-full h-dvh bg-white overflow-y-auto scrollbar-hide z-10 flex flex-col">
       <ServiceHeader />
