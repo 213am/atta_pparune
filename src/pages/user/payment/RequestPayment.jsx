@@ -62,7 +62,7 @@ const RequestPayment = () => {
   };
 
   return (
-    <div className="relative w-full h-dvh flex justify-center items-center overflow-x-hidden overflow-y-scroll scrollbar-hide">
+    <div className="relative flex w-full h-dvh justify-center items-center overflow-x-hidden overflow-y-scroll scrollbar-hide">
       {isConfirm ? (
         <>
           <img

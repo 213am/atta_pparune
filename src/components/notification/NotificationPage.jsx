@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { isClickIcon, noticeState } from "../../atoms/noticeAtom";
 import { orderIdAtom } from "../../atoms/restaurantAtom";
 import { getCookie } from "../../components/cookie";
+import { getAlert } from "./getAlert";
 
 const NotificationPage = () => {
   const [orderId, setOrderId] = useRecoilState(orderIdAtom);
@@ -69,6 +70,12 @@ const NotificationPage = () => {
       }).then(result => {
         if (result.isConfirmed) {
           navigate("/user");
+          getAlert({
+            sessionId,
+            accessToken,
+            isLogin,
+            setIsNotice,
+          });
         }
       });
     } catch (error) {
@@ -100,6 +107,12 @@ const NotificationPage = () => {
       }).then(result => {
         if (result.isConfirmed) {
           navigate("/user");
+          getAlert({
+            sessionId,
+            accessToken,
+            isLogin,
+            setIsNotice,
+          });
         }
       });
     } catch (error) {

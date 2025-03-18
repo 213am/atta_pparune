@@ -3,6 +3,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { getCookie } from "../../../components/cookie";
+import Swal from "sweetalert2";
 
 interface IFormDataType {
   adminId: number;
@@ -52,8 +53,25 @@ const JoinMember = (): JSX.Element => {
         },
       });
       console.log("사원 계정 생성요청 : ", res.data);
+      if (res.data.statusCode === "200") {
+        Swal.fire({
+          title: "새로운 계정이 생성됐습니다!",
+          icon: "success",
+          confirmButtonText: "확인",
+          showConfirmButton: true,
+          allowOutsideClick: false,
+        });
+      }
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        title: "생성 중 오류 발생",
+        text: "다시 한번 시도해주세요",
+        icon: "error",
+        confirmButtonText: "확인",
+        showConfirmButton: true,
+        allowOutsideClick: false,
+      });
     }
   };
 

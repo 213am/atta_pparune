@@ -5,6 +5,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import MenuBar from "../../../components/MenuBar";
 import { IoArrowForward } from "react-icons/io5";
 import { FaCircleCheck } from "react-icons/fa6";
+import { LuClipboardList } from "react-icons/lu";
 import { HiOutlineTicket } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
 import { getCookie } from "../../../components/cookie";
@@ -85,6 +86,11 @@ const OrderList = () => {
     }
   };
 
+  const formatPhoneNumber = phone => {
+    if (!phone || phone.length !== 11) return phone; // 유효성 체크
+    return phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+  };
+
   const linkToReview = e => {
     console.log("리뷰써보자 : ", e);
 
@@ -127,7 +133,7 @@ const OrderList = () => {
       </div>
       {isTap ? (
         activeList.orderId ? (
-          <div className="flex flex-col w-full h-dvh gap-10 pt-24">
+          <div className="flex flex-col w-full h-dvh gap-10 pt-24 pb-20">
             <div className="flex w-full h-[14%] justify-center items-end text-primary text-2xl font-semibold tracking-widest">
               {activeList.ticketId ? (
                 <div className="flex items-center gap-2">
@@ -141,7 +147,7 @@ const OrderList = () => {
                 </div>
               )}
             </div>
-            <div className="flex flex-col w-full h-[25%] px-10 gap-5">
+            <div className="flex flex-col w-full h-[35%] px-10 gap-5">
               <span className="mb-2">매장 정보</span>
               <div className="flex flex-col w-full h-full px-4 justify-between">
                 <div className="flex gap-4 items-center">
@@ -161,10 +167,16 @@ const OrderList = () => {
                     key={item.menuId}
                     className="flex w-full justify-between"
                   >
-                    <span>{item.menuName}</span>
-                    <div className="flex gap-4">
-                      <span>{item.menuCount}개</span>
-                      <span>{item.menuPrice.toLocaleString("ko")}원</span>
+                    <span className="flex w-[60%] text-nowrap">
+                      {item.menuName}
+                    </span>
+                    <div className="flex w-[40%] justify-end text-nowrap">
+                      <span className="flex w-1/3 justify-end">
+                        {item.menuCount}개
+                      </span>
+                      <span className="flex w-2/3 justify-end">
+                        {item.menuPrice.toLocaleString("ko")}원
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -190,25 +202,34 @@ const OrderList = () => {
               <span className="mb-2">예약자 정보</span>
               <div className="flex flex-col w-full h-full px-4 justify-between">
                 <div className="flex w-full">
-                  <span className="flex w-[25%] mr-4 text-darkGray justify-end">
+                  <span className="flex w-[25%] mr-4 text-darkGray justify-end text-nowrap">
                     이름
                   </span>
-                  <span>{activeList.reservationUserName}</span>
+                  <span>
+                    {activeList.reservationUserName || activeList.orderUserName}
+                  </span>
                 </div>
                 <div className="flex w-full">
-                  <span className="flex w-[25%] mr-4 text-darkGray justify-end">
+                  <span className="flex w-[25%] mr-4 text-darkGray justify-end text-nowrap">
                     핸드폰 번호
                   </span>
-                  <span>{activeList.reservationUserPhone}</span>
+                  <span>
+                    {formatPhoneNumber(activeList?.reservationUserPhone) ||
+                      formatPhoneNumber(activeList?.orderUserPhone)}
+                  </span>
                 </div>
                 <div className="flex w-full">
-                  <span className="flex w-[25%] mr-4 text-darkGray justify-end">
+                  <span className="flex w-[25%] mr-4 text-darkGray justify-end text-nowrap">
                     인원
                   </span>
-                  <span></span>
+                  <span>
+                    {activeList.reservationPeopleCount === 0
+                      ? "앉아서 주문"
+                      : `${activeList.reservationPeopleCount}명 예약`}
+                  </span>
                 </div>
                 <div className="flex w-full">
-                  <span className="flex w-[25%] mr-4 text-darkGray justify-end">
+                  <span className="flex w-[25%] mr-4 text-darkGray justify-end text-nowrap">
                     예약시간
                   </span>
                   <span>
@@ -236,11 +257,23 @@ const OrderList = () => {
           </div>
         )
       ) : (
-        <div className="flex flex-col w-full h-dvh justify-start items-center gap-5 pt-40 scrollbar-hide">
+        <div
+          className={`flex flex-col w-full h-dvh justify-start items-center gap-5 overflow-x-hidden overflow-y-scroll scrollbar-hide ${paymentList.length === 0 ? "" : "py-36"}`}
+        >
           {/* 주문내역 카드 */}
           {paymentList.length === 0 ? (
-            <div className="flex w-full h-1/4 justify-center text-xl">
-              아직 주문 내역이 없습니다
+            <div className="flex flex-col w-full h-dvh justify-center items-center gap-3">
+              <LuClipboardList className="text-8xl text-darkGray" />
+              <span className="text-2xl text-darkGray">
+                아직 주문 내역이 없습니다
+              </span>
+              <div
+                onClick={() => setIsTap(true)}
+                className="flex items-center gap-1 mt-3 text-xl border border-darkGray px-3 py-1 rounded-lg bg-white cursor-pointer"
+              >
+                진행 중인 주문 보기
+                <IoArrowForward />
+              </div>
             </div>
           ) : (
             paymentList.map((item, index) => (

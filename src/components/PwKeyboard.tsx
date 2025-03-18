@@ -87,7 +87,7 @@ const PwKeyboard: React.FC<PwKeyboardProps> = ({
   };
 
   return (
-    <div className="flex flex-col w-full items-center p-4 justify-center">
+    <div className="flex flex-col w-full items-center px-10 justify-center">
       <div className="flex flex-col w-full items-center">
         <span className="flex text-2xl">
           {mode === "edit"

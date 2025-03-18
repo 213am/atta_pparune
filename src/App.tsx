@@ -32,12 +32,7 @@ import {
   removeCookie,
   removeCookieRefresh,
 } from "./components/cookie";
-
-// const SkeletonLoader = () => (
-//   <div style={{ width: "100%", height: "100vh", backgroundColor: "#f3f3f3" }}>
-//     <p style={{ textAlign: "center", paddingTop: "50px" }}>Loading...</p>
-//   </div>
-// );
+import { AnimatePresence } from "framer-motion";
 
 const preload = (importFunc: () => Promise<{ default: any }>) =>
   importFunc().then((module: { default: any }) => ({
@@ -136,324 +131,316 @@ const App = (): JSX.Element => {
     }
   }, [sessionRestaurant, sessionUser, isLogin, isLoginStore]);
 
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      const token = getCookie();
-      if (token) {
-        removeCookie();
-        removeCookieRefresh();
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, []);
-
   return (
-    <Router>
-      <Suspense fallback={<Loading />}>
-        <Routes>
-          <Route path="/" element={<IndexPage />} />
-          <Route path="/auth">
-            <Route index element={<LoginPage />} />
-            {/* 임시 - 시스템 관리자 로그인 */}
-            <Route path="system" element={<LoginPage />} />
-            {/* 임시 - 회사 관리자 로그인 */}
-            <Route path="company" element={<LoginPage />} />
+    <AnimatePresence mode="wait">
+      <Router>
+        <Suspense fallback={<Loading />}>
+          <Routes>
+            <Route path="/" element={<IndexPage />} />
+            <Route path="/auth">
+              <Route index element={<LoginPage />} />
+              {/* 임시 - 시스템 관리자 로그인 */}
+              <Route path="system" element={<LoginPage />} />
+              {/* 임시 - 회사 관리자 로그인 */}
+              <Route path="company" element={<LoginPage />} />
 
-            <Route path="findid" element={<FindIdPage />} />
-            <Route path="findpw" element={<FindPwPage />} />
-            <Route path="editpw" element={<EditPwPage />} />
-            <Route path="policy" element={<PolicyPage />} />
-            <Route path="signup">
-              <Route index element={<SignUpPage />} />
-              <Route path="emailauth" element={<EmailAuthPage />} />
+              <Route path="findid" element={<FindIdPage />} />
+              <Route path="findpw" element={<FindPwPage />} />
+              <Route path="editpw" element={<EditPwPage />} />
+              <Route path="policy" element={<PolicyPage />} />
+              <Route path="signup">
+                <Route index element={<SignUpPage />} />
+                <Route path="emailauth" element={<EmailAuthPage />} />
+              </Route>
             </Route>
-          </Route>
 
-          {/* 사용자 */}
-          <Route path="/user">
-            <Route
-              index
-              element={
-                <UserLayout>
-                  <UserMainPage />
-                </UserLayout>
-              }
-            />
-            <Route path="userinfo">
+            {/* 사용자 */}
+            <Route path="/user">
               <Route
                 index
                 element={
                   <UserLayout>
-                    <UserInfo />
+                    <UserMainPage />
                   </UserLayout>
                 }
               />
+              <Route path="userinfo">
+                <Route
+                  index
+                  element={
+                    <UserLayout>
+                      <UserInfo />
+                    </UserLayout>
+                  }
+                />
+                <Route
+                  path="edit"
+                  element={
+                    <UserLayout>
+                      <EditInfoPage />
+                    </UserLayout>
+                  }
+                />
+                <Route
+                  path="myreview"
+                  element={
+                    <UserLayout>
+                      <MyReviewPage />
+                    </UserLayout>
+                  }
+                />
+              </Route>
+              <Route path="order">
+                <Route
+                  index
+                  element={
+                    <UserLayout>
+                      <Order />
+                    </UserLayout>
+                  }
+                />
+              </Route>
+              <Route path="placetoorder">
+                <Route
+                  index
+                  element={
+                    <UserLayout>
+                      <PlaceToOrder />
+                    </UserLayout>
+                  }
+                />
+                <Route path="coupon">
+                  <Route
+                    path=":id"
+                    element={
+                      <UserLayout>
+                        <MealTicketPage />
+                      </UserLayout>
+                    }
+                  />
+                </Route>
+                <Route path="member">
+                  <Route
+                    path=":id"
+                    element={
+                      <UserLayout>
+                        <OrderMemberPage />
+                      </UserLayout>
+                    }
+                  />
+                </Route>
+                <Route path="price">
+                  <Route
+                    path=":id"
+                    element={
+                      <UserLayout>
+                        <OrderPricePage />
+                      </UserLayout>
+                    }
+                  />
+                </Route>
+                <Route path="request">
+                  <Route
+                    path=":id"
+                    element={
+                      <UserLayout>
+                        <OrderRequestPage />
+                      </UserLayout>
+                    }
+                  />
+                </Route>
+                <Route
+                  path="loading"
+                  element={
+                    <UserLayout>
+                      <OrderLoading />
+                    </UserLayout>
+                  }
+                />
+              </Route>
+              <Route path="restaurant">
+                <Route
+                  index
+                  element={
+                    <UserLayout>
+                      <Restaurant />
+                    </UserLayout>
+                  }
+                />
+                <Route path="detail">
+                  <Route
+                    path=":id"
+                    element={
+                      <UserLayout>
+                        <RestaurantDetailPage />
+                      </UserLayout>
+                    }
+                  />
+                  <Route
+                    path="reserve/:id"
+                    element={
+                      <UserLayout>
+                        <MenuSelectPage />
+                      </UserLayout>
+                    }
+                  />
+                  <Route
+                    path="review/:id"
+                    element={
+                      <UserLayout>
+                        <RestaurantReviewPage />
+                      </UserLayout>
+                    }
+                  />
+                </Route>
+              </Route>
               <Route
-                path="edit"
+                path="review/:id"
                 element={
                   <UserLayout>
-                    <EditInfoPage />
-                  </UserLayout>
-                }
-              />
-              <Route
-                path="myreview"
-                element={
-                  <UserLayout>
-                    <MyReviewPage />
+                    <WriteReview />
                   </UserLayout>
                 }
               />
             </Route>
-            <Route path="order">
+
+            {/* 식당 */}
+            <Route path="/store">
               <Route
                 index
                 element={
+                  <StoreLayout>
+                    <Store />
+                  </StoreLayout>
+                }
+              />
+              <Route
+                path="menu"
+                element={
+                  <StoreLayout>
+                    <MenuPage />
+                  </StoreLayout>
+                }
+              />
+              <Route
+                path="order"
+                element={
+                  <StoreLayout>
+                    <OrderPage />
+                  </StoreLayout>
+                }
+              />
+              <Route
+                path="sales"
+                element={
+                  <StoreLayout>
+                    <StoreSales />
+                  </StoreLayout>
+                }
+              />
+              <Route
+                path="info"
+                element={
+                  <StoreLayout>
+                    <StoreInfoPage />
+                  </StoreLayout>
+                }
+              />
+              <Route
+                path="review"
+                element={
+                  <StoreLayout>
+                    <StoreReviewPage />
+                  </StoreLayout>
+                }
+              />
+              <Route
+                path="request"
+                element={
                   <UserLayout>
-                    <Order />
+                    <RequestPayment />
                   </UserLayout>
                 }
               />
             </Route>
-            <Route path="placetoorder">
+            {/* 서비스 소개 페이지 */}
+            <Route path="/service">
+              <Route index element={<ServiceMainPage />} />
+              <Route path="about" element={<AboutPage />} />
+              <Route path="enroll">
+                <Route index element={<EnrollServicePage />} />
+                <Route path="addstore" element={<AddStorePage />} />
+                <Route path="addcompany" element={<AddCompanyPage />} />
+              </Route>
+              <Route path="notice">
+                <Route index element={<NoticePage />} />
+                <Route path="writepost" element={<WritePostPage />} />
+                <Route path="detail" element={<DetailPage />} />
+              </Route>
+              <Route path="auth" element={<ServiceLoginPage />} />
+            </Route>
+            <Route path="/storeManage" element={<TableComponent />}></Route>
+
+            <Route path="/admin">
+              <Route index element={<AdminPage />} />
+              <Route path="enquiry" element={<EnquiryPage />} />
+              <Route
+                path="franchisee-store"
+                element={<FranchiseeStorePage />}
+              />
+              <Route
+                path="franchisee-company"
+                element={<FranchiseeCompanyPage />}
+              />
+              <Route path="refund" element={<RefundPage />} />
+              <Route path="deposit" element={<DepositHistory />} />
+              <Route path="point" element={<PointHistory />} />
+            </Route>
+
+            {/* 회사 */}
+            <Route path="/company">
               <Route
                 index
                 element={
-                  <UserLayout>
-                    <PlaceToOrder />
-                  </UserLayout>
+                  <CompanyLayout>
+                    <DashBoard />
+                  </CompanyLayout>
                 }
               />
-              <Route path="coupon">
-                <Route
-                  path=":id"
-                  element={
-                    <UserLayout>
-                      <MealTicketPage />
-                    </UserLayout>
-                  }
-                />
-              </Route>
-              <Route path="member">
-                <Route
-                  path=":id"
-                  element={
-                    <UserLayout>
-                      <OrderMemberPage />
-                    </UserLayout>
-                  }
-                />
-              </Route>
-              <Route path="price">
-                <Route
-                  path=":id"
-                  element={
-                    <UserLayout>
-                      <OrderPricePage />
-                    </UserLayout>
-                  }
-                />
-              </Route>
-              <Route path="request">
-                <Route
-                  path=":id"
-                  element={
-                    <UserLayout>
-                      <OrderRequestPage />
-                    </UserLayout>
-                  }
-                />
-              </Route>
               <Route
-                path="loading"
+                path="transaction"
                 element={
-                  <UserLayout>
-                    <OrderLoading />
-                  </UserLayout>
+                  <CompanyLayout>
+                    <CpTransaction />
+                  </CompanyLayout>
                 }
               />
-            </Route>
-            <Route path="restaurant">
               <Route
-                index
+                path="member"
                 element={
-                  <UserLayout>
-                    <Restaurant />
-                  </UserLayout>
+                  <CompanyLayout>
+                    <Member />
+                  </CompanyLayout>
                 }
               />
-              <Route path="detail">
-                <Route
-                  path=":id"
-                  element={
-                    <UserLayout>
-                      <RestaurantDetailPage />
-                    </UserLayout>
-                  }
-                />
-                <Route
-                  path="reserve/:id"
-                  element={
-                    <UserLayout>
-                      <MenuSelectPage />
-                    </UserLayout>
-                  }
-                />
-                <Route
-                  path="review/:id"
-                  element={
-                    <UserLayout>
-                      <RestaurantReviewPage />
-                    </UserLayout>
-                  }
-                />
-              </Route>
+              <Route
+                path="account"
+                element={
+                  <CompanyLayout>
+                    <Account />
+                  </CompanyLayout>
+                }
+              />
             </Route>
-            <Route
-              path="review/:id"
-              element={
-                <UserLayout>
-                  <WriteReview />
-                </UserLayout>
-              }
-            />
-          </Route>
 
-          {/* 식당 */}
-          <Route path="/store">
-            <Route
-              index
-              element={
-                <StoreLayout>
-                  <Store />
-                </StoreLayout>
-              }
-            />
-            <Route
-              path="menu"
-              element={
-                <StoreLayout>
-                  <MenuPage />
-                </StoreLayout>
-              }
-            />
-            <Route
-              path="order"
-              element={
-                <StoreLayout>
-                  <OrderPage />
-                </StoreLayout>
-              }
-            />
-            <Route
-              path="sales"
-              element={
-                <StoreLayout>
-                  <StoreSales />
-                </StoreLayout>
-              }
-            />
-            <Route
-              path="info"
-              element={
-                <StoreLayout>
-                  <StoreInfoPage />
-                </StoreLayout>
-              }
-            />
-            <Route
-              path="review"
-              element={
-                <StoreLayout>
-                  <StoreReviewPage />
-                </StoreLayout>
-              }
-            />
-            <Route
-              path="request"
-              element={
-                <UserLayout>
-                  <RequestPayment />
-                </UserLayout>
-              }
-            />
-          </Route>
-          {/* 서비스 소개 페이지 */}
-          <Route path="/service">
-            <Route index element={<ServiceMainPage />} />
-            <Route path="about" element={<AboutPage />} />
-            <Route path="enroll">
-              <Route index element={<EnrollServicePage />} />
-              <Route path="addstore" element={<AddStorePage />} />
-              <Route path="addcompany" element={<AddCompanyPage />} />
-            </Route>
-            <Route path="notice">
-              <Route index element={<NoticePage />} />
-              <Route path="writepost" element={<WritePostPage />} />
-              <Route path="detail" element={<DetailPage />} />
-            </Route>
-            <Route path="auth" element={<ServiceLoginPage />} />
-          </Route>
-          <Route path="/storeManage" element={<TableComponent />}></Route>
+            {/* 결제 성공 */}
+            <Route path="/success" element={<WidgetSuccessPage />} />
 
-          <Route path="/admin">
-            <Route index element={<AdminPage />} />
-            <Route path="enquiry" element={<EnquiryPage />} />
-            <Route path="franchisee-store" element={<FranchiseeStorePage />} />
-            <Route
-              path="franchisee-company"
-              element={<FranchiseeCompanyPage />}
-            />
-            <Route path="refund" element={<RefundPage />} />
-            <Route path="deposit" element={<DepositHistory />} />
-            <Route path="point" element={<PointHistory />} />
-          </Route>
-
-          {/* 회사 */}
-          <Route path="/company">
-            <Route
-              index
-              element={
-                <CompanyLayout>
-                  <DashBoard />
-                </CompanyLayout>
-              }
-            />
-            <Route
-              path="transaction"
-              element={
-                <CompanyLayout>
-                  <CpTransaction />
-                </CompanyLayout>
-              }
-            />
-            <Route
-              path="member"
-              element={
-                <CompanyLayout>
-                  <Member />
-                </CompanyLayout>
-              }
-            />
-            <Route
-              path="account"
-              element={
-                <CompanyLayout>
-                  <Account />
-                </CompanyLayout>
-              }
-            />
-          </Route>
-
-          {/* 결제 성공 */}
-          <Route path="/success" element={<WidgetSuccessPage />} />
-
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
-    </Router>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </Router>
+    </AnimatePresence>
   );
 };
 

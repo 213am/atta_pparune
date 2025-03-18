@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import Swal from "sweetalert2";
 import { roleAtom } from "../../../atoms/roleAtom";
-import { getCookie, setCookie } from "../../../components/cookie";
+import { setCookie } from "../../../components/cookie";
 import { MANAGER, USER } from "../../../constants/Role";
 import {
   CloseDiv,

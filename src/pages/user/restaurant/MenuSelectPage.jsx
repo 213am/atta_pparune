@@ -215,8 +215,13 @@ function MenuSelectPage() {
         console.log(res.data.resultData);
         setOrderId(res.data.resultData);
         subscribeToReservationStatus(res.data?.resultData);
+
+        const titleMessage = time
+          ? `${time}에 예약이 완료 되었습니다.`
+          : `예약이 완료 되었습니다.`;
+
         Swal.fire({
-          title: `${time}에 예약이 완료 되었습니다.`,
+          title: titleMessage,
           icon: "success",
           confirmButtonText: "확인",
           showConfirmButton: true, // ok 버튼 노출 여부
