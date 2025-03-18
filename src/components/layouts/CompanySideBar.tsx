@@ -144,66 +144,66 @@ const CompanySideBar = (): JSX.Element => {
               대시보드
             </div>
           </div>
+        </div>
 
-          {/* 거래내역 */}
-          <div
-            className={`flex gap-4 items-center pl-7 py-5 cursor-pointer ${isClick.second ? "bg-primary" : "bg-none"}`}
-            onClick={() => handleClick(2)}
-          >
-            <div className="flex gap-4 items-center pl-7 py-2">
-              <IconDiv
-                width={40}
-                height={40}
-                className={isClick.second ? "text-white" : "text-darkGray"}
-              >
-                <HiOutlineClipboardList className="w-full h-full" />
-              </IconDiv>
-              <div
-                className={`text-[20px] tracking-wide ${isClick.second ? "text-white font-semibold" : "text-darkGray"}`}
-              >
-                거래내역
-              </div>
+        {/* 거래내역 */}
+        <div
+          className={`flex gap-4 items-center pl-7 py-5 cursor-pointer ${isClick.second ? "bg-primary" : "bg-none"}`}
+          onClick={() => handleClick(2)}
+        >
+          <div className="flex gap-4 items-center pl-7 py-2">
+            <IconDiv
+              width={40}
+              height={40}
+              className={isClick.second ? "text-white" : "text-darkGray"}
+            >
+              <HiOutlineClipboardList className="w-full h-full" />
+            </IconDiv>
+            <div
+              className={`text-[20px] tracking-wide ${isClick.second ? "text-white font-semibold" : "text-darkGray"}`}
+            >
+              거래내역
             </div>
           </div>
+        </div>
 
-          {/* 구성원 관리 */}
-          <div
-            className={`flex gap-4 items-center pl-7 py-5 cursor-pointer ${isClick.third ? "bg-primary" : "bg-none"}`}
-            onClick={() => handleClick(3)}
-          >
-            <div className="flex gap-4 items-center pl-7 py-2">
-              <IconDiv
-                width={40}
-                height={40}
-                className={isClick.third ? "text-white" : "text-darkGray"}
-              >
-                <RiStore2Line className="w-full h-full" />
-              </IconDiv>
-              <div
-                className={`text-[20px] tracking-wide ${isClick.third ? "text-white font-semibold" : "text-darkGray"}`}
-              >
-                구성원 관리
-              </div>
+        {/* 구성원 관리 */}
+        <div
+          className={`flex gap-4 items-center pl-7 py-5 cursor-pointer ${isClick.third ? "bg-primary" : "bg-none"}`}
+          onClick={() => handleClick(3)}
+        >
+          <div className="flex gap-4 items-center pl-7 py-2">
+            <IconDiv
+              width={40}
+              height={40}
+              className={isClick.third ? "text-white" : "text-darkGray"}
+            >
+              <RiStore2Line className="w-full h-full" />
+            </IconDiv>
+            <div
+              className={`text-[20px] tracking-wide ${isClick.third ? "text-white font-semibold" : "text-darkGray"}`}
+            >
+              구성원 관리
             </div>
           </div>
-          {/* 계정 관리 */}
-          <div
-            className={`flex gap-4 items-center pl-7 py-5 cursor-pointer ${isClick.forth ? "bg-primary" : "bg-none"}`}
-            onClick={() => handleClick(4)}
-          >
-            <div className="flex gap-4 items-center pl-7 py-2">
-              <IconDiv
-                width={40}
-                height={40}
-                className={`p-1 ${isClick.forth ? "text-white" : "text-darkGray"}`}
-              >
-                <LuTriangleAlert className="w-full h-full" />
-              </IconDiv>
-              <div
-                className={`text-[20px] tracking-wide ${isClick.forth ? "text-white font-semibold" : "text-darkGray"}`}
-              >
-                계정 관리
-              </div>
+        </div>
+        {/* 계정 관리 */}
+        <div
+          className={`flex gap-4 items-center pl-7 py-5 cursor-pointer ${isClick.forth ? "bg-primary" : "bg-none"}`}
+          onClick={() => handleClick(4)}
+        >
+          <div className="flex gap-4 items-center pl-7 py-2">
+            <IconDiv
+              width={40}
+              height={40}
+              className={`p-1 ${isClick.forth ? "text-white" : "text-darkGray"}`}
+            >
+              <LuTriangleAlert className="w-full h-full" />
+            </IconDiv>
+            <div
+              className={`text-[20px] tracking-wide ${isClick.forth ? "text-white font-semibold" : "text-darkGray"}`}
+            >
+              계정 관리
             </div>
           </div>
         </div>
@@ -211,7 +211,7 @@ const CompanySideBar = (): JSX.Element => {
       <div className="flex w-full justify-center mb-6">
         <span
           onClick={signoutHandler}
-          className="text-white border px-10 py-2 rounded-md cursor-pointer ease-in-out hover:bg-primary hover:border-primary hover:font-semibold hover:scale-110"
+          className="text-white border px-10 py-2 rounded-md cursor-pointer"
         >
           로그아웃
         </span>

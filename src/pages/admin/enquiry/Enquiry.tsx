@@ -30,12 +30,12 @@ export interface ChartProps {
 
 export interface IEnquiryType {
   id: number;
-  commentYn: number;
+  commentYn: string;
   createdAt: string;
   inquiryId: number;
   name: string;
-  postCode: number;
-  roleCode: number;
+  postCode: string;
+  roleCode: string;
   year: string;
 }
 
@@ -148,7 +148,7 @@ const Enquiry = (): JSX.Element => {
       id: index + 1,
       commentYn: "",
       createdAt: "",
-      inquiryId: "",
+      inquiryId: 0,
       name: "",
       postCode: "",
       roleCode: "",

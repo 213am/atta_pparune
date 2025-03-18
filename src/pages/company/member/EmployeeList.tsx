@@ -7,8 +7,11 @@ import { Pagination, PaginationProps } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { getCookie } from "../../../components/cookie";
+import { IoMdClose } from "react-icons/io";
+import Swal from "sweetalert2";
 
 interface EmployeeListType {
+  userId: number;
   id: number;
   uid: string;
   name: string;
@@ -21,6 +24,13 @@ interface EmployeeListType {
 const EmployeeList = (): JSX.Element => {
   const [data, setData] = useState<EmployeeListType[]>([]);
   const [totalPage, setTotalPage] = useState(0);
+  const [isOpen, setIsOpen] = useState({
+    deposit: false,
+    collect: false,
+  });
+  const [pointAmount, setPointAmount] = useState("");
+  // patch할 userId
+  const [userId, setUserId] = useState(0);
   const companyId = sessionStorage.getItem("companyId");
   const adminId = sessionStorage.getItem("adminId");
   const accessToken = getCookie();
@@ -31,8 +41,50 @@ const EmployeeList = (): JSX.Element => {
   // 입금 포인트 내용 오른쪽 정렬
   const PointRenderer = (props: any) => {
     return (
-      <div className="text-right">
+      <div className="flex gap-5 justify-end items-center">
         <span className="font-bold italic">{props.value}</span>
+      </div>
+    );
+  };
+
+  const SendRenderer = (props: any) => {
+    // 데이터가 없으면 버튼을 렌더링하지 않음
+    if (!props.data || !props.data.id || !props.data.uid) {
+      return null; // 빈 데이터나 인덱스가 비어있으면 버튼을 렌더링하지 않음
+    }
+
+    return (
+      <div className="flex gap-5 justify-center">
+        <span
+          onClick={() => {
+            setUserId(props.data.userId);
+            setIsOpen({ deposit: true, collect: false });
+          }}
+          className="bg-primary text-white cursor-pointer px-3 rounded-[5px]"
+        >
+          입금하기
+        </span>
+      </div>
+    );
+  };
+
+  const CollectRenderer = (props: any) => {
+    // 데이터가 없으면 버튼을 렌더링하지 않음
+    if (!props.data || !props.data.id || !props.data.uid) {
+      return null; // 빈 데이터나 인덱스가 비어있으면 버튼을 렌더링하지 않음
+    }
+
+    return (
+      <div className="flex gap-5 justify-center">
+        <span
+          onClick={() => {
+            setUserId(props.data.userId);
+            setIsOpen({ deposit: false, collect: true });
+          }}
+          className="bg-primary text-white cursor-pointer px-3 rounded-[5px]"
+        >
+          회수하기
+        </span>
       </div>
     );
   };
@@ -41,12 +93,13 @@ const EmployeeList = (): JSX.Element => {
     { length: EMPTY_ROW_COUNT },
     (_, index) => ({
       id: index + 1,
-      uid: "10000001",
-      name: "홍길동",
-      phone: "010-1234-5678",
-      email: "test@gmail.com",
-      point: "100,000,000",
+      uid: "",
+      name: "",
+      phone: "",
+      email: "",
+      point: "",
       activation: 0,
+      userId: 0,
     }),
   );
 
@@ -91,18 +144,28 @@ const EmployeeList = (): JSX.Element => {
       filter: true,
       width: 200,
     },
-
     {
       headerName: "잔여포인트",
       field: "point",
       sortable: true,
       filter: true,
-      width: 150,
+      width: 250,
       cellRenderer: PointRenderer,
+    },
+    {
+      headerName: "입금하기",
+      width: 100,
+      cellRenderer: SendRenderer,
+    },
+    {
+      headerName: "회수하기",
+      width: 100,
+      cellRenderer: CollectRenderer,
     },
   ];
 
-  const getSendPoint = async (page: number) => {
+  // 사원정보 가져오기
+  const getEmployee = async (page: number) => {
     const params = {
       searchFilter: "",
       companyId,
@@ -145,6 +208,58 @@ const EmployeeList = (): JSX.Element => {
     }
   };
 
+  // 포인트 입금
+  const patchPoint = async () => {
+    const data = {
+      userId,
+      pointAmount,
+    };
+    try {
+      await axios.patch("/api/admin/company/v3/point/user", data, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      getEmployee(1);
+      Swal.fire({
+        title: "포인트 입금에 성공하였습니다.",
+        icon: "success",
+        confirmButtonText: "확인",
+        showConfirmButton: true,
+        allowOutsideClick: false,
+      });
+      setIsOpen({ deposit: false, collect: false });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 포인트 회수
+  const patchPointCollect = async () => {
+    const data = {
+      userId,
+      pointAmount,
+      adminId,
+    };
+    try {
+      await axios.patch("/api/admin/company/v3/employee/point/collect", data, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      getEmployee(1);
+      Swal.fire({
+        title: "포인트 회수에 성공하였습니다.",
+        icon: "success",
+        confirmButtonText: "확인",
+        showConfirmButton: true,
+        allowOutsideClick: false,
+      });
+      setIsOpen({ deposit: false, collect: false });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // antDesign
   const itemRender: PaginationProps["itemRender"] = (
     _,
@@ -161,11 +276,11 @@ const EmployeeList = (): JSX.Element => {
   };
 
   const handlePageChange = (page: number) => {
-    getSendPoint(page);
+    getEmployee(page);
   };
 
   useEffect(() => {
-    getSendPoint(1);
+    getEmployee(1);
   }, []);
 
   return (
@@ -189,6 +304,81 @@ const EmployeeList = (): JSX.Element => {
           pageSize={15}
         />
       </div>
+      {/* 입금 모달 */}
+      {isOpen.deposit && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="relative bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold flex justify-center mb-5">
+              포인트 입금
+            </h2>
+            <div className="flex gap-5">
+              <input
+                type="number"
+                className="w-[250px] border border-darkGray px-2 rounded-[5px]"
+                placeholder="입금할 포인트 금액을 입력해주세요."
+                value={pointAmount}
+                onChange={e => setPointAmount(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => patchPoint()}
+                className="px-4 py-2 rounded-[5px] bg-primary text-white"
+              >
+                입금하기
+              </button>
+            </div>
+            <div className="absolute top-0 right-0 flex justify-end mt-3 mr-3">
+              <button
+                className="text-black w-5 h-5"
+                onClick={() => {
+                  setIsOpen({ deposit: false, collect: false });
+                  setPointAmount("");
+                }}
+              >
+                <IoMdClose className="w-full h-full" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 회수 모달 */}
+      {isOpen.collect && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="relative bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold flex justify-center mb-5">
+              포인트 회수
+            </h2>
+            <div className="flex gap-5">
+              <input
+                type="number"
+                className="w-[250px] border border-darkGray px-2 rounded-[5px]"
+                placeholder="회수할 포인트 금액을 입력해주세요."
+                value={pointAmount}
+                onChange={e => setPointAmount(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => patchPointCollect()}
+                className="px-4 py-2 rounded-[5px] bg-primary text-white"
+              >
+                회수하기
+              </button>
+            </div>
+            <div className="absolute top-0 right-0 flex justify-end mt-3 mr-3">
+              <button
+                className="text-black w-5 h-5"
+                onClick={() => {
+                  setIsOpen({ deposit: false, collect: false });
+                  setPointAmount("");
+                }}
+              >
+                <IoMdClose className="w-full h-full" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
