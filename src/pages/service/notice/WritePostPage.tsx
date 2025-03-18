@@ -11,11 +11,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import ServiceFooter from "../../../components/ServiceFooter";
 import ServiceHeader from "../../../components/ServiceHeader";
 import "./notice.css";
-import axios from "axios";
-import { getCookie } from "../../../components/cookie";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 interface Size {
   width?: number;
@@ -29,21 +24,21 @@ const IconDiv = styled.div<Size>`
   height: ${({ height }) => (height ? `${height}px` : "25px")};
 `;
 
-const boardSchema = yup.object({
-  postCode: yup.string(),
-  inquiryTitle: yup.string(),
-  inquiryDetail: yup.string(),
-  roleCode: yup.string(),
-  id: yup.number(),
-  postType: yup.number(),
-});
+// const boardSchema = yup.object({
+//   postCode: yup.string(),
+//   inquiryTitle: yup.string(),
+//   inquiryDetail: yup.string(),
+//   roleCode: yup.string(),
+//   id: yup.number(),
+//   postType: yup.number(),
+// });
 
 const WritePostPage = (): JSX.Element => {
   // 구분 (질의응답, 불편사항)
   const [cate, setCate] = useState("구분");
   const [isClick, setIsClick] = useState(false);
   const navigate = useNavigate();
-  const accessToken = getCookie();
+  // const accessToken = getCookie();
 
   // 이미지 미리보기 state
   const [preview, setPreview] = useState<string[]>([]);
@@ -52,9 +47,9 @@ const WritePostPage = (): JSX.Element => {
   // 파일 input value 값 추적
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { handleSubmit, setValue, watch } = useForm({
-    resolver: yupResolver(boardSchema),
-  });
+  // const { handleSubmit, setValue, watch } = useForm({
+  //   resolver: yupResolver(boardSchema),
+  // });
 
   const addImgHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const inputfile = e.target.files && e.target.files;
@@ -85,36 +80,36 @@ const WritePostPage = (): JSX.Element => {
   };
 
   // 게시글 등록
-  const postBoard = async () => {
-    const postData = {
-      postCode: "00202",
-      inquiryTitle: "안녕하세요",
-      inquiryDetail: "반갑습니다",
-      roleCode: "00104",
-      id: 1,
-    };
+  // const postBoard = async () => {
+  //   const postData = {
+  //     postCode: "00202",
+  //     inquiryTitle: "안녕하세요",
+  //     inquiryDetail: "반갑습니다",
+  //     roleCode: "00104",
+  //     id: 1,
+  //   };
 
-    const formData = new FormData();
-    formData.append(
-      "req",
-      new Blob([JSON.stringify(postData)], { type: "application/json" }),
-    );
-    imgFile.forEach(file => {
-      formData.append("reviewPics", file);
-    });
+  //   const formData = new FormData();
+  //   formData.append(
+  //     "req",
+  //     new Blob([JSON.stringify(postData)], { type: "application/json" }),
+  //   );
+  //   imgFile.forEach(file => {
+  //     formData.append("reviewPics", file);
+  //   });
 
-    try {
-      const res = await axios.post("/api/system/v3/post", formData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+  //   try {
+  //     const res = await axios.post("/api/system/v3/post", formData, {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     });
 
-      console.log("res : ", res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     console.log("res : ", res);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     console.log("프리뷰", preview);

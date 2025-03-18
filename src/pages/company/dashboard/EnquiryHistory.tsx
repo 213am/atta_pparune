@@ -1,12 +1,8 @@
-import {
-  ClientSideRowModelModule,
-  ColDef,
-  RowClickedEvent,
-} from "ag-grid-community";
-import { getCookie } from "../../../components/cookie";
-import { useEffect, useState } from "react";
+import { ClientSideRowModelModule, ColDef } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { getCookie } from "../../../components/cookie";
 
 interface IEnquiryType {
   id: string;
@@ -17,8 +13,8 @@ interface IEnquiryType {
 }
 
 const EnquiryHistory = (): JSX.Element => {
-  const [enqCount, setEnqCount] = useState<number[]>([]);
-  const [enquiryList, setEnquiryList] = useState<IEnquiryType[]>([]);
+  // const [enqCount, setEnqCount] = useState<number[]>([]);
+  const [enquiryList, _setEnquiryList] = useState<IEnquiryType[]>([]);
   const accessToken = getCookie();
   const adminId = sessionStorage.getItem("adminId");
   const tableData = enquiryList;
@@ -88,7 +84,7 @@ const EnquiryHistory = (): JSX.Element => {
 
   const emptyRows: IEnquiryType[] = Array.from(
     { length: EMPTY_ROW_COUNT },
-    (_, index) => ({
+    (_, _index) => ({
       id: "",
       enquiryTitle: "",
       createdAt: "",
@@ -102,13 +98,13 @@ const EnquiryHistory = (): JSX.Element => {
       ? [...tableData, ...emptyRows.slice(tableData.length)]
       : tableData;
 
-  const enquiryDetailHandler = (e: RowClickedEvent<IEnquiryType>) => {
-    if (e.data) {
-      console.log("해당 게시글로 이동", e.data.id);
-    } else {
-      console.log("해당 게시글을 찾을 수 없습니다");
-    }
-  };
+  // const enquiryDetailHandler = (e: RowClickedEvent<IEnquiryType>) => {
+  //   if (e.data) {
+  //     console.log("해당 게시글로 이동", e.data.id);
+  //   } else {
+  //     console.log("해당 게시글을 찾을 수 없습니다");
+  //   }
+  // };
 
   return (
     <div className="flex w-1/2 pb-20">

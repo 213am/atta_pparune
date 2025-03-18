@@ -27,8 +27,8 @@ interface PointTypeI {
 }
 
 const PointChart = (): JSX.Element => {
-  const [chartDataArr, setChartDataArr] = useState<ChartDataI[]>([]);
-  const [chartLabel, _setChartLabel] = useState([
+  // const [chartDataArr, setChartDataArr] = useState<ChartDataI[]>([]);
+  const [_chartLabel, _setChartLabel] = useState([
     "02월 포인트 구매",
     "02월 포인트 지출",
     "현재 포인트",

@@ -1,5 +1,5 @@
 import AdminHeader from "../../../components/AdminHeader";
-import ChangePassword from "./ChangePassword";
+// import ChangePassword from "./ChangePassword";
 import JoinMember from "./JoinMember";
 
 const Account = (): JSX.Element => {
