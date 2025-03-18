@@ -27,6 +27,11 @@ import CpTransaction from "./pages/company/transaction/CpTransaction";
 import Member from "./pages/company/member/Member";
 import Account from "./pages/company/account/Account";
 import ServiceLoginPage from "./pages/service/auth/ServiceLoginPage";
+import {
+  getCookie,
+  removeCookie,
+  removeCookieRefresh,
+} from "./components/cookie";
 
 // const SkeletonLoader = () => (
 //   <div style={{ width: "100%", height: "100vh", backgroundColor: "#f3f3f3" }}>
@@ -130,6 +135,19 @@ const App = (): JSX.Element => {
       subscribeUserLogin(sessionUser);
     }
   }, [sessionRestaurant, sessionUser, isLogin, isLoginStore]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const token = getCookie();
+      if (token) {
+        removeCookie();
+        removeCookieRefresh();
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
 
   return (
     <Router>

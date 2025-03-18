@@ -3,18 +3,18 @@ import { AgGridReact } from "ag-grid-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { getCookie } from "../../../components/cookie";
+import dayjs from "dayjs";
 
 interface IEnquiryType {
-  id: string;
-  enquiryTitle: string;
+  id: number | null;
+  inquiryTitle: string;
   createdAt: string;
   postCode: string;
   commentState: string;
 }
 
 const EnquiryHistory = (): JSX.Element => {
-  // const [enqCount, setEnqCount] = useState<number[]>([]);
-  const [enquiryList, _setEnquiryList] = useState<IEnquiryType[]>([]);
+  const [enquiryList, setEnquiryList] = useState<IEnquiryType[]>([]);
   const accessToken = getCookie();
   const adminId = sessionStorage.getItem("adminId");
   const tableData = enquiryList;
@@ -35,6 +35,16 @@ const EnquiryHistory = (): JSX.Element => {
           },
         );
         console.log("문의사항 내역 : ", res.data);
+        const result = res.data.resultData.map(
+          (data: IEnquiryType, index: number) => ({
+            ...data,
+            id: data.commentState === null ? "" : index + 1,
+            postCode: data.postCode === "00202" ? "문의사항" : "불편사항",
+            commentState: data.commentState === "0" ? "미답변" : "답변완료",
+            createdAt: dayjs(data.createdAt).format("YYYY-MM-DD HH:mm"),
+          }),
+        );
+        setEnquiryList(result);
       } catch (error) {
         console.log(error);
       }
@@ -52,7 +62,7 @@ const EnquiryHistory = (): JSX.Element => {
     },
     {
       headerName: "제목",
-      field: "enquiryTitle",
+      field: "inquiryTitle",
       sortable: true,
       filter: true,
       width: 200,
@@ -80,13 +90,13 @@ const EnquiryHistory = (): JSX.Element => {
     },
   ];
 
-  const EMPTY_ROW_COUNT = 10;
+  const EMPTY_ROW_COUNT = 15;
 
   const emptyRows: IEnquiryType[] = Array.from(
     { length: EMPTY_ROW_COUNT },
-    (_, _index) => ({
-      id: "",
-      enquiryTitle: "",
+    (_, index) => ({
+      id: index + 1,
+      inquiryTitle: "",
       createdAt: "",
       postCode: "",
       commentState: "",
@@ -113,7 +123,7 @@ const EnquiryHistory = (): JSX.Element => {
           문의 내역
         </span>
         <div>
-          <div className="ag-theme-alpine w-full h-full justify-start">
+          <div className="ag-theme-alpine flex flex-col justify-center text-center">
             <AgGridReact
               columnDefs={columnDefs}
               rowData={rowDefs}

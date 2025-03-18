@@ -246,9 +246,9 @@ const OrderList = () => {
             paymentList.map((item, index) => (
               <div
                 key={index}
-                className="w-full h-1/4 bg-white shadow-lg border-y border-y-gray"
+                className="w-full h-48 bg-white shadow-lg border-y border-y-gray py-3 px-6"
               >
-                <div className="w-full h-1/4 flex justify-between items-center px-5 py-3">
+                <div className="w-full h-1/5 flex justify-between items-center">
                   <span className="text-darkGray">
                     {dayjs(item.createdAt).format("YYYY-MM-DD")}
                   </span>
@@ -256,7 +256,7 @@ const OrderList = () => {
                     {item.reservationYn > 0 ? "예약주문" : "현장결제"}
                   </span>
                 </div>
-                <div className="w-full h-2/4 flex justify-start items-center gap-5 px-5">
+                <div className="w-full h-2/5 flex justify-start items-center gap-6">
                   <img
                     src={
                       item.pic === null
@@ -264,45 +264,48 @@ const OrderList = () => {
                         : `${DOCKER_URL}/pic/restaurant/${item?.restaurantId}/${item?.pic}`
                     }
                     alt="식당이미지"
-                    className="w-16 h-16 rounded-xl border border-neutral-200 object-cover shadow-sm"
+                    className="w-16 h-16 rounded-xl border border-neutral-200 object-cover shadow-sm p-0.5"
                   />
-                  <div className="flex flex-col w-[60%]">
-                    <div
-                      onClick={() => linkToDetailPage(item.restaurantId)}
-                      className="flex items-center gap-2 font-semibold text-2xl cursor-pointer"
-                    >
-                      <span>{item.restaurantName}</span>
-                      <IoIosArrowForward />
-                    </div>
-                    <div className="flex items-center gap-5 mt-1 justify-between">
-                      {item.pastDtoList.map(data => (
-                        <div
-                          key={data.menuId}
-                          className="flex w-full gap-4 items-center"
-                        >
-                          <span className="text-nowrap">{data.menuName}</span>
-                          <span className="text-nowrap">
-                            {data.menuCount}개
-                          </span>
-                        </div>
-                      ))}
-                      <div className="flex text-nowrap gap-2 items-center">
-                        <span className="text-darkGray">총 가격</span>
-                        <span className="text-lg">
-                          {item.menuTotalPrice.toLocaleString("ko-KR")}원
-                        </span>
+                  <div className="flex flex-col w-full">
+                    <div className="flex font-semibold text-2xl">
+                      <div
+                        onClick={() => linkToDetailPage(item.restaurantId)}
+                        className="flex items-center gap-2 cursor-pointer"
+                      >
+                        <span>{item.restaurantName}</span>
+                        <IoIosArrowForward />
                       </div>
+                    </div>
+                    <div className="flex flex-col w-full items-center justify-between">
+                      {item.pastDtoList.length > 0 && (
+                        <div className="flex w-full gap-2 items-center">
+                          <span className="text-nowrap">
+                            {item.pastDtoList[0].menuName}
+                          </span>
+                          {item.pastDtoList.length > 1 && (
+                            <span className="text-nowrap">
+                              외 {item.pastDtoList.length - 1}개
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-center h-1/4">
+                <div className="flex w-full h-1/5 text-nowrap gap-2 items-center justify-end">
+                  <span className="text-darkGray">총 가격</span>
+                  <span className="text-lg">
+                    {item.menuTotalPrice.toLocaleString("ko-KR")}원
+                  </span>
+                </div>
+                <div className="flex justify-center h-1/5">
                   <button
                     onClick={() => linkToReview(item)}
-                    className={`w-1/4 h-2/3 flex px-4 py-1 border border-darkGray rounded-sm text-nowrap items-center justify-center 
+                    className={`h-2/3 flex p-4 border border-darkGray rounded-sm text-nowrap items-center justify-center 
                         ${
                           item.reviewStatus === 1
-                            ? "cursor-not-allowed focus:outline-none text-darkGray border-darkGray"
-                            : "hover:bg-primary hover:text-white cursor-pointer focus:outline focus:outline-2 focus:outline-primary"
+                            ? "cursor-not-allowed text-darkGray border-gray"
+                            : "hover:bg-primary hover:text-white cursor-pointer focus:outline focus:outline-2 focus:outline-primary hover:border-none"
                         }
                       `}
                     disabled={item.reviewStatus === 1}
