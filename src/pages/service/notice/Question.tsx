@@ -1,14 +1,39 @@
-import { useEffect } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { IoIosSearch } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { getCookie } from "../../../components/cookie";
+import dayjs from "dayjs";
+
+interface QuestionDataType {
+  postCode: string;
+  inquiryTitle: string;
+  roleCode: string;
+  createdAt: string;
+}
 
 const Question = (): JSX.Element => {
+  const [questionData, setQuestionData] = useState<QuestionDataType[]>([]);
   const navigate = useNavigate();
   const accessToken = getCookie();
 
+  const getQuestion = async () => {
+    const params = {
+      page: 1,
+      size: 15,
+    };
+    try {
+      const res = await axios.get("/api/system/v3/post-question", { params });
+      console.log(res.data.resultData);
+      setQuestionData(res.data.resultData.postList);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    getQuestion();
     console.log("이게 머임????", accessToken);
   }, [accessToken]);
 
@@ -23,50 +48,27 @@ const Question = (): JSX.Element => {
             <div className="w-[20%]">작성일</div>
           </div>
         </div>
-        {/* 아래선 추가 */}
-        {/* <div className="flex justify-center">
-          <div className="border-t border-tableGray w-[1400px]" />
-        </div> */}
+
         {/* 내용 */}
-        <div className="flex justify-center">
-          <div className="flex border-b border-tableGray w-[1400px] text-center items-center py-2 gap-5">
-            <div className="w-[10%] flex justify-center">
-              <AiOutlineQuestionCircle />
+        {questionData.map(item => (
+          <div className="flex justify-center">
+            <div className="flex border-b border-tableGray w-[1400px] text-center items-center py-2 gap-5">
+              <div className="w-[10%] flex justify-center">
+                <AiOutlineQuestionCircle />
+              </div>
+              <div
+                className={"w-[60%] text-left cursor-pointer"}
+                onClick={() => navigate(`/service/notice/detail`)}
+              >
+                {item.inquiryTitle}
+              </div>
+              <div className="w-[10%]">관리자</div>
+              <div className="w-[20%]">
+                {dayjs(item.createdAt).format("YYYY-MM-DD")}
+              </div>
             </div>
-            <div
-              className={"w-[60%] text-left cursor-pointer"}
-              onClick={() => navigate(`/service/notice/detail`)}
-            >
-              개선 요구사항이 있어요!
-            </div>
-            <div className="w-[10%]">관리자</div>
-            <div className="w-[20%]">2025-02-17</div>
           </div>
-        </div>
-        <div className="flex justify-center">
-          <div className="flex border-b border-tableGray w-[1400px] text-center items-center py-2 gap-5">
-            <div className="w-[10%] flex justify-center">
-              <AiOutlineQuestionCircle />
-            </div>
-            <div className="w-[60%] text-left">
-              제휴 및 입점은 어떻게 하나요?
-            </div>
-            <div className="w-[10%]">관리자</div>
-            <div className="w-[20%]">2025-02-17</div>
-          </div>
-        </div>
-        <div className="flex justify-center">
-          <div className="flex border-b border-tableGray w-[1400px] text-center items-center py-2 gap-5">
-            <div className="w-[10%] flex justify-center">
-              <AiOutlineQuestionCircle />
-            </div>
-            <div className="w-[60%] text-left">
-              서비스 이용 방법이 궁금해요.
-            </div>
-            <div className="w-[10%]">관리자</div>
-            <div className="w-[20%]">2025-02-17</div>
-          </div>
-        </div>
+        ))}
       </div>
 
       <div className="flex justify-center bottom-0">

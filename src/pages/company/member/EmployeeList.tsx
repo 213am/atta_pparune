@@ -32,7 +32,7 @@ const EmployeeList = (): JSX.Element => {
   // patch할 userId
   const [userId, setUserId] = useState(0);
   const companyId = sessionStorage.getItem("companyId");
-  const adminId = sessionStorage.getItem("adminId");
+  const adminId = parseInt(sessionStorage.getItem("adminId") as string);
   const accessToken = getCookie();
 
   const EMPTY_ROW_COUNT = 15;
@@ -41,26 +41,62 @@ const EmployeeList = (): JSX.Element => {
   // 입금 포인트 내용 오른쪽 정렬
   const PointRenderer = (props: any) => {
     return (
-      <div className="flex gap-5 justify-end items-center">
+      <div className="flex justify-end items-center">
         <span className="font-bold italic">{props.value}</span>
       </div>
     );
   };
 
-  const SendRenderer = (props: any) => {
+  // 활성화 / 비활성화 버튼
+  const ActiveRenderer = (props: any) => {
     // 데이터가 없으면 버튼을 렌더링하지 않음
     if (!props.data || !props.data.id || !props.data.uid) {
       return null; // 빈 데이터나 인덱스가 비어있으면 버튼을 렌더링하지 않음
     }
 
     return (
-      <div className="flex gap-5 justify-center">
+      <div className="flex justify-center">
+        <span
+          onClick={() => {
+            Swal.fire({
+              title: `${props.data.name}님을 ${props.data.activation === 0 ? "비활성화" : "활성화"} 하시겠습니까?`,
+              icon: "question",
+              confirmButtonText: "확인",
+              cancelButtonText: "취소",
+              showConfirmButton: true,
+              allowOutsideClick: false,
+            }).then(result => {
+              if (result.isConfirmed) {
+                patchEmployee(
+                  props.data.userId,
+                  props.data.name,
+                  props.data.activation,
+                );
+              }
+            });
+          }}
+          className={`text-white cursor-pointer px-3 rounded-[5px] ${props.data.activation === 0 ? "bg-darkGray hover:bg-black" : "bg-primary hover:bg-primaryFocus"}`}
+        >
+          {props.data.activation === 0 ? "비활성화" : "활성화"}
+        </span>
+      </div>
+    );
+  };
+
+  // 입금하기 버튼
+  const SendRenderer = (props: any) => {
+    if (!props.data || !props.data.id || !props.data.uid) {
+      return null;
+    }
+
+    return (
+      <div className="flex justify-center">
         <span
           onClick={() => {
             setUserId(props.data.userId);
             setIsOpen({ deposit: true, collect: false });
           }}
-          className="bg-primary text-white cursor-pointer px-3 rounded-[5px]"
+          className="bg-green hover:bg-greenHover text-white cursor-pointer px-3 rounded-[5px]"
         >
           입금하기
         </span>
@@ -68,20 +104,20 @@ const EmployeeList = (): JSX.Element => {
     );
   };
 
+  // 회수하기 버튼
   const CollectRenderer = (props: any) => {
-    // 데이터가 없으면 버튼을 렌더링하지 않음
     if (!props.data || !props.data.id || !props.data.uid) {
-      return null; // 빈 데이터나 인덱스가 비어있으면 버튼을 렌더링하지 않음
+      return null;
     }
 
     return (
-      <div className="flex gap-5 justify-center">
+      <div className="flex justify-center">
         <span
           onClick={() => {
             setUserId(props.data.userId);
             setIsOpen({ deposit: false, collect: true });
           }}
-          className="bg-primary text-white cursor-pointer px-3 rounded-[5px]"
+          className="bg-red hover:bg-redHover text-white cursor-pointer px-3 rounded-[5px]"
         >
           회수하기
         </span>
@@ -162,6 +198,11 @@ const EmployeeList = (): JSX.Element => {
       width: 100,
       cellRenderer: CollectRenderer,
     },
+    {
+      headerName: "상태변경",
+      width: 100,
+      cellRenderer: ActiveRenderer,
+    },
   ];
 
   // 사원정보 가져오기
@@ -212,7 +253,7 @@ const EmployeeList = (): JSX.Element => {
   const patchPoint = async () => {
     const data = {
       userId,
-      pointAmount,
+      pointAmount: Number(pointAmount),
     };
     try {
       await axios.patch("/api/admin/company/v3/point/user", data, {
@@ -238,7 +279,7 @@ const EmployeeList = (): JSX.Element => {
   const patchPointCollect = async () => {
     const data = {
       userId,
-      pointAmount,
+      pointAmount: Number(pointAmount),
       adminId,
     };
     try {
@@ -260,6 +301,38 @@ const EmployeeList = (): JSX.Element => {
       console.log(error);
     }
   };
+
+  // 사원 활성화 / 비활성화
+  const patchEmployee = async (
+    userId: number,
+    name: string,
+    active: number,
+  ) => {
+    const data = {
+      adminId,
+      userId,
+      activation: active === 0 ? 1 : 0,
+    };
+    try {
+      const res = await axios.patch("/api/admin/company/v3/employee", data, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(res);
+      Swal.fire({
+        title: `${name}님의 상태가 변경되었습니다.`,
+        icon: "success",
+        confirmButtonText: "확인",
+        showConfirmButton: true,
+        allowOutsideClick: false,
+      });
+      getEmployee(1);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // antDesign
   const itemRender: PaginationProps["itemRender"] = (
     _,
@@ -304,6 +377,7 @@ const EmployeeList = (): JSX.Element => {
           pageSize={15}
         />
       </div>
+
       {/* 입금 모달 */}
       {isOpen.deposit && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import { getCookie } from "../../../components/cookie";
 
 interface BoardType {
+  inquiryId: number;
   createdAt: string;
   inquiryTitle: string;
   postCode: string;
@@ -83,7 +84,7 @@ const Board = (): JSX.Element => {
       case "00202":
         return <div>{index}</div>;
       case "00203":
-        return "[불편사항]";
+        return <div>{index}</div>;
     }
   };
 
@@ -130,7 +131,9 @@ const Board = (): JSX.Element => {
               </div>
               <div
                 className={"w-[60%] text-left cursor-pointer"}
-                onClick={() => navigate(`/service/notice/detail`)}
+                onClick={() =>
+                  navigate(`/service/notice/detail?inquiryId=${item.inquiryId}`)
+                }
               >
                 {boardCate(item)}
               </div>
