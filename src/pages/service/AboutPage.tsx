@@ -62,7 +62,7 @@ const NoticePage = (): JSX.Element => {
               </div>
             </div>
             <div>
-              <img src="/guide1.PNG" alt="" />
+              <img src="/guide1.PNG" alt="" draggable="false" />
             </div>
           </div>
         </div>

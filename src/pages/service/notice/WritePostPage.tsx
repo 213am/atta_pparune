@@ -1,5 +1,8 @@
 import styled from "@emotion/styled";
+import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
 import { LuCircleUserRound } from "react-icons/lu";
@@ -8,13 +11,22 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
+import * as yup from "yup";
+import { getCookie } from "../../../components/cookie";
 import ServiceFooter from "../../../components/ServiceFooter";
 import ServiceHeader from "../../../components/ServiceHeader";
 import "./notice.css";
+import Swal from "sweetalert2";
 
 interface Size {
   width?: number;
   height?: number;
+}
+
+interface PostType {
+  postCode?: string;
+  inquiryTitle?: string;
+  inquiryDetail?: string;
 }
 
 const IconDiv = styled.div<Size>`
@@ -24,21 +36,21 @@ const IconDiv = styled.div<Size>`
   height: ${({ height }) => (height ? `${height}px` : "25px")};
 `;
 
-// const boardSchema = yup.object({
-//   postCode: yup.string(),
-//   inquiryTitle: yup.string(),
-//   inquiryDetail: yup.string(),
-//   roleCode: yup.string(),
-//   id: yup.number(),
-//   postType: yup.number(),
-// });
+const boardSchema = yup.object({
+  postCode: yup.string(),
+  inquiryTitle: yup.string(),
+  inquiryDetail: yup.string(),
+});
 
 const WritePostPage = (): JSX.Element => {
   // 구분 (질의응답, 불편사항)
   const [cate, setCate] = useState("구분");
   const [isClick, setIsClick] = useState(false);
   const navigate = useNavigate();
-  // const accessToken = getCookie();
+  const name = sessionStorage.getItem("name");
+  const id = parseInt(sessionStorage.getItem("id") as string);
+  const roleCode = sessionStorage.getItem("roleCode");
+  const accessToken = getCookie();
 
   // 이미지 미리보기 state
   const [preview, setPreview] = useState<string[]>([]);
@@ -47,9 +59,9 @@ const WritePostPage = (): JSX.Element => {
   // 파일 input value 값 추적
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // const { handleSubmit, setValue, watch } = useForm({
-  //   resolver: yupResolver(boardSchema),
-  // });
+  const { handleSubmit, setValue, register } = useForm({
+    resolver: yupResolver(boardSchema),
+  });
 
   const addImgHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const inputfile = e.target.files && e.target.files;
@@ -80,47 +92,71 @@ const WritePostPage = (): JSX.Element => {
   };
 
   // 게시글 등록
-  // const postBoard = async () => {
-  //   const postData = {
-  //     postCode: "00202",
-  //     inquiryTitle: "안녕하세요",
-  //     inquiryDetail: "반갑습니다",
-  //     roleCode: "00104",
-  //     id: 1,
-  //   };
+  const postBoard = async (data: PostType) => {
+    const { inquiryDetail, inquiryTitle, postCode } = data;
 
-  //   const formData = new FormData();
-  //   formData.append(
-  //     "req",
-  //     new Blob([JSON.stringify(postData)], { type: "application/json" }),
-  //   );
-  //   imgFile.forEach(file => {
-  //     formData.append("reviewPics", file);
-  //   });
+    const postData = {
+      postCode,
+      inquiryTitle,
+      inquiryDetail,
+      roleCode,
+      id,
+    };
 
-  //   try {
-  //     const res = await axios.post("/api/system/v3/post", formData, {
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //     });
+    console.log(postData);
 
-  //     console.log("res : ", res);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+    const formData = new FormData();
+    formData.append(
+      "req",
+      new Blob([JSON.stringify(postData)], { type: "application/json" }),
+    );
+    imgFile.forEach(file => {
+      formData.append("reviewPics", file);
+    });
+
+    try {
+      await axios.post("/api/system/v3/post", formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      Swal.fire({
+        title: "게시글 등록에 성공하였습니다.",
+        icon: "success",
+        confirmButtonText: "확인",
+        showConfirmButton: true, // ok 버튼 노출 여부
+        allowOutsideClick: false, // 외부 영역 클릭 방지
+      }).then(result => {
+        if (result.isConfirmed) {
+          navigate("/service/notice");
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmitForm = (data: PostType) => {
+    // console.log(data);
+    postBoard(data);
+  };
 
   useEffect(() => {
     console.log("프리뷰", preview);
     console.log("이미지 파일", imgFile);
   }, [imgFile, preview]);
 
+  useEffect(() => {
+    setValue("inquiryDetail", "");
+    setValue("inquiryTitle", "");
+    setValue("postCode", "");
+  }, []);
+
   return (
     <div className="relative w-full h-dvh bg-white overflow-y-auto scrollbar-hide z-10 flex flex-col">
       <ServiceHeader />
       <div className="mt-[150px] flex-grow">
-        <form>
+        <form onSubmit={handleSubmit(handleSubmitForm)}>
           <div className="flex justify-center relative">
             <div className="flex w-[1280px] justify-between z-10">
               <div
@@ -139,6 +175,7 @@ const WritePostPage = (): JSX.Element => {
                       className="py-1 cursor-pointer"
                       onClick={() => {
                         setCate("문의사항");
+                        setValue("postCode", "00202");
                         setIsClick(false);
                       }}
                     >
@@ -148,6 +185,7 @@ const WritePostPage = (): JSX.Element => {
                       className="py-1 cursor-pointer"
                       onClick={() => {
                         setCate("불편사항");
+                        setValue("postCode", "00203");
                         setIsClick(false);
                       }}
                     >
@@ -158,7 +196,7 @@ const WritePostPage = (): JSX.Element => {
               </div>
               <div className="flex items-center gap-2 h-[34px]">
                 <LuCircleUserRound className="text-[30px]" />
-                <div className="text-[20px]">김길동</div>
+                <div className="text-[20px]">{name}</div>
               </div>
             </div>
             <div className="absolute mt-20">
@@ -168,6 +206,7 @@ const WritePostPage = (): JSX.Element => {
                     type="text"
                     placeholder="제목을 입력해주세요"
                     className="px-4 py-2 w-full"
+                    {...register("inquiryTitle")}
                   />
                 </div>
               </div>
@@ -185,6 +224,7 @@ const WritePostPage = (): JSX.Element => {
                     ["bold", "italic", "underline", "strike"],
                   ],
                 }}
+                onChange={e => setValue("inquiryDetail", e)}
                 formats={[
                   "header",
                   "bold",
@@ -210,6 +250,7 @@ const WritePostPage = (): JSX.Element => {
                 type="file"
                 id="fileinput"
                 ref={fileInputRef}
+                accept="image/png, image/jpeg"
                 onChange={e => addImgHandler(e)}
                 className="absolute left-[-5000px]"
               />

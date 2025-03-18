@@ -280,15 +280,11 @@ const Board = (): JSX.Element => {
               } else {
                 Swal.fire({
                   title: "로그인이 필요한 서비스입니다!",
-                  text: "확인을 누르면 로그인으로 이동합니다.",
+                  text: "오른쪽 상단의 로그인 버튼을 눌러 로그인해주세요.",
                   icon: "error",
                   confirmButtonText: "확인",
                   showConfirmButton: true, // ok 버튼 노출 여부
                   allowOutsideClick: false, // 외부 영역 클릭 방지
-                }).then(result => {
-                  if (result.isConfirmed) {
-                    navigate("/service/auth");
-                  }
                 });
               }
             }}

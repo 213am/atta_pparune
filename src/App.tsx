@@ -125,6 +125,7 @@ const App = (): JSX.Element => {
   const [isLoginStore] = useRecoilState(isLoginStoreAtom);
 
   useEffect(() => {
+    localStorage.removeItem("@tosspayments/merchant-browser-id");
     initializeSocket();
 
     if (sessionRestaurant && isLoginStore) {
@@ -135,19 +136,6 @@ const App = (): JSX.Element => {
       subscribeUserLogin(sessionUser);
     }
   }, [sessionRestaurant, sessionUser, isLogin, isLoginStore]);
-
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      const token = getCookie();
-      if (token) {
-        removeCookie();
-        removeCookieRefresh();
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, []);
 
   return (
     <Router>

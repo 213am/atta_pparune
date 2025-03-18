@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import Swal from "sweetalert2";
 import { roleAtom } from "../../../atoms/roleAtom";
-import { getCookie, setCookie } from "../../../components/cookie";
+import { setCookie } from "../../../components/cookie";
 import { MANAGER, USER } from "../../../constants/Role";
 import {
   CloseDiv,
@@ -44,17 +44,19 @@ function ServiceLoginPage() {
         const result = res.data.resultData;
         console.log(result);
         const userId = result.userId || sessionUserId;
-        const accessToken = result.accessToken;
-        window.sessionStorage.setItem("userId", userId);
-        setCookie(accessToken);
+        sessionStorage.setItem("id", userId);
+        sessionStorage.setItem("name", result.name);
+        sessionStorage.setItem("roleCode", result.code);
+        setCookie(result.accessToken);
       } else if (role === MANAGER) {
         const res = await axios.post("/api/admin/sign-in", formData);
-        console.log(res.data.resultData);
         const result = res.data.resultData;
+        console.log(result);
         const adminId = result.adminId || sessionAdminId;
-        const accessToken = result.accessToken;
-        window.sessionStorage.setItem("adminId", adminId);
-        setCookie(accessToken);
+        sessionStorage.setItem("id", adminId);
+        sessionStorage.setItem("name", result.name);
+        sessionStorage.setItem("roleCode", result.code);
+        setCookie(result.accessToken);
       }
       routeHandler();
     } catch (error) {

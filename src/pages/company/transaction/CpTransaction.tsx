@@ -10,14 +10,17 @@ const CpTransaction = (): JSX.Element => {
   const [point, setPoint] = useState("");
 
   return (
-    <div className="relative flex flex-col w-full h-dvh bg-white">
+    <div className="relative flex flex-col w-full overflow-hidden h-dvh bg-white">
       <AdminHeader title="거래내역" />
       <div className="px-10 py-5 bg-gray w-[100%] h-[100vh]">
-        <div className="absolute right-0 mr-10">
+        <div className="flex gap-3 absolute right-0 mr-10">
           <button
             onClick={() => setIsOpen(true)}
-            className="px-4 py-2 rounded-[5px] bg-primary text-white"
+            className="px-4 py-2 rounded-[5px] bg-lightGreen hover:bg-green text-white"
           >
+            포인트환불
+          </button>
+          <button className="px-4 py-2 rounded-[5px] bg-primary hover:bg-primaryFocus text-white">
             포인트구매
           </button>
         </div>
