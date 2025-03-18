@@ -278,7 +278,7 @@ function StoreDetailPage() {
       <BackDiv>
         <IoMdArrowBack
           style={{ width: "100%", height: "100%" }}
-          onClick={() => navigate(fromPath)}
+          onClick={() => navigate(-1)}
         />
       </BackDiv>
       <TitleDiv onClick={() => console.log(menu)}>

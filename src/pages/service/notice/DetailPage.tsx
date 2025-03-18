@@ -3,18 +3,27 @@ import ServiceFooter from "../../../components/ServiceFooter";
 import ServiceHeader from "../../../components/ServiceHeader";
 import { useEffect } from "react";
 import axios from "axios";
+import { getCookie } from "../../../components/cookie";
 
 const DetailPage = (): JSX.Element => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const inquiryId = searchParams.get("inquiryId");
+  const accessToken = getCookie();
+  const id = sessionStorage.getItem("id");
 
   const getBoardDetail = async () => {
     const params = {
       inquiryId,
+      id,
     };
     try {
-      await axios.get("/api/system/v3/post/detail", { params });
+      await axios.get("/api/system/v3/post/detail", {
+        params,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
     } catch (error) {
       console.log(error);
     }

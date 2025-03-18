@@ -24,6 +24,7 @@ export default {
         yellow: "#FFD400",
         green: "#3CB371",
         greenHover: "#2f8d59",
+        lightGreen: "#5ac88b",
       },
     },
     screens: {

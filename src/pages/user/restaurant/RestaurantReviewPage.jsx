@@ -44,7 +44,7 @@ const RestaurantReviewPage = () => {
     <div className="flex flex-col w-full h-dvh">
       <div className="flex w-full px-3 py-5 justify-between items-center border-b-2 border-gray border-opacity-70 bg-white">
         <span
-          onClick={() => navigate(`/user/restaurant/detail/${id}`)}
+          onClick={() => navigate(-1)}
           className="flex w-[10%] justify-center text-2xl cursor-pointer"
         >
           <IoIosArrowBack />

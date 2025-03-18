@@ -9,6 +9,9 @@ import { useEffect, useState } from "react";
 import { getCookie } from "../../../components/cookie";
 import { IoMdClose } from "react-icons/io";
 import Swal from "sweetalert2";
+import { useRecoilState } from "recoil";
+import { pointState } from "../../../atoms/companyPointAtom";
+import dayjs from "dayjs";
 
 interface EmployeeListType {
   userId: number;
@@ -31,9 +34,12 @@ const EmployeeList = (): JSX.Element => {
   const [pointAmount, setPointAmount] = useState("");
   // patch할 userId
   const [userId, setUserId] = useState(0);
+  const [_, setPoint] = useRecoilState(pointState);
+
   const companyId = sessionStorage.getItem("companyId");
   const adminId = parseInt(sessionStorage.getItem("adminId") as string);
   const accessToken = getCookie();
+  const date = dayjs(new Date()).format("YYYY-MM");
 
   const EMPTY_ROW_COUNT = 15;
   const tableData = data;
@@ -249,6 +255,26 @@ const EmployeeList = (): JSX.Element => {
     }
   };
 
+  // 포인트
+  const getPoint = async () => {
+    const params = { companyId, date };
+    try {
+      const res = await axios.get(
+        "/api/admin/company/dashboard/v3/Transaction",
+        {
+          params,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      sessionStorage.setItem("point", res.data.resultData.currentPoint);
+      setPoint(res.data.resultData.currentPoint.toLocaleString());
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // 포인트 입금
   const patchPoint = async () => {
     const data = {
@@ -268,6 +294,11 @@ const EmployeeList = (): JSX.Element => {
         confirmButtonText: "확인",
         showConfirmButton: true,
         allowOutsideClick: false,
+      }).then(result => {
+        if (result.isConfirmed) {
+          getPoint();
+          setPointAmount("");
+        }
       });
       setIsOpen({ deposit: false, collect: false });
     } catch (error) {
@@ -279,7 +310,7 @@ const EmployeeList = (): JSX.Element => {
   const patchPointCollect = async () => {
     const data = {
       userId,
-      pointAmount: Number(pointAmount),
+      point: Number(pointAmount),
       adminId,
     };
     try {
@@ -295,6 +326,11 @@ const EmployeeList = (): JSX.Element => {
         confirmButtonText: "확인",
         showConfirmButton: true,
         allowOutsideClick: false,
+      }).then(result => {
+        if (result.isConfirmed) {
+          getPoint();
+          setPointAmount("");
+        }
       });
       setIsOpen({ deposit: false, collect: false });
     } catch (error) {
@@ -326,6 +362,10 @@ const EmployeeList = (): JSX.Element => {
         confirmButtonText: "확인",
         showConfirmButton: true,
         allowOutsideClick: false,
+      }).then(result => {
+        if (result.isConfirmed) {
+          getPoint();
+        }
       });
       getEmployee(1);
     } catch (error) {
