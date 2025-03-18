@@ -261,12 +261,17 @@ function StoreDetailPage() {
         <img
           src={`${DOCKER_URL}/pic/restaurant/${formData?.restaurantId}/${formData?.restaurantPics?.filePath}`}
           alt="가게 이미지"
-          style={{ width: "100%", height: 260, position: "relative" }}
+          style={{
+            width: "100%",
+            height: 300,
+            position: "relative",
+            objectFit: "cover",
+          }}
         />
       ) : (
         <img
           src={"/restaurant_default.png"}
-          className="bg-cover bg-gray py-6"
+          className="object-cover bg-gray py-6"
         />
       )}
 

@@ -1,10 +1,8 @@
+import { useEffect } from "react";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
-import { FiEdit } from "react-icons/fi";
 import { IoIosSearch } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { getCookie } from "../../../components/cookie";
-import Swal from "sweetalert2";
-import { useEffect } from "react";
 
 const Question = (): JSX.Element => {
   const navigate = useNavigate();

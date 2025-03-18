@@ -10,6 +10,7 @@ import { getCookie } from "../../../components/cookie";
 // 스와이퍼
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
+import Swal from "sweetalert2";
 
 interface Size {
   width?: number;
@@ -111,7 +112,19 @@ function WriteReview() {
         },
       });
 
-      console.log("res : ", res);
+      console.log("res : ", res.data);
+      if (res.data.statusCode === "200") {
+        Swal.fire({
+          title: "리뷰가 등록되었어요",
+          icon: "success",
+          confirmButtonText: "확인",
+          allowOutsideClick: false,
+        }).then(result => {
+          if (result.isConfirmed) {
+            navigate("/user/order");
+          }
+        });
+      }
     } catch (error) {
       console.log(error);
     }

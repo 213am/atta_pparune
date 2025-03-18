@@ -95,6 +95,14 @@ const OrderList = () => {
     });
   };
 
+  const linkToDetailPage = id => {
+    navigate(`/user/restaurant/detail/${id}`, {
+      state: {
+        from: "/user/order",
+      },
+    });
+  };
+
   return (
     <div className="w-full h-dvh flex flex-col justify-between overflow-x-hidden overflow-y-scroll scrollbar-hide bg-white">
       <Notification />
@@ -260,9 +268,7 @@ const OrderList = () => {
                   />
                   <div className="flex flex-col w-[60%]">
                     <div
-                      onClick={() =>
-                        navigate(`/user/restaurant/detail/${item.restaurantId}`)
-                      }
+                      onClick={() => linkToDetailPage(item.restaurantId)}
                       className="flex items-center gap-2 font-semibold text-2xl cursor-pointer"
                     >
                       <span>{item.restaurantName}</span>
@@ -289,18 +295,21 @@ const OrderList = () => {
                     </div>
                   </div>
                 </div>
-                {item.reviewStatus === 1 ? (
-                  <></>
-                ) : (
-                  <div className="flex justify-center h-1/4">
-                    <button
-                      onClick={() => linkToReview(item)}
-                      className="w-1/4 h-2/3 flex px-4 py-1 border border-darkGray rounded-sm text-nowrap items-center justify-center hover:bg-primary hover:text-white"
-                    >
-                      리뷰 작성
-                    </button>
-                  </div>
-                )}
+                <div className="flex justify-center h-1/4">
+                  <button
+                    onClick={() => linkToReview(item)}
+                    className={`w-1/4 h-2/3 flex px-4 py-1 border border-darkGray rounded-sm text-nowrap items-center justify-center 
+                        ${
+                          item.reviewStatus === 1
+                            ? "cursor-not-allowed focus:outline-none text-darkGray border-darkGray"
+                            : "hover:bg-primary hover:text-white cursor-pointer focus:outline focus:outline-2 focus:outline-primary"
+                        }
+                      `}
+                    disabled={item.reviewStatus === 1}
+                  >
+                    {item.reviewStatus === 1 ? "리뷰 작성완료" : "리뷰 작성"}
+                  </button>
+                </div>
               </div>
             ))
           )}
