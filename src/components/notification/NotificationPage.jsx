@@ -6,12 +6,14 @@ import { useRecoilState } from "recoil";
 import Swal from "sweetalert2";
 import { isClickIcon, noticeState } from "../../atoms/noticeAtom";
 import { orderIdAtom } from "../../atoms/restaurantAtom";
+import { loginAtom } from "../../atoms/userAtom";
 import { getCookie } from "../../components/cookie";
 import { getAlert } from "./getAlert";
 
 const NotificationPage = () => {
   const [orderId, setOrderId] = useRecoilState(orderIdAtom);
   const [isNotice, setIsNotice] = useRecoilState(noticeState);
+  const [isLogin, setIsLogin] = useRecoilState(loginAtom);
   const [clickData, setClickData] = useState({});
   const [isClick, setIsClick] = useRecoilState(isClickIcon);
   const [myPaymentData, setMypaymentData] = useState({});
@@ -71,7 +73,7 @@ const NotificationPage = () => {
         if (result.isConfirmed) {
           navigate("/user");
           getAlert({
-            sessionId,
+            sessionId: loginUserId,
             accessToken,
             isLogin,
             setIsNotice,
@@ -130,6 +132,31 @@ const NotificationPage = () => {
     setIsClick(false);
   };
 
+  const payRequestPageNav = id => {
+    navigate(`/user/placetoorder/request/${id}`);
+  };
+
+  const noticeClickHandler = item => {
+    switch (item.message) {
+      case "나한테 온 승인요청 메세지":
+        orderData(item); // 클릭 정보 저장
+        getPaymentInfo(item); // 결제 정보 불러오기
+        setIsModalOpen(true); // 모달 오픈
+        break;
+
+      case "인원 선택 메세지":
+        orderMemberPageNav(item.orderId);
+        break;
+
+      case "식권 생성 요청 메세지":
+        payRequestPageNav(item.orderId);
+        break;
+
+      default:
+        console.warn("알 수 없는 알림 타입:", item.message);
+    }
+  };
+
   const orderData = e => {
     console.log("데이터 불러오기", e);
     setClickData({ ...e });
@@ -143,14 +170,7 @@ const NotificationPage = () => {
           isNotice.map(item => (
             <div
               key={item.orderId}
-              onClick={() => {
-                if (item.message === "나한테 온 승인요청 메세지") {
-                  getPaymentInfo(item);
-                  setIsModalOpen(true);
-                } else {
-                  orderMemberPageNav(item.orderId);
-                }
-              }}
+              onClick={() => noticeClickHandler(item)}
               className="flex w-full h-[10%]"
             >
               {item.message === "나한테 온 승인요청 메세지" ? (
@@ -162,13 +182,22 @@ const NotificationPage = () => {
                     {item.message}
                   </span>
                 </>
+              ) : item.message === "인원 선택 메세지" ? (
+                <>
+                  <div className="flex gap-2 items-center cursor-pointer">
+                    <span className="text-black text-xl">
+                      {item.restaurantName}
+                    </span>
+                    <span className="text-darkGray">인원 선택</span>
+                  </div>
+                </>
               ) : (
                 <>
                   <div className="flex gap-2 items-center cursor-pointer">
                     <span className="text-black text-xl">
                       {item.restaurantName}
                     </span>
-                    <span className="text-darkGray">주문을 완성해주세요</span>
+                    <span className="text-darkGray">식권 생성</span>
                   </div>
                 </>
               )}

@@ -173,7 +173,7 @@ const UserMainPage = (): JSX.Element => {
                 alt=""
                 className="w-full h-full object-cover"
               />
-              <div className="absolute left-2 bottom-8 font-bold">
+              <div className="absolute left-4 bottom-8 font-bold">
                 <p className="w-14 px-1 py-1 rounded-lg bg-primary text-white mb-2 text-center text-xs text-nowrap ">
                   추천식당
                 </p>

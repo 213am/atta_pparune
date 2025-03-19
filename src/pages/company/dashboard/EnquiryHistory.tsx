@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ClientSideRowModelModule, ColDef } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import axios from "axios";
@@ -52,6 +53,18 @@ const EnquiryHistory = (): JSX.Element => {
     getEnquiryData();
   }, []);
 
+  const commentStateRenderer = (props: any) => {
+    return (
+      <div className="text-right">
+        {props.value === "미답변" ? (
+          <span className="text-darkGray font-bold italic">{props.value}</span>
+        ) : (
+          <span className="text-blue font-bold italic">{props.value}</span>
+        )}
+      </div>
+    );
+  };
+
   const columnDefs: ColDef<IEnquiryType>[] = [
     {
       headerName: "순번",
@@ -87,6 +100,7 @@ const EnquiryHistory = (): JSX.Element => {
       sortable: true,
       filter: true,
       width: 100,
+      cellRenderer: commentStateRenderer,
     },
   ];
 
@@ -115,6 +129,8 @@ const EnquiryHistory = (): JSX.Element => {
   //     console.log("해당 게시글을 찾을 수 없습니다");
   //   }
   // };
+
+  // 포인트 및 금액 정렬 및 색상
 
   return (
     <div className="flex w-1/2 pb-20">

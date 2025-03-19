@@ -96,6 +96,16 @@ function EditInfoPage() {
       formData.append("req", blobData);
       if (imageValue instanceof File) {
         formData.append("userPic", imageValue);
+      } else if (userData.userPic === null) {
+        const defaultPic = "/profile.jpeg";
+        const resPic = await fetch(defaultPic);
+        const blobPic = await resPic.blob();
+        const mimeType = blobPic.type;
+        const fileData = new File([blobPic], "default-pic.jpg", {
+          type: mimeType,
+        });
+
+        formData.append("userPic", fileData);
       } else {
         const prevPic = `${USER_IMAGE_URL}/${userData.userId}/${userData.userPic}`;
         try {
@@ -109,7 +119,6 @@ function EditInfoPage() {
           formData.append("userPic", fileData);
         } catch (error) {
           console.error("Failed to fetch previous image:", error);
-          formData.append("userPicUrl", prevPic);
         }
       }
 
