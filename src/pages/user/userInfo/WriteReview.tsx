@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import styled from "@emotion/styled";
 import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
@@ -113,7 +114,7 @@ function WriteReview() {
       });
 
       console.log("res : ", res.data);
-      if (res.data.statusCode === "200") {
+      if (res.data.statusCode === 200) {
         Swal.fire({
           title: "리뷰가 등록되었어요",
           icon: "success",
@@ -125,8 +126,19 @@ function WriteReview() {
           }
         });
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log("리뷰 작성 중 오류 발생 : ", error);
+      Swal.fire({
+        title: "리뷰 작성 중 오류발생",
+        text: error?.response.data.resultMsg,
+        icon: "error",
+        confirmButtonText: "확인",
+        allowOutsideClick: false,
+      }).then(result => {
+        if (result.isConfirmed) {
+          navigate("/user/order");
+        }
+      });
     }
   };
 

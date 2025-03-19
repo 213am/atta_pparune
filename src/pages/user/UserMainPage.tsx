@@ -276,13 +276,13 @@ const UserMainPage = (): JSX.Element => {
                   </p>
                 </div>
                 <div className="w-1/3">
-                  <span className="flex items-center gap-1 pl-2">
+                  <span className="flex w-full items-center gap-1 pl-2">
                     <FaStar className="text-yellow" />
                     <span className="tracking-wide">
                       {data.avgRating.toFixed(1)}
                     </span>
                   </span>
-                  <p className="flex pl-2 font-semibold text-sm text-primary text-nowrap">
+                  <p className="flex w-full px-2 items-center justify-end font-semibold text-sm text-primary text-nowrap">
                     약 {data.avgRestaurant}분
                   </p>
                 </div>

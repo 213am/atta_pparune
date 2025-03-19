@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useForm } from "react-hook-form";
@@ -36,6 +37,7 @@ const JoinMember = (): JSX.Element => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: yupResolver(signupSchema),
     // 유효성 검사 방식( 입력 진행중에 )
@@ -60,9 +62,19 @@ const JoinMember = (): JSX.Element => {
           confirmButtonText: "확인",
           showConfirmButton: true,
           allowOutsideClick: false,
+        }).then(() => {
+          reset({
+            adminId: parseInt(adminId),
+            companyId: parseInt(companyId),
+            name: "",
+            employeeNum: "",
+            upw: "",
+            email: "",
+            phone: "",
+          });
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       Swal.fire({
         title: "생성 중 오류 발생",
@@ -76,13 +88,13 @@ const JoinMember = (): JSX.Element => {
   };
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full">
       <form
         onSubmit={handleSubmit(formSubmitHandler)}
-        className="flex flex-col w-1/3 h-2/3 gap-10 p-5 border rounded-md tb:w-1/4"
+        className="flex flex-col gap-10"
       >
-        <span>사원 계정 생성</span>
-        <div className="flex flex-col w-full h-full justify-between">
+        <span className="text-xl">사원 계정 생성</span>
+        <div className="flex flex-col h-full gap-4 px-10">
           <input
             type="hidden"
             value={parseInt(adminId)}
@@ -93,77 +105,99 @@ const JoinMember = (): JSX.Element => {
             value={parseInt(companyId)}
             {...register("companyId")}
           />
-          <div className="w-full h-1/5">
-            <div className="flex items-center pb-1">
-              <label htmlFor="name" className="flex w-[30%]">
-                이름
-              </label>
+          <div className="flex w-full h-14">
+            <label
+              htmlFor="name"
+              className="flex w-[22%] text-darkGray pt-0.5 lg:w-[25%] tb:w-[20%]"
+            >
+              이름
+            </label>
+            <div className="flex flex-col w-2/5">
               <input
                 id="name"
-                className="flex w-[70%] px-2 border"
+                className="flex w-full px-2 mb-1 border-b border-darkGray"
+                placeholder="이름을 입력해주세요"
                 {...register("name")}
               />
+              <p className="text-red h-1/2">{errors.name?.message}</p>
             </div>
-            <p className="text-red">{errors.name?.message}</p>
           </div>
-          <div className="w-full h-1/5">
-            <div className="flex items-center pb-1">
-              <label htmlFor="employeeNum" className="flex w-[30%]">
-                사원번호
-              </label>
+          <div className="flex w-full h-14">
+            <label
+              htmlFor="employeeNum"
+              className="flex w-[22%] text-darkGray pt-0.5 lg:w-[25%] tb:w-[20%]"
+            >
+              사원번호
+            </label>
+            <div className="flex flex-col w-2/5">
               <input
                 id="employeeNum"
-                className="flex w-[70%] px-2 border"
+                className="flex w-full px-2 mb-1 border-b border-darkGray"
+                placeholder="4자리 숫자를 입력해주세요"
                 {...register("employeeNum")}
               />
+              <p className="text-red h-1/2">{errors.employeeNum?.message}</p>
             </div>
-            <p className="text-red">{errors.employeeNum?.message}</p>
           </div>
-          <div className="w-full h-1/5">
-            <div className="flex items-center pb-1">
-              <label htmlFor="upw" className="flex w-[30%]">
-                비밀번호
-              </label>
+          <div className="flex w-full h-14">
+            <label
+              htmlFor="upw"
+              className="flex w-[22%] text-darkGray pt-0.5 lg:w-[25%] tb:w-[20%]"
+            >
+              비밀번호
+            </label>
+            <div className="flex flex-col w-2/5">
               <input
                 type="password"
                 id="upw"
-                className="flex w-[70%] px-2 border"
+                className="flex w-full px-2 mb-1 border-b border-darkGray"
+                placeholder="비밀번호를 입력해주세요"
                 {...register("upw")}
               />
+              <p className="text-red h-1/2">{errors.upw?.message}</p>
             </div>
-            <p className="text-red">{errors.upw?.message}</p>
           </div>
-          <div className="w-full h-1/5">
-            <div className="flex items-center pb-1">
-              <label htmlFor="email" className="flex w-[30%]">
-                이메일
-              </label>
+          <div className="w-full flex h-14">
+            <label
+              htmlFor="email"
+              className="flex w-[22%] text-darkGray pt-0.5 lg:w-[25%] tb:w-[20%]"
+            >
+              이메일
+            </label>
+            <div className="flex flex-col w-2/5">
               <input
                 id="email"
-                className="flex w-[70%] px-2 border"
+                className="flex w-full px-2 mb-1 border-b border-darkGray"
+                placeholder="이메일 주소를 입력해주세요"
                 {...register("email")}
               />
+              <p className="text-red h-1/2">{errors.email?.message}</p>
             </div>
-            <p className="text-red">{errors.email?.message}</p>
           </div>
-          <div className="w-full h-1/5">
-            <div className="flex items-center pb-1">
-              <label htmlFor="phone" className="flex w-[30%]">
-                핸드폰 번호
-              </label>
+          <div className="flex w-full h-14">
+            <label
+              htmlFor="phone"
+              className="flex w-[22%] text-darkGray text-nowrap pt-0.5 lg:w-[25%] tb:w-[20%]"
+            >
+              핸드폰 번호
+            </label>
+            <div className="flex flex-col w-2/5">
               <input
                 id="phone"
-                className="flex w-[70%] px-2 border"
+                className="flex w-full px-2 mb-1 border-b border-darkGray"
+                placeholder="- 없이 숫자만 입력해주세요"
                 {...register("phone")}
               />
+              <p className="flex text-red w-full h-1/2">
+                {errors.phone?.message}
+              </p>
             </div>
-            <p className="text-red">{errors.phone?.message}</p>
           </div>
         </div>
-        <div className="flex w-full justify-center">
+        <div className="flex w-3/5 justify-center">
           <button
             type="submit"
-            className="px-4 py-1.5 border rounded-sm bg-white tracking-wide hover:bg-primary hover:text-white"
+            className="px-4 py-1.5 border rounded-md bg-white tracking-wide hover:bg-primary hover:text-white"
           >
             생성하기
           </button>

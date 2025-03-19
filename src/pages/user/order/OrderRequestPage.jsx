@@ -95,6 +95,11 @@ const OrderRequestPage = () => {
       navigate(`/user/order`);
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        title: "결제 오류",
+        text: "다시 한번 시도해주세요",
+        timer: 2000,
+      });
     }
   };
 
@@ -120,42 +125,31 @@ const OrderRequestPage = () => {
     }
   };
 
-  const inputApprovalHandler = userId => {
-    console.log(userId);
-    const inputNumber = parseInt(inputValues[userId]);
-    console.log("입력값", inputNumber, userId);
-
-    if (isCompleted) {
-      patchApproval(userId);
-    } else {
-      setPriceList(prevPriceList => {
-        const updatedList = prevPriceList.map(item =>
-          item.userId === userId ? { ...item, point: inputNumber } : item,
-        );
-
-        const isUserInList = updatedList.some(item => item.userId === userId);
-        return isUserInList
-          ? updatedList
-          : [...updatedList, { userId, point: inputNumber }];
-      });
-
-      setIsCompleted(prev => {
-        const updatedStatus = {
-          ...prev,
-          [userId]: !prev[userId],
-        };
-        return updatedStatus;
-      });
-    }
-  };
-
-  const cancleButtonClick = sessionUserId => {
+  const cancleButtonClick = async sessionUserId => {
     setIsCompleted(!isCompleted);
     console.log(sessionUserId);
-  };
-
-  const linkToTicket = () => {
-    navigate();
+    const params = {
+      orderId: parseInt(id),
+      userId: sessionUserId,
+    };
+    try {
+      const res = await axios.delete("/api/user/user-payment-member", {
+        params,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(res.data);
+      if (res.data.status === 200) {
+        Swal.fire({
+          title: "주문 취소",
+          text: "주문이 취소되었습니다!",
+          timer: 2000,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const isDisabled = !priceList.every(item => item.approvalStatus === 1);
@@ -231,28 +225,6 @@ const OrderRequestPage = () => {
                   </>
                 )}
               </div>
-              {/* 현재 사용자와 일치하지 않는 경우에만 버튼 표시 */}
-              {/* {item.userId === parseInt(sessionUserId) ? (
-                <div className="flex w-[20%] justify-center gap-2 text-nowrap items-center">
-                  <span
-                    onClick={() => inputApprovalHandler(item.userId)}
-                    className="bg-blue px-2 text-white font-semibold rounded-md cursor-pointer"
-                  >
-                    승인
-                  </span>
-                  <span
-                    onClick={() => cancleButtonClick(item.userId)}
-                    className="bg-red px-2 text-white font-semibold rounded-md cursor-pointer"
-                  >
-                    {isCompleted[item.userId] ? "수정" : "거절"}
-                  </span>
-                </div>
-              ) : (
-                <div className="flex w-[20%] justify-center gap-2 text-nowrap items-center ">
-                  <span className="bg-blue px-2 text-white font-semibold rounded-md"></span>
-                  <span className="bg-red px-2 text-white font-semibold rounded-md"></span>
-                </div>
-              )} */}
             </div>
           ))}
         <div className="flex w-full justify-center gap-10">
@@ -270,6 +242,7 @@ const OrderRequestPage = () => {
                 결제 요청
               </button>
               <button
+                onClick={() => cancleButtonClick()}
                 className={`text-lg px-2 py-1 rounded-md cursor-pointer bg-red text-white`}
               >
                 결제 취소
