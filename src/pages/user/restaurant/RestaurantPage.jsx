@@ -471,10 +471,10 @@ function RestaurantPage() {
               <FlexDiv>
                 <span>{item.restaurantName}</span>
                 <span
-                  style={{ fontSize: 10 }}
+                  style={{ fontSize: 12 }}
                   onClick={() => console.log(item.restaurantAddress)}
                 >
-                  식사시간 : {item.avgRestaurant}분
+                  식사시간 : 약 {item.avgRestaurant?.toFixed(0)}분
                 </span>
               </FlexDiv>
 
