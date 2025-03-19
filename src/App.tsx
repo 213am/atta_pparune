@@ -20,7 +20,7 @@ import FranchiseeStorePage from "./pages/admin/franchisee/FranchiseeStorePage";
 import RefundPage from "./pages/admin/refund/RefundPage";
 import DepositHistory from "./pages/admin/transaction/DepositHistory";
 import PointHistory from "./pages/admin/transaction/PointHistory";
-import Account from "./pages/company/account/Account";
+import Account from "./pages/company/account/AccountPage";
 import DashBoard from "./pages/company/dashboard/DashBoard";
 import Member from "./pages/company/member/Member";
 import CpTransaction from "./pages/company/transaction/CpTransaction";

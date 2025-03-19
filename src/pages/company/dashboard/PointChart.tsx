@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 import { useEffect, useState } from "react";
@@ -36,6 +37,30 @@ const PointChart = (): JSX.Element => {
   const accessToken = getCookie();
   const nowMonth = dayjs().format("MM");
   const prevMonth = dayjs().subtract(1, "month").format("MM");
+
+  const chartOptions = {
+    plugins: {
+      tooltip: {
+        backgroundColor: "rgba(0, 0, 0, 1)",
+        titleColor: "#fff",
+        bodyColor: "#fff",
+        borderColor: "#ccc",
+        borderWidth: 1,
+        cornerRadius: 6,
+        padding: 10,
+        position: "nearest",
+        yAlign: "top",
+        xAlign: "center",
+        callbacks: {
+          label: function (tooltipItem: any) {
+            const value = tooltipItem.raw;
+            const label = tooltipItem.label;
+            return `${label}: ${value.toLocaleString("ko-KR")}원`;
+          },
+        },
+      },
+    },
+  };
 
   const dataArr: ChartDataI[] = [
     {
@@ -121,8 +146,9 @@ const PointChart = (): JSX.Element => {
         <div className="flex w-full h-[90%]">
           {dataArr.map((item, index) => (
             <div className="relative flex w-1/3 justify-center" key={index}>
-              <Doughnut data={item} />
-              <div className="absolute top-1/2 flex flex-col text-center -mt-3">
+              <Doughnut data={item} options={chartOptions} />
+
+              <div className="absolute top-1/2 z-0 flex flex-col text-center -mt-3">
                 <span className="text-sm">{item.labels[0]}</span>
                 <span className="text-2xl font-semibold tracking-wide">
                   {item.datasets[0]?.data[0]?.toLocaleString("ko-kr")}원
