@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AnimatePresence } from "framer-motion";
-import { Suspense, lazy, useEffect } from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Suspense, lazy, useEffect, useState } from "react";
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { isLoginStoreAtom } from "./atoms/restaurantAtom";
 import { loginAtom } from "./atoms/userAtom";
@@ -113,6 +118,26 @@ const App = (): JSX.Element => {
   const sessionUser = sessionStorage.getItem("userId");
   const [isLogin] = useRecoilState(loginAtom);
   const [isLoginStore] = useRecoilState(isLoginStoreAtom);
+  const [deviceType, setDeviceType] = useState<string>("desktop");
+
+  function getDeviceType(): string {
+    const userAgent = navigator.userAgent.toLowerCase();
+    if (/mobile/i.test(userAgent)) {
+      return "mobile";
+    }
+    if (
+      /tablet/i.test(userAgent) ||
+      (/ipad/i.test(userAgent) && !/mobile/i.test(userAgent))
+    ) {
+      return "tablet";
+    }
+    return "desktop";
+  }
+
+  useEffect(() => {
+    const currentDeviceType = getDeviceType();
+    setDeviceType(currentDeviceType);
+  }, []);
 
   useEffect(() => {
     localStorage.removeItem("@tosspayments/merchant-browser-id");
@@ -133,6 +158,11 @@ const App = (): JSX.Element => {
       <Router>
         <Suspense fallback={<Loading />}>
           <Routes>
+            {/* 모바일에서만 / 경로를 /user로 리디렉션 */}
+            {deviceType === "mobile" && (
+              <Route path="/" element={<Navigate to="/user" />} />
+            )}
+
             <Route path="/" element={<IndexPage />} />
             <Route path="/auth">
               <Route index element={<LoginPage />} />

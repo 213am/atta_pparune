@@ -130,7 +130,10 @@ const CompanySideBar = (): JSX.Element => {
 
   return (
     <div className="bg-black w-[300px] h-[100vh] py-3 flex flex-col">
-      <div className="w-[200px] h-[35px] mx-6 my-3">
+      <div
+        onClick={() => navigate("/company")}
+        className="w-[200px] h-[35px] mx-6 my-3 cursor-pointer"
+      >
         <img src="/adminLogo.png" className="w-full h-full" />
       </div>
       <div className="mt-[100px] flex-grow">

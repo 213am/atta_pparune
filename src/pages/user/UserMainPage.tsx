@@ -267,7 +267,7 @@ const UserMainPage = (): JSX.Element => {
                   <p className="font-semibold truncate">
                     {data.restaurantName}
                   </p>
-                  <p className="text-xs text-darkGray text-nowrap">
+                  <p className="text-xs text-darkGray text-nowrap w-[90px] overflow-hidden truncate">
                     {
                       data.restaurantAddress.match(
                         /^(?:대구광역시|대구)\s*(.+)/,
