@@ -27,6 +27,20 @@ function IndexPage() {
   const sessionUserId = window.sessionStorage.getItem("userId");
 
   useEffect(() => {
+    if (!isLogin) {
+      Swal.fire({
+        title: "잘못된 접근입니다.",
+        icon: "error",
+        confirmButtonText: "확인",
+        showConfirmButton: true,
+        allowOutsideClick: false,
+      }).then(result => {
+        if (result.isConfirmed) {
+          navigate(-1);
+        }
+      });
+    }
+
     // 알림 아이콘 검정색
     setIsWhite(false);
 
@@ -76,6 +90,7 @@ function IndexPage() {
       if (result.isConfirmed) {
         setIsLogin(false);
         navigate("/user");
+        setUserData({});
       }
     });
   };

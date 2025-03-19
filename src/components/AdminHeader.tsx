@@ -56,7 +56,7 @@ const AdminHeader = ({ title }: AdminHeaderI) => {
         <img
           src="/profile.jpeg"
           alt=""
-          className="flex w-10 h-10 rounded-full cursor-pointer"
+          className="flex w-10 h-10 rounded-full"
         />
       </div>
     </div>

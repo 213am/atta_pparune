@@ -129,6 +129,12 @@ function LoginPage() {
   };
 
   useEffect(() => {
+    if (isLogin) {
+      navigate(-1);
+    }
+  }, []);
+
+  useEffect(() => {
     if (formData.id && formData.pw) {
       setHasVal(true);
     } else {
