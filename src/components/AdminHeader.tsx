@@ -51,7 +51,7 @@ const AdminHeader = ({ title }: AdminHeaderI) => {
               P
             </div>
           </div>
-          <span className="font-normal">{point}P</span>
+          <span className="font-normal">{point || 0}P</span>
         </div>
         <img
           src="/profile.jpeg"

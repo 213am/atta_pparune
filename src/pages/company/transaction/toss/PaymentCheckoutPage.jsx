@@ -1,6 +1,8 @@
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import { getCookie } from "../../../../components/cookie";
 // ------  SDK 초기화 ------
 // @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
 const clientKey = "test_ck_P9BRQmyarY9Gnq5Yy99ZrJ07KzLN";
@@ -11,10 +13,37 @@ export function PaymentCheckoutPage({ point }) {
     currency: "KRW",
     value: parseInt(point),
   };
+  const accessToken = getCookie();
+  const adminId = Number(sessionStorage.getItem("adminId"));
+
+  const [companyInfo, setCompanyInfo] = useState();
+
+  const getCompanyInfo = async () => {
+    const params = {
+      adminId,
+    };
+    try {
+      const res = await axios.get("/api/admin/company/v3/info", {
+        params,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setCompanyInfo(res.data.resultData);
+      console.log(res.data.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     console.log(point);
+    getCompanyInfo();
   }, []);
+
+  useEffect(() => {
+    console.log("야!!!!!!!!!!!!!!!!!", companyInfo);
+  }, [companyInfo]);
 
   useEffect(() => {
     async function fetchPayment() {
@@ -58,9 +87,9 @@ export function PaymentCheckoutPage({ point }) {
           orderName: "아따빠르네 포인트 구매",
           successUrl: window.location.origin + "/success", // 결제 요청이 성공하면 리다이렉트되는 URL
           failUrl: window.location.origin + "/fail", // 결제 요청이 실패하면 리다이렉트되는 URL
-          customerEmail: "customer123@gmail.com",
-          customerName: "김토스",
-          customerMobilePhone: "01012341234",
+          customerEmail: companyInfo.email,
+          customerName: companyInfo.name,
+          customerMobilePhone: companyInfo.phone,
           // 카드 결제에 필요한 정보
           card: {
             useEscrow: false,
@@ -78,8 +107,14 @@ export function PaymentCheckoutPage({ point }) {
     // 토스 페이먼트 모달창 띄우기 버튼
     <button
       type="button"
-      className="px-4 py-2 rounded-[5px] bg-primary text-white"
-      onClick={() => postPayment()}
+      className="px-4 py-2 rounded-[5px] bg-primary hover:bg-primaryFocus text-white"
+      onClick={() => {
+        if (Number(point)) {
+          postPayment();
+        } else {
+          Swal.fire("0보다 큰 금액을 입력해 주세요.", "", "error");
+        }
+      }}
     >
       결제하기
     </button>
