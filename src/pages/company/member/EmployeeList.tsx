@@ -37,7 +37,7 @@ const EmployeeList = (): JSX.Element => {
   const [_, setPoint] = useRecoilState(pointState);
 
   const companyId = sessionStorage.getItem("companyId");
-  const adminId = parseInt(sessionStorage.getItem("adminId") as string);
+  const adminId = Number(sessionStorage.getItem("adminId") as string);
   const accessToken = getCookie();
   const date = dayjs(new Date()).format("YYYY-MM");
 
@@ -99,8 +99,16 @@ const EmployeeList = (): JSX.Element => {
       <div className="flex justify-center">
         <span
           onClick={() => {
-            setUserId(props.data.userId);
-            setIsOpen({ deposit: true, collect: false });
+            if (props.data.activation === 0) {
+              setUserId(props.data.userId);
+              setIsOpen({ deposit: true, collect: false });
+            } else {
+              Swal.fire(
+                "현재 지원되지 않는 기능입니다.",
+                "회원 상태를 활성화한 후 이용해 주세요.",
+                "error",
+              );
+            }
           }}
           className="bg-green hover:bg-greenHover text-white cursor-pointer px-3 rounded-[5px]"
         >
@@ -120,8 +128,28 @@ const EmployeeList = (): JSX.Element => {
       <div className="flex justify-center">
         <span
           onClick={() => {
-            setUserId(props.data.userId);
-            setIsOpen({ deposit: false, collect: true });
+            if (
+              props.data.activation === 0 &&
+              Number(props.data.point.replace(/,/g, ""))
+            ) {
+              setUserId(props.data.userId);
+              setIsOpen({ deposit: false, collect: true });
+            } else if (
+              !Number(props.data.point.replace(/,/g, "")) &&
+              props.data.activation === 0
+            ) {
+              Swal.fire(
+                "회수할 수 있는\n포인트가 남아있지 않습니다.",
+                "",
+                "error",
+              );
+            } else {
+              Swal.fire(
+                "현재 지원되지 않는 기능입니다.",
+                "회원 상태를 활성화한 후 이용해 주세요.",
+                "error",
+              );
+            }
           }}
           className="bg-red hover:bg-redHover text-white cursor-pointer px-3 rounded-[5px]"
         >
@@ -301,7 +329,12 @@ const EmployeeList = (): JSX.Element => {
         }
       });
       setIsOpen({ deposit: false, collect: false });
-    } catch (error) {
+    } catch (error: any) {
+      Swal.fire(
+        "포인트 입금에 실패하였습니다.",
+        `${error.response.data.resultMsg}`,
+        "error",
+      );
       console.log(error);
     }
   };
@@ -333,7 +366,12 @@ const EmployeeList = (): JSX.Element => {
         }
       });
       setIsOpen({ deposit: false, collect: false });
-    } catch (error) {
+    } catch (error: any) {
+      Swal.fire(
+        "포인트 회수에 실패하였습니다.",
+        `${error.response.data.resultMsg}`,
+        "error",
+      );
       console.log(error);
     }
   };
@@ -436,7 +474,7 @@ const EmployeeList = (): JSX.Element => {
               <button
                 type="button"
                 onClick={() => patchPoint()}
-                className="px-4 py-2 rounded-[5px] bg-primary text-white"
+                className="px-4 py-2 rounded-[5px] bg-lightGreen hover:bg-green text-white"
               >
                 입금하기
               </button>
@@ -474,7 +512,7 @@ const EmployeeList = (): JSX.Element => {
               <button
                 type="button"
                 onClick={() => patchPointCollect()}
-                className="px-4 py-2 rounded-[5px] bg-primary text-white"
+                className="px-4 py-2 rounded-[5px] bg-red hover:bg-redHover text-white"
               >
                 회수하기
               </button>

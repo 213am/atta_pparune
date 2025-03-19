@@ -72,9 +72,7 @@ const CompanySideBar = (): JSX.Element => {
   };
 
   const signoutHandler = () => {
-    sessionStorage.removeItem("adminId");
-    sessionStorage.removeItem("companyId");
-    sessionStorage.removeItem("point");
+    sessionStorage.clear();
     removeCookie();
     removeCookieRefresh();
     Swal.fire({

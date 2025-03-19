@@ -121,6 +121,7 @@ const App = (): JSX.Element => {
 
   useEffect(() => {
     localStorage.removeItem("@tosspayments/merchant-browser-id");
+    sessionStorage.removeItem("@tosspayments/session-id");
     initializeSocket();
 
     if (sessionRestaurant && isLoginStore) {
