@@ -50,6 +50,7 @@ const QRCode = () => {
       requestAnimationFrame(() => {
         setCouponPath();
       });
+      fetchTicketData();
     }
   }, [dimensions]);
 
@@ -163,14 +164,13 @@ const QRCode = () => {
         console.error("티켓 상태 조회 실패:", error);
       }
     }, 3000);
-
     return () => clearInterval(intervalId);
   }, [newTicketId]);
 
   return (
-    <div className="flex flex-col w-full h-dvh px-10 py-20 overflow-x-hidden overflow-y-scroll scrollbar-hide">
+    <div className="flex flex-col w-full h-dvh px-5 py-20 overflow-x-hidden overflow-y-scroll scrollbar-hide">
       <Notification />
-      <div className="absolute top-0 left-0 w-full flex justify-between items-center px-3 py-5 border-b-2 border-gray border-opacity-70 bg-white z-50">
+      <div className="absolute top-0 left-0 w-full flex justify-between items-center px-3 py-5 border-b-2 border-gray border-opacity-70 bg-white z-30">
         <span className="flex w-[10%] justify-center text-2xl cursor-pointer">
           <IoMdArrowBack onClick={() => navigate("/user/order")} />
         </span>

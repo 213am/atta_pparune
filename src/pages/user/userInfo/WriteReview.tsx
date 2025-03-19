@@ -114,7 +114,7 @@ function WriteReview() {
       });
 
       console.log("res : ", res.data);
-      if (res.data.statusCode === 200) {
+      if (res.data.statusCode === "200") {
         Swal.fire({
           title: "리뷰가 등록되었어요",
           icon: "success",

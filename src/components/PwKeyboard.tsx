@@ -30,16 +30,27 @@ const PwKeyboard: React.FC<PwKeyboardProps> = ({
     );
   }, []);
 
-  const erasePasswordOne = useCallback(() => {
-    setPassword(prev => prev.slice(0, prev.length === 0 ? 0 : prev.length - 1));
-  }, []);
+  const erasePasswordOne = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.currentTarget.blur();
+      setPassword(prev =>
+        prev.slice(0, prev.length === 0 ? 0 : prev.length - 1),
+      );
+    },
+    [],
+  );
 
-  const erasePasswordAll = useCallback(() => {
-    setPassword("");
-  }, []);
+  const erasePasswordAll = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.currentTarget.blur();
+      setPassword("");
+    },
+    [],
+  );
 
   const shuffleNums = useCallback(
-    (num: number) => () => {
+    (num: number) => (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.currentTarget.blur();
       setNums(prev => [...prev.sort(() => Math.random() - 0.5)]);
       handlePasswordChange(num);
     },
@@ -73,7 +84,8 @@ const PwKeyboard: React.FC<PwKeyboardProps> = ({
     }
   };
 
-  const onClickSubmitButton = () => {
+  const onClickSubmitButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.blur();
     if (password.length !== 6) {
       alert("비밀번호 6자리를 모두 입력해주세요!");
       return;
@@ -110,7 +122,7 @@ const PwKeyboard: React.FC<PwKeyboardProps> = ({
           <button
             key={i}
             className="w-1/3 h-1/4 border flex items-center justify-center text-2xl font-fantasy transition-all duration-300 ease-in-out hover:shadow-lg hover:text-white hover:bg-primaryFocus"
-            onClick={shuffleNums(n)}
+            onClick={e => shuffleNums(n)(e)}
           >
             {n}
           </button>

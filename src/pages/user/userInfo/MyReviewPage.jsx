@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import DOMPurify from "dompurify";
 import { REVIEW_IMAGE_URL } from "../../../constants/url";
+import Swal from "sweetalert2";
 
 const MyReviewPage = () => {
   const [previewImage, setPreviewImage] = useState(null);
@@ -58,8 +59,16 @@ const MyReviewPage = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
+      console.log(res.data);
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        title: "삭제 실패",
+        text: error.response.data.resultMsg,
+        icon: "error",
+        confirmButtonText: "확인",
+        allowOutsideClick: false,
+      });
     }
   };
 
@@ -95,12 +104,14 @@ const MyReviewPage = () => {
       ) : (
         myReviewList?.map((data, index) => (
           <div className="flex flex-col px-10 py-4 gap-2" key={index}>
-            <div
-              onClick={() => linkToDetailPage(data.restaurantId)}
-              className="flex items-center gap-1 text-lg cursor-pointer"
-            >
-              <span>{data.restaurantName}</span>
-              <IoIosArrowForward className="font-semibold" />
+            <div className="flex items-center text-lg">
+              <div
+                onClick={() => linkToDetailPage(data.restaurantId)}
+                className="flex items-center gap-1 cursor-pointer"
+              >
+                <span>{data.restaurantName}</span>
+                <IoIosArrowForward className="font-semibold" />
+              </div>
             </div>
             <div className="flex gap-4 items-center">
               <span className="flex items-center">
