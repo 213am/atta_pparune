@@ -3,10 +3,13 @@ import OrderList from "./OderList";
 import axios from "axios";
 import { getCookie } from "../../../components/cookie";
 import dayjs from "dayjs";
+import { reloadOrderAtom } from "../../../atoms/restaurantAtom";
+import { useRecoilState } from "recoil";
 
 const Table = () => {
   const [isClick, setIsClick] = useState(true);
   const [orderList, setOrderList] = useState([]);
+  const [reloadOrders, setReloadOrders] = useRecoilState(reloadOrderAtom);
   const sessionRestaurantId = sessionStorage.getItem("restaurantId");
   const accessToken = getCookie();
 
@@ -32,7 +35,7 @@ const Table = () => {
       }
     };
     getOrderList();
-  }, []);
+  }, [reloadOrders]);
 
   const openDescriptHandler = () => {
     setIsClick(!isClick);

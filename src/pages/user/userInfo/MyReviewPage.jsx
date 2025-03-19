@@ -19,29 +19,29 @@ const MyReviewPage = () => {
   const accessToken = getCookie();
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const getMyReviews = async () => {
     const params = {
       page: 1,
       size: 15,
     };
+    const res = await axios.get("/api/user/v3/review", {
+      params,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log("서버에서 받아온 데이터 : ", res.data.resultData);
 
+    const updatedResult = res.data.resultData.map(item => ({
+      ...item,
+      createdAt: dayjs(item.createdAt).format("YYYY-MM-DD"),
+    }));
+
+    setMyReviewList([...updatedResult]);
+  };
+
+  useEffect(() => {
     try {
-      const getMyReviews = async () => {
-        const res = await axios.get("/api/user/v3/review", {
-          params,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        console.log("서버에서 받아온 데이터 : ", res.data.resultData);
-
-        const updatedResult = res.data.resultData.map(item => ({
-          ...item,
-          createdAt: dayjs(item.createdAt).format("YYYY-MM-DD"),
-        }));
-
-        setMyReviewList([...updatedResult]);
-      };
       getMyReviews();
     } catch (error) {
       console.log(error);
@@ -60,6 +60,13 @@ const MyReviewPage = () => {
         },
       });
       console.log(res.data);
+      Swal.fire({
+        title: "삭제 성공",
+        text: "리뷰가 삭제되었습니다",
+        icon: "success",
+        confirmButtonText: "확인",
+        allowOutsideClick: false,
+      }).then(getMyReviews());
     } catch (error) {
       console.log(error);
       Swal.fire({

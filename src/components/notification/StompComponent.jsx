@@ -158,7 +158,9 @@ export const subscribeUserLogin = userId => {
   }
 };
 
-export const subscribeStoreLogin = restaurantId => {
+export const SubscribeStoreLogin = restaurantId => {
+  const [reloadOrders, setReloadOrders] = useRecoilState(reloadOrderAtom);
+
   const subscribeFn = () => {
     const url = `/queue/restaurant/${restaurantId}/owner/reservation`;
 
@@ -171,10 +173,10 @@ export const subscribeStoreLogin = restaurantId => {
       try {
         const messageObj = JSON.parse(message.body);
         console.log("메세지 수신 완료 : ", messageObj);
-
         console.log("식당 관리자 로그인 : ", messageObj);
         Swal.fire({
-          title: "새로운 주문이 들어왔습니다!",
+          title: "새로운 알림",
+          text: messageObj,
           icon: "question",
           showCancelButton: true,
           confirmButtonColor: "#79BAF2",
@@ -184,6 +186,7 @@ export const subscribeStoreLogin = restaurantId => {
           reverseButtons: false,
         }).then(result => {
           if (result.isConfirmed) {
+            setReloadOrders(true);
             Swal.fire("오른쪽 주문목록을 확인해주세요", "", "success");
           }
         });

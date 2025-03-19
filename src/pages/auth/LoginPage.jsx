@@ -90,7 +90,7 @@ function LoginPage() {
         window.sessionStorage.setItem("coalitionState", coalitionState);
         setCookie(accessToken);
         setIsLoginStore(true);
-        // subscribeStoreLogin(restaurantId);
+        // SubscribeStoreLogin(restaurantId);
       } else if (role === COMPANY) {
         const res = await axios.post("/api/admin/sign-in", formData);
         console.log(res.data.resultData);

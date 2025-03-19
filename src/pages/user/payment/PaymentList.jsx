@@ -338,12 +338,18 @@ const OrderList = () => {
                         ${
                           item.reviewStatus === 1
                             ? "cursor-not-allowed text-darkGray border-gray"
-                            : "hover:bg-primary hover:text-white cursor-pointer focus:outline focus:outline-2 focus:outline-primary hover:border-none"
+                            : item.is24hourLeft === 1
+                              ? "cursor-not-allowed text-darkGray border-gray"
+                              : "hover:bg-primary hover:text-white cursor-pointer focus:outline focus:outline-2 focus:outline-primary hover:border-none"
                         }
                       `}
                     disabled={item.reviewStatus === 1}
                   >
-                    {item.reviewStatus === 1 ? "리뷰 작성완료" : "리뷰 작성"}
+                    {item.is24hourLeft === 1
+                      ? "작성 기한 만료"
+                      : item.reviewStatus === 1
+                        ? "리뷰 작성완료"
+                        : "리뷰 작성"}
                   </button>
                 </div>
               </div>
