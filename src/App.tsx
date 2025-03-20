@@ -119,7 +119,7 @@ const App = (): JSX.Element => {
   const sessionUser = sessionStorage.getItem("userId");
   const [isLogin] = useRecoilState(loginAtom);
   const [isLoginStore] = useRecoilState(isLoginStoreAtom);
-  const [reloadOrders, setReloadOrders] = useRecoilState(reloadOrderAtom);
+  const [_reloadOrders, setReloadOrders] = useRecoilState(reloadOrderAtom);
   const [deviceType, setDeviceType] = useState<string>("desktop");
   const width = window.innerWidth;
 
