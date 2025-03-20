@@ -33,6 +33,7 @@ import ServiceLoginPage from "./pages/service/auth/ServiceLoginPage";
 import DetailPage from "./pages/service/notice/DetailPage";
 import OrderLoading from "./pages/user/order/OrderLoading";
 import RequestPayment from "./pages/user/payment/RequestPayment";
+import EditPostPage from "./pages/service/notice/EditPostPage";
 
 const preload = (importFunc: () => Promise<{ default: any }>) =>
   importFunc().then((module: { default: any }) => ({
@@ -161,6 +162,12 @@ const App = (): JSX.Element => {
             {/* 모바일에서만 / 경로를 /user로 리디렉션 */}
             {deviceType === "mobile" && (
               <Route path="/" element={<Navigate to="/user" />} />
+            )}
+            {deviceType === "tablet" && (
+              <Route path="/" element={<Navigate to="/store" />} />
+            )}
+            {deviceType === "desktop" && (
+              <Route path="/" element={<Navigate to="/service" />} />
             )}
 
             <Route path="/" element={<IndexPage />} />
@@ -403,6 +410,7 @@ const App = (): JSX.Element => {
                 <Route index element={<NoticePage />} />
                 <Route path="writepost" element={<WritePostPage />} />
                 <Route path="detail" element={<DetailPage />} />
+                <Route path="editpost" element={<EditPostPage />} />
               </Route>
               <Route path="auth" element={<ServiceLoginPage />} />
             </Route>

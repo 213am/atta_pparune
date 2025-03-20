@@ -3,27 +3,26 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaCaretDown, FaCaretUp } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
 import { LuCircleUserRound } from "react-icons/lu";
 import { MdFileDownload } from "react-icons/md";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import { Swiper, SwiperSlide } from "swiper/react";
 import * as yup from "yup";
 import { getCookie } from "../../../components/cookie";
 import ServiceFooter from "../../../components/ServiceFooter";
 import ServiceHeader from "../../../components/ServiceHeader";
 import "./notice.css";
-import Swal from "sweetalert2";
 
 interface Size {
   width?: number;
   height?: number;
 }
 
-interface PostType {
+interface PatchType {
   postCode?: string;
   inquiryTitle?: string;
   inquiryDetail?: string;
@@ -42,15 +41,15 @@ const boardSchema = yup.object({
   inquiryDetail: yup.string(),
 });
 
-const WritePostPage = (): JSX.Element => {
+const EditPostPage = (): JSX.Element => {
   // 구분 (질의응답, 불편사항)
   const [cate, setCate] = useState("문의사항");
-  const [isClick, setIsClick] = useState(false);
   const navigate = useNavigate();
   const name = sessionStorage.getItem("name");
   const id = parseInt(sessionStorage.getItem("id") as string);
-  const roleCode = sessionStorage.getItem("roleCode");
   const accessToken = getCookie();
+  const [searchParams] = useSearchParams();
+  const inquiryId = Number(searchParams.get("inquiryId"));
 
   // 이미지 미리보기 state
   const [preview, setPreview] = useState<string[]>([]);
@@ -59,7 +58,10 @@ const WritePostPage = (): JSX.Element => {
   // 파일 input value 값 추적
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { handleSubmit, setValue, register } = useForm({
+  const location = useLocation();
+  const prevData = location.state;
+
+  const { handleSubmit, setValue, register, watch } = useForm({
     resolver: yupResolver(boardSchema),
   });
 
@@ -92,36 +94,35 @@ const WritePostPage = (): JSX.Element => {
   };
 
   // 게시글 등록
-  const postBoard = async (data: PostType) => {
-    const { inquiryDetail, inquiryTitle, postCode } = data;
+  const patchBoard = async (data: PatchType) => {
+    const { inquiryDetail, inquiryTitle } = data;
 
-    const postData = {
-      postCode,
+    const patchData = {
       inquiryTitle,
       inquiryDetail,
-      roleCode,
       id,
+      inquiryId,
     };
 
-    console.log(postData);
+    console.log(patchData);
 
     const formData = new FormData();
     formData.append(
       "req",
-      new Blob([JSON.stringify(postData)], { type: "application/json" }),
+      new Blob([JSON.stringify(patchData)], { type: "application/json" }),
     );
     imgFile.forEach(file => {
       formData.append("reviewPics", file);
     });
 
     try {
-      await axios.post("/api/system/v3/post", formData, {
+      await axios.patch("/api/system/v3/post", formData, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
       Swal.fire({
-        title: "게시글 등록에 성공하였습니다.",
+        title: "게시글 수정에 성공하였습니다.",
         icon: "success",
         confirmButtonText: "확인",
         showConfirmButton: true, // ok 버튼 노출 여부
@@ -132,14 +133,18 @@ const WritePostPage = (): JSX.Element => {
         }
       });
     } catch (error) {
-      Swal.fire("게시글 등록에 실패하였습니다.", "", "error");
+      Swal.fire(
+        "게시글 수정에 실패하였습니다.",
+        "제목과 내용을 올바르게 입력했는지 확인해주세요.",
+        "error",
+      );
       console.log(error);
     }
   };
 
-  const handleSubmitForm = (data: PostType) => {
+  const handleSubmitForm = (data: PatchType) => {
     // console.log(data);
-    postBoard(data);
+    patchBoard(data);
   };
 
   useEffect(() => {
@@ -148,9 +153,15 @@ const WritePostPage = (): JSX.Element => {
   }, [imgFile, preview]);
 
   useEffect(() => {
-    setValue("inquiryDetail", "");
-    setValue("inquiryTitle", "");
-    setValue("postCode", "");
+    setValue("inquiryDetail", prevData.inquiryDetail);
+    setValue("inquiryTitle", prevData.inquiryTitle);
+    setValue("postCode", prevData.postCode);
+
+    if (watch("postCode") === "00202") {
+      setCate("문의사항");
+    } else if (watch("postCode") === "00203") {
+      setCate("불편사항");
+    }
   }, []);
 
   return (
@@ -160,40 +171,8 @@ const WritePostPage = (): JSX.Element => {
         <form onSubmit={handleSubmit(handleSubmitForm)}>
           <div className="flex justify-center relative">
             <div className="flex w-[1280px] justify-between z-10">
-              <div
-                className={`relative border border-slate-300 w-[100px] text-[16px] bg-white ${isClick ? "rounded-t-[5px]" : "rounded-[5px]"}`}
-              >
-                <div
-                  className="flex gap-1 justify-between py-1 cursor-pointer px-3 w-[100px] items-center"
-                  onClick={() => setIsClick(!isClick)}
-                >
-                  <div>{cate}</div>
-                  {isClick ? <FaCaretUp /> : <FaCaretDown />}
-                </div>
-                {isClick && (
-                  <div className="absolute left-[-1px] bg-white w-[100px] px-3 border border-collapse border-slate-300 rounded-b-[5px]">
-                    <div
-                      className="py-1 cursor-pointer"
-                      onClick={() => {
-                        setCate("문의사항");
-                        setValue("postCode", "00202");
-                        setIsClick(false);
-                      }}
-                    >
-                      문의사항
-                    </div>
-                    <div
-                      className="py-1 cursor-pointer"
-                      onClick={() => {
-                        setCate("불편사항");
-                        setValue("postCode", "00203");
-                        setIsClick(false);
-                      }}
-                    >
-                      불편사항
-                    </div>
-                  </div>
-                )}
+              <div className="py-1 px-3 text-[24px]">
+                <div>{cate}</div>
               </div>
               <div className="flex items-center gap-2 h-[34px]">
                 <LuCircleUserRound className="text-[30px]" />
@@ -225,6 +204,7 @@ const WritePostPage = (): JSX.Element => {
                     ["bold", "italic", "underline", "strike"],
                   ],
                 }}
+                value={watch("inquiryDetail")}
                 onChange={e => setValue("inquiryDetail", e)}
                 formats={[
                   "header",
@@ -309,4 +289,4 @@ const WritePostPage = (): JSX.Element => {
     </div>
   );
 };
-export default WritePostPage;
+export default EditPostPage;

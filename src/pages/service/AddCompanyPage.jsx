@@ -190,7 +190,7 @@ function AddCompanyPage() {
   };
 
   return (
-    <div className="bg-white h-[100vh] overflow-y-auto scrollbar-hide">
+    <div className="bg-white h-[100vh] overflow-y-auto">
       <LayoutDiv style={{ position: "relative" }}>
         <HeaderDiv>
           <CloseDiv>
@@ -289,6 +289,7 @@ function AddCompanyPage() {
                 type="submit"
                 style={{
                   backgroundColor: hasVal ? "#6F4CDB" : "#ddd",
+                  marginBottom: 100,
                 }}
                 disabled={!hasVal}
               >

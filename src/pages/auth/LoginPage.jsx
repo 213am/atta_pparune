@@ -148,7 +148,7 @@ function LoginPage() {
         <CloseDiv>
           <IoMdClose
             style={{ width: "100%", height: "100%", cursor: "pointer" }}
-            onClick={() => navigate("/")}
+            onClick={() => navigate(-1)}
           />
         </CloseDiv>
       </HeaderDiv>

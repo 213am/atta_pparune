@@ -375,7 +375,12 @@ function StoreReviewPage(): JSX.Element {
                   </div>
                 </div>
                 <div>
-                  <div className="w-[435px]">{item.reviewText}</div>
+                  <p
+                    className="w-[435px]"
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(String(item.reviewText)),
+                    }}
+                  />
                   <div className="flex w-[300px] my-3 gap-1">
                     {item.reviewPic.map(url => (
                       <img

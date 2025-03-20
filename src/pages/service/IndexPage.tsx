@@ -1,11 +1,12 @@
+import ServiceFooter from "../../components/ServiceFooter";
 import ServiceHeader from "../../components/ServiceHeader";
 
 const IndexPage = (): JSX.Element => {
   return (
-    <div className="relative w-full h-dvh bg-white overflow-hidden z-10">
+    <div className="relative w-full h-dvh bg-white overflow-y-auto overflow-x-hidden z-10 flex flex-col">
       <ServiceHeader />
-      <div className="fixed -top-[600px] -right-60 w-[1500px] h-[1500px] rounded-full bg-gradient-to-tr from-sky-100 to-purple-200 blur-sm shadow-lg z-10"></div>
-      <div className="absolute flex w-full h-full z-10">
+      <div className="absolute ml-[660px] mt-[-600px] w-[1500px] h-[1500px] rounded-full bg-gradient-to-tr from-sky-100 to-purple-200 blur-sm shadow-lg z-10"></div>
+      <div className="flex w-full h-full z-10 flex-grow mt-[80px]">
         <div className="flex flex-col w-1/2 justify-center items-center">
           <div className="w-full ml-52">
             <div className="text-[30px] font-bold mb-10">
@@ -54,6 +55,7 @@ const IndexPage = (): JSX.Element => {
           />
         </div>
       </div>
+      <ServiceFooter />
     </div>
   );
 };

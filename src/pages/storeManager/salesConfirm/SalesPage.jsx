@@ -61,7 +61,7 @@ const MenuListDiv = styled.div`
   text-align: center;
   align-items: center;
   justify-content: center;
-  padding: 10px 10px;
+  padding: 10px 30px;
   border-right: 1px solid #929292;
 `;
 
@@ -179,13 +179,11 @@ function SalesPage() {
           <ContentDiv>{item.userName}</ContentDiv>
           <MenuListDiv>
             {item.orderDetails.map(menu => (
-              <div key={menu.menuId} className="flex w-full">
-                <span className="flex w-[80%] justify-center text-nowrap">
+              <div key={menu.menuId} className="flex justify-between w-full">
+                <span className="w-[120px] text-nowrap overflow-hidden truncate">
                   {menu.menuName}
                 </span>
-                <span className="flex w-[20%] justify-start text-nowrap">
-                  {menu.menuCount}개
-                </span>
+                <span className="w-[30px] text-nowrap">{menu.menuCount}개</span>
               </div>
             ))}
           </MenuListDiv>

@@ -6,8 +6,10 @@ import axios from "axios";
 import { getCookie } from "../../../components/cookie";
 import Swal from "sweetalert2";
 import DOMPurify from "dompurify";
+import dayjs from "dayjs";
 
 interface BoardType {
+  createdAt: string;
   inquiryId: number;
   inquiryTitle: string;
   postCode: string;
@@ -32,6 +34,7 @@ const DetailPage = (): JSX.Element => {
     pic: null,
     postCode: "",
     roleCode: "",
+    createdAt: "",
   });
   const [isError, setIsError] = useState(false);
 
@@ -103,6 +106,8 @@ const DetailPage = (): JSX.Element => {
         return <>[문의] {detailData.inquiryTitle}</>;
       case "00203":
         return <>[불편사항] {detailData.inquiryTitle}</>;
+      case "00204":
+        return <>{detailData.inquiryTitle}</>;
     }
   };
 
@@ -115,11 +120,12 @@ const DetailPage = (): JSX.Element => {
         return <>문의사항</>;
       case "00203":
         return <>불편사항</>;
+      case "00204":
+        return <>자주 묻는 질문</>;
     }
   };
 
   useEffect(() => {
-    console.log(inquiryId);
     getBoardDetail();
   }, []);
 
@@ -128,7 +134,7 @@ const DetailPage = (): JSX.Element => {
   }
 
   return (
-    <div className="relative w-full h-dvh bg-white overflow-y-auto scrollbar-hide z-10 flex flex-col">
+    <div className="relative w-full h-dvh bg-white overflow-y-auto overflow-x-hidden z-10 flex flex-col">
       <ServiceHeader />
       <div className="mt-[100px] relative flex-grow">
         <div className="flex justify-center">
@@ -146,7 +152,11 @@ const DetailPage = (): JSX.Element => {
               <div className="flex gap-3">
                 <div>{writePerson(detailData.roleCode)}</div>
                 <div className="text-gray">|</div>
-                <div>2025-02-17</div>
+                <div>
+                  {detailData.createdAt
+                    ? dayjs(detailData.createdAt).format("YYYY-MM-DD")
+                    : ""}
+                </div>
               </div>
             </div>
 
@@ -168,9 +178,17 @@ const DetailPage = (): JSX.Element => {
               >
                 목록으로
               </button>
-              {detailData.postCode !== "00201" && (
+              {detailData.postCode === "00202" ? (
                 <>
-                  <button className="bg-black text-white px-4 py-1 rounded-[5px]">
+                  <button
+                    onClick={() =>
+                      navigate(
+                        `/service/notice/editpost?inquiryId=${inquiryId}`,
+                        { state: detailData },
+                      )
+                    }
+                    className="bg-black text-white px-4 py-1 rounded-[5px]"
+                  >
                     수정
                   </button>
                   <button
@@ -196,6 +214,44 @@ const DetailPage = (): JSX.Element => {
                     삭제
                   </button>
                 </>
+              ) : (
+                detailData.postCode === "00203" && (
+                  <>
+                    <button
+                      onClick={() =>
+                        navigate(
+                          `/service/notice/editpost?inquiryId=${inquiryId}`,
+                          { state: detailData },
+                        )
+                      }
+                      className="bg-black text-white px-4 py-1 rounded-[5px]"
+                    >
+                      수정
+                    </button>
+                    <button
+                      onClick={() => {
+                        Swal.fire({
+                          title: "게시글을 삭제하시겠습니까?",
+                          text: "삭제한 게시글은 복구할 수 없습니다.",
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#79BAF2",
+                          cancelButtonColor: "#E44B58",
+                          confirmButtonText: "확인",
+                          cancelButtonText: "취소",
+                          reverseButtons: false,
+                        }).then(result => {
+                          if (result.isConfirmed) {
+                            deleteBoard();
+                          }
+                        });
+                      }}
+                      className="bg-black text-white px-4 py-1 rounded-[5px]"
+                    >
+                      삭제
+                    </button>
+                  </>
+                )
               )}
             </div>
           </div>
