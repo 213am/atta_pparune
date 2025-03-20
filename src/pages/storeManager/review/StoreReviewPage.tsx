@@ -31,6 +31,7 @@ const ContentDiv = styled.div`
   width: 830px;
   max-height: calc(100vh - 60px);
   overflow-y: auto;
+  overflow-x: hidden;
   background-color: #fff;
 `;
 
@@ -352,26 +353,40 @@ function StoreReviewPage(): JSX.Element {
           {review.map((item, index) => (
             <div key={index}>
               <div className="flex gap-5">
-                <div>
-                  <div className="font-bold mb-2">{item.nickName}</div>
-                  <div className="flex gap-3 items-center">
-                    <div className="font-bold text-[20px]">
-                      {item.rating.toFixed(1)}
+                <div className="flex flex-col justify-between">
+                  <div>
+                    <div className="font-bold mb-2">{item.nickName}</div>
+                    <div className="flex gap-3 items-center">
+                      <div className="font-bold text-[20px]">
+                        {item.rating.toFixed(1)}
+                      </div>
+                      <div className="flex gap-2">
+                        {[...Array(5)].map((_, index) => {
+                          const starIndex = index + 1;
+                          return (
+                            <FaStar
+                              key={starIndex}
+                              className={`w-[20px] h-[20px] ${starIndex <= item.rating ? "text-yellow" : "text-gray"}`}
+                            />
+                          );
+                        })}
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      {[...Array(5)].map((_, index) => {
-                        const starIndex = index + 1;
-                        return (
-                          <FaStar
-                            key={starIndex}
-                            className={`w-[20px] h-[20px] ${starIndex <= item.rating ? "text-yellow" : "text-gray"}`}
-                          />
-                        );
-                      })}
+                    <div className="mt-2 text-darkGray">
+                      {dayjs(item.createdAt).format("YYYY-MM-DD")}
                     </div>
                   </div>
-                  <div className="mt-2 text-darkGray">
-                    {dayjs(item.createdAt).format("YYYY-MM-DD")}
+                  <div
+                    className={
+                      "flex w-full justify-start pl-2 gap-2 items-center cursor-pointer text-red h-4 text-nowrap"
+                    }
+                    onClick={() => {
+                      postBlackList(item.userId);
+                      patchReviewReq(item.orderId);
+                    }}
+                  >
+                    <PiSirenFill className="w-[20px] h-[20px]" />
+                    <div>신고하기</div>
                   </div>
                 </div>
                 <div>
@@ -456,9 +471,9 @@ function StoreReviewPage(): JSX.Element {
                     </div>
                   )}
                 </div>
-                <div
+                {/* <div
                   className={
-                    "flex gap-2 items-center cursor-pointer ml-5 text-red h-4"
+                    "flex gap-2 items-center cursor-pointer text-red h-4 text-nowrap"
                   }
                   onClick={() => {
                     postBlackList(item.userId);
@@ -467,7 +482,7 @@ function StoreReviewPage(): JSX.Element {
                 >
                   <PiSirenFill className="w-[20px] h-[20px]" />
                   <div>신고하기</div>
-                </div>
+                </div> */}
               </div>
               <div className="border-gray border my-5"></div>
             </div>

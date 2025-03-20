@@ -321,10 +321,11 @@ const SideBar = () => {
           로그인
         </div>
       )}
-
-      <Modal>
-        <PwKeyboard mode="edit" close={close} />
-      </Modal>
+      <div className="absolute left-1/2 top-1/2">
+        <Modal>
+          <PwKeyboard mode="edit" close={close} />
+        </Modal>
+      </div>
     </div>
   );
 };

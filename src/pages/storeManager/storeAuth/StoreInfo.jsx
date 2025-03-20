@@ -436,7 +436,7 @@ const StoreInfo = () => {
             <input type="phone" className="border px-2 rounded-md" />
           </div> */}
 
-            <div className="flex flex-col w-[45%] gap-2">
+            <div className="flex flex-col w-[45%] gap-2 pb-10">
               <div className="flex gap-1 items-center">
                 <button
                   className="bg-primary px-4 py-1 rounded-lg text-white"
