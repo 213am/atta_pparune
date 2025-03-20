@@ -9,17 +9,17 @@ const IndexPage = () => {
 
   return (
     <div className="relative min-h-dvh bg-[url('/startingPage.webp')] bg-cover bg-center flex flex-col justify-evenly items-center">
-      <div className="w-full h-1/3 flex flex-col justify-center items-center">
-        <span className="w-4/5 h-full text-primary font-bold text-3xl pl-6 tracking-wide sm:w-2/3 sm:text-4xl lg:text-5xl drop-shadow-[1px_2px_1px_rgba(0,0,0,0.8)] italic">
+      <div className="w-full h-1/3 flex flex-col gap-2 justify-center items-center mt-[-450px]">
+        <span className="w-4/5 h-full font-bold text-primary text-[38px] flex justify-center tracking-wide sm:w-2/3 sm:text-4xl lg:text-5xl drop-shadow-[1px_2px_1px_rgba(0,0,0,0.8)] italic">
           예약부터 결제까지
         </span>
         <img
           src="/logo.png"
           alt=""
-          className="w-4/5 h-full sm:w-2/3 lg:w-3/4 drop-shadow-[1px_2px_1px_rgba(0,0,0,0.8)]"
+          className="w-4/5 max-w-[600px] h-full sm:w-2/3 lg:w-3/4 drop-shadow-[1px_2px_1px_rgba(0,0,0,0.8)]"
         />
       </div>
-      <div>
+      {/* <div>
         <div className="flex flex-col items-center w-full gap-8 mx-auto top-80 tb:w-1/2 lg:w-1/3">
           <button
             className={
@@ -66,7 +66,7 @@ const IndexPage = () => {
             시스템관리자
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const EnrollServicePage = (): JSX.Element => {
   const navigate = useNavigate();
   return (
-    <div className="relative w-full h-dvh bg-white overflow-y-auto z-10 scrollbar-hide">
+    <div className="relative w-full h-dvh bg-white overflow-y-auto overflow-x-hidden z-10">
       <ServiceHeader />
       <div className="flex justify-center mt-[200px] gap-[150px]">
         {/* 기업 제휴 신청 */}

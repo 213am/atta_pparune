@@ -7,6 +7,7 @@ import { getCookie } from "../../../components/cookie";
 import dayjs from "dayjs";
 
 interface QuestionDataType {
+  inquiryId: number;
   postCode: string;
   inquiryTitle: string;
   roleCode: string;
@@ -58,7 +59,9 @@ const Question = (): JSX.Element => {
               </div>
               <div
                 className={"w-[60%] text-left cursor-pointer"}
-                onClick={() => navigate(`/service/notice/detail`)}
+                onClick={() =>
+                  navigate(`/service/notice/detail?inquiryId=${item.inquiryId}`)
+                }
               >
                 {item.inquiryTitle}
               </div>

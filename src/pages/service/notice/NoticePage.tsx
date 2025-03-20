@@ -8,7 +8,7 @@ import { boardState } from "../../../atoms/serviceAtom";
 const NoticePage = (): JSX.Element => {
   const [board, setBoard] = useRecoilState(boardState);
   return (
-    <div className="relative w-full h-dvh bg-white overflow-y-auto scrollbar-hide z-10 flex flex-col">
+    <div className="relative w-full h-dvh bg-white overflow-y-auto overflow-x-hidden z-10 flex flex-col">
       <ServiceHeader />
       <div className="mt-[100px] relative flex-grow">
         <div className="flex justify-center text-[30px] font-bold">{board}</div>
