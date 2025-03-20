@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import axios from "axios";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
+import Swal from "sweetalert2";
 import AdminHeader from "../../../components/AdminHeader";
+import { getCookie } from "../../../components/cookie";
 import BuyPoint from "./BuyPoint";
 import SendPoint from "./SendPoint";
 import { PaymentCheckoutPage } from "./toss/PaymentCheckoutPage";
-import axios from "axios";
-import { getCookie } from "../../../components/cookie";
-import Swal from "sweetalert2";
-import { useRecoilValue } from "recoil";
-import { pointState } from "../../../atoms/companyPointAtom";
 
 const CpTransaction = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState({
@@ -20,7 +18,7 @@ const CpTransaction = (): JSX.Element => {
 
   const accessToken = getCookie();
   const adminId = Number(sessionStorage.getItem("adminId") as string);
-  const companyPoint = useRecoilValue(pointState);
+  // const companyPoint = useRecoilValue(pointState);
 
   // 환불 요청
   const postRefund = async () => {
@@ -50,7 +48,7 @@ const CpTransaction = (): JSX.Element => {
       <AdminHeader title="거래내역" />
       <div className="px-10 py-5 bg-gray w-[100%] h-[100vh]">
         <div className="flex gap-3 absolute right-0 mr-10">
-          <button
+          {/* <button
             onClick={() => {
               if (Number(companyPoint.replace(/,/g, ""))) {
                 setIsOpen({ buy: false, refund: true });
@@ -61,7 +59,7 @@ const CpTransaction = (): JSX.Element => {
             className="px-4 py-2 rounded-[5px] bg-lightGreen hover:bg-green text-white"
           >
             포인트환불
-          </button>
+          </button> */}
           <button
             onClick={() => setIsOpen({ buy: true, refund: false })}
             className="px-4 py-2 rounded-[5px] bg-primary hover:bg-primaryFocus text-white"
