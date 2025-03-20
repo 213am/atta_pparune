@@ -256,7 +256,6 @@ function StoreDetailPage() {
       style={{
         height: "100vh",
         backgroundColor: "white",
-        position: "relative",
       }}
     >
       {isLoading && (
