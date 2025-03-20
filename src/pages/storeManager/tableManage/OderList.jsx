@@ -59,9 +59,10 @@ const OrderList = () => {
           title: "주문을 승인했습니다!",
           text: "사용자 결제완료 후 테이블 목록에 추가됩니다",
           icon: "success",
+        }).then(() => {
+          triggerReload();
         });
         close();
-        triggerReload();
       }
     } catch (error) {
       console.log(error);
@@ -120,7 +121,7 @@ const OrderList = () => {
               <li
                 onClick={() => open(item)}
                 key={index}
-                className="flex w-full items-center justify-between px-6 py-2 border-b border-gray"
+                className="flex w-full items-center justify-between px-6 py-2 border-b border-gray cursor-pointer"
               >
                 <span className="flex w-[30%] justify-center text-black">
                   {item.orderId}
@@ -181,13 +182,13 @@ const OrderList = () => {
             <div className="flex w-full justify-center gap-10 mb-10">
               <div
                 onClick={confirmClickHandler}
-                className="bg-blue px-2 py-1 rounded-md text-nowrap text-white font-medium"
+                className="bg-blue px-2 py-1 rounded-md text-nowrap text-white font-medium cursor-pointer"
               >
                 주문 승인
               </div>
               <div
                 onClick={dismissClickHandler}
-                className="bg-red px-2 py-1 rounded-md text-nowrap text-white font-medium"
+                className="bg-red px-2 py-1 rounded-md text-nowrap text-white font-medium cursor-pointer"
               >
                 주문 취소
               </div>

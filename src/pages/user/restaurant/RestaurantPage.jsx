@@ -319,12 +319,6 @@ function RestaurantPage() {
 
   return (
     <>
-      {isInitialLoading && (
-        <div className="absolute inset-0 z-50">
-          <LoadingScreen message="주변 식당 찾는중..." />
-        </div>
-      )}
-
       <div
         className="w-full h-dvh overflow-hidden overflow-y-scroll scrollbar-hide relative"
         // onMouseOver={() => {
@@ -333,6 +327,11 @@ function RestaurantPage() {
         //   }
         // }}
       >
+        {isInitialLoading && (
+          <div className="absolute inset-0 z-50">
+            <LoadingScreen message="주변 식당 찾는중..." />
+          </div>
+        )}
         <Map
           center={{ lat: location?.latitude, lng: location?.longitude }}
           style={{

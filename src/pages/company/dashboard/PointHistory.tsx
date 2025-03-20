@@ -69,8 +69,6 @@ const PointHistory = (): JSX.Element => {
 
   // 포인트 및 금액 정렬 및 색상
   const pointAmountRenderer = (props: any) => {
-    console.log("얼마지? : ", props);
-
     return (
       <div className="text-right">
         {props.value === "0" ? (
@@ -85,8 +83,6 @@ const PointHistory = (): JSX.Element => {
   };
 
   const cashAmountRenderer = (props: any) => {
-    console.log("얼마지? : ", props);
-
     return (
       <div className="text-right">
         {props.value === "0" ? (

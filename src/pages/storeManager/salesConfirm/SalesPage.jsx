@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 import { getCookie } from "../../../components/cookie";
 
 const TableDiv = styled.div`
-  width: 1060px;
+  width: 100%;
   margin: 30px 35px;
   overflow-y: scroll;
+  padding-right: 20px;
 `;
 
 const TableTitleDiv = styled.div`

@@ -237,7 +237,7 @@ function MenuSelectPage() {
       console.log(error);
       Swal.fire({
         title: `예약에 실패했습니다`,
-        text: "다시 한번 시도해주세요",
+        text: "진행 중인 주문을 확인해 주세요",
         icon: "error",
         confirmButtonText: "확인",
         showConfirmButton: true, // ok 버튼 노출 여부
