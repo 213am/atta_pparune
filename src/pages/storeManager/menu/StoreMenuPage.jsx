@@ -153,7 +153,9 @@ function StoreMenuPage() {
       return "메뉴 수정하기";
     }
   };
-  const { Modal, open } = useModal({ title: titleChange() });
+  const { Modal, open } = useModal({
+    title: titleChange(),
+  });
 
   // 식당 상세정보 보기
   const getStoreInfo = async () => {
@@ -425,7 +427,10 @@ function StoreMenuPage() {
       {isClick.modal1 && (
         <Modal>
           <MenuAddDiv>
-            <form onSubmit={handleSubmit(handleSubmitForm)}>
+            <form
+              onSubmit={handleSubmit(handleSubmitForm)}
+              className="text-[14px]"
+            >
               <img src={preview} />
               <p>
                 <label htmlFor="menuImg">
@@ -473,7 +478,10 @@ function StoreMenuPage() {
       {isClick.modal2 && (
         <Modal>
           <MenuAddDiv>
-            <form onSubmit={handleSubmit(handleSubmitForm)}>
+            <form
+              onSubmit={handleSubmit(handleSubmitForm)}
+              className="text-[14px]"
+            >
               <img src={preview || menuEditPic} />
               <p>
                 <label htmlFor="menuImg">

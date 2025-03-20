@@ -149,7 +149,7 @@ const RestaurantReviewPage = () => {
                   }}
                 ></span>
               </div>
-              <div className="flex w-full gap-4 items-center ">
+              <div className="flex w-full flex-wrap gap-4 items-center">
                 {item?.menuName.map((data, index) => (
                   <span
                     className="flex px-2 py-1 border bg-white rounded-xl"
@@ -159,7 +159,7 @@ const RestaurantReviewPage = () => {
                   </span>
                 ))}
               </div>
-              <div className="flex w-full justify-end items-center ">
+              <div className="flex w-full justify-end items-center">
                 {/* <div className="flex items-center cursor-pointer gap-1">
             <RiDeleteBin6Fill />
             <span>삭제</span>
