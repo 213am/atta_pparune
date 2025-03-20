@@ -41,10 +41,9 @@ const SideBar = () => {
     height: 650,
   });
   const [title, setTitle] = useState("");
-  const [isLogin, setIsLogin] = useRecoilState(isLoginStoreAtom);
 
   const accessToken = getCookie();
-  const adminId = parseInt(sessionStorage.getItem("adminId"));
+  const adminId = Number(sessionStorage.getItem("adminId"));
   const coalitionState = parseInt(sessionStorage.getItem("coalitionState"));
 
   useEffect(() => {
@@ -208,7 +207,19 @@ const SideBar = () => {
         {activeMenu === "store" && (
           <>
             <SubMenuDiv
-              onClick={() => handleMenuClick("store", "/store/info")}
+              onClick={() => {
+                if (adminId) {
+                  handleMenuClick("store", "/store/info");
+                } else {
+                  Swal.fire({
+                    title: "로그인이 필요한 서비스 입니다.",
+                    icon: "error",
+                    confirmButtonText: "확인",
+                    showConfirmButton: true, // ok 버튼 노출 여부
+                    allowOutsideClick: false, // 외부 영역 클릭 방지
+                  });
+                }
+              }}
               style={{
                 backgroundColor: subMenuClick ? "#eee" : "#4825b6",
                 color: subMenuClick ? "#333" : "#fff",
@@ -220,49 +231,100 @@ const SideBar = () => {
             >
               정보수정
             </SubMenuDiv>
-            <SubMenuDiv onClick={open}>PIN 변경</SubMenuDiv>
             <SubMenuDiv
               onClick={() => {
-                navigate("/auth/editpw");
-                setRole(STORE);
+                if (adminId) {
+                  open();
+                } else {
+                  Swal.fire({
+                    title: "로그인이 필요한 서비스 입니다.",
+                    icon: "error",
+                    confirmButtonText: "확인",
+                    showConfirmButton: true, // ok 버튼 노출 여부
+                    allowOutsideClick: false, // 외부 영역 클릭 방지
+                  });
+                }
+              }}
+            >
+              PIN 변경
+            </SubMenuDiv>
+            <SubMenuDiv
+              onClick={() => {
+                if (adminId) {
+                  navigate("/auth/editpw");
+                  setRole(STORE);
+                } else {
+                  Swal.fire({
+                    title: "로그인이 필요한 서비스 입니다.",
+                    icon: "error",
+                    confirmButtonText: "확인",
+                    showConfirmButton: true, // ok 버튼 노출 여부
+                    allowOutsideClick: false, // 외부 영역 클릭 방지
+                  });
+                }
               }}
             >
               비밀번호 변경
             </SubMenuDiv>
-            <SubMenuDiv onClick={() => handleChangeCoalition()}>
+            <SubMenuDiv
+              onClick={() => {
+                if (adminId) {
+                  handleChangeCoalition();
+                } else {
+                  Swal.fire({
+                    title: "로그인이 필요한 서비스 입니다.",
+                    icon: "error",
+                    confirmButtonText: "확인",
+                    showConfirmButton: true, // ok 버튼 노출 여부
+                    allowOutsideClick: false, // 외부 영역 클릭 방지
+                  });
+                }
+              }}
+            >
               제휴상태 변경
             </SubMenuDiv>
           </>
         )}
       </div>
-      <div
-        onClick={() => {
-          window.sessionStorage.removeItem("adminId");
-          window.sessionStorage.removeItem("restaurantId");
-          window.sessionStorage.removeItem("coalitionState");
-          removeCookie();
-          removeCookieRefresh();
-          Swal.fire({
-            title: "로그아웃 되었습니다.",
-            icon: "success",
-            confirmButtonText: "확인",
-            showConfirmButton: true, // ok 버튼 노출 여부
-            allowOutsideClick: false, // 외부 영역 클릭 방지
-          }).then(result => {
-            if (result.isConfirmed) {
-              setIsLogin(false);
-            }
-          });
-        }}
-        className="rounded-md bg-secondary text-white font-bold tracking-wider px-6 py-2 mb-16 cursor-pointer shadow-lg"
-      >
-        로그아웃
-      </div>
-      <div className="absolute left-1/2 top-1/2">
-        <Modal>
-          <PwKeyboard mode="edit" close={close} />
-        </Modal>
-      </div>
+      {adminId !== 0 ? (
+        <div
+          onClick={() => {
+            window.sessionStorage.removeItem("adminId");
+            window.sessionStorage.removeItem("restaurantId");
+            window.sessionStorage.removeItem("coalitionState");
+            removeCookie();
+            removeCookieRefresh();
+            Swal.fire({
+              title: "로그아웃 되었습니다.",
+              icon: "success",
+              confirmButtonText: "확인",
+              showConfirmButton: true, // ok 버튼 노출 여부
+              allowOutsideClick: false, // 외부 영역 클릭 방지
+            }).then(result => {
+              if (result.isConfirmed) {
+                navigate("/store");
+              }
+            });
+          }}
+          className="rounded-md bg-darkGray text-white font-bold tracking-wider px-6 py-2 mb-16 cursor-pointer shadow-lg"
+        >
+          로그아웃
+        </div>
+      ) : (
+        <div
+          onClick={() => {
+            setRole(STORE);
+            navigate("/auth");
+          }}
+          className="rounded-md bg-secondary text-white font-bold tracking-wider px-6 py-2 mb-16 cursor-pointer shadow-lg"
+        >
+          로그인
+        </div>
+      )}
+
+      <Modal>
+        <PwKeyboard mode="edit" close={close} />
+      </Modal>
     </div>
   );
 };

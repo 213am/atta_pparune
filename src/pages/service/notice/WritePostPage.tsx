@@ -150,7 +150,7 @@ const WritePostPage = (): JSX.Element => {
   useEffect(() => {
     setValue("inquiryDetail", "");
     setValue("inquiryTitle", "");
-    setValue("postCode", "");
+    setValue("postCode", "00202");
   }, []);
 
   return (
