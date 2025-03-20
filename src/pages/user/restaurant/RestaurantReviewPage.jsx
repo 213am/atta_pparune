@@ -8,10 +8,12 @@ import ImgPreview from "../../../components/ImgPreview";
 import MenuBar from "../../../components/MenuBar";
 import { REVIEW_IMAGE_URL, USER_IMAGE_URL } from "../../../constants/url";
 import DOMPurify from "dompurify";
+import LoadingScreen from "../../../components/LoadingScreen"; // 로딩 컴포넌트
 
 const RestaurantReviewPage = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const [reviewList, setReviewList] = useState({});
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,15 +22,16 @@ const RestaurantReviewPage = () => {
 
   useEffect(() => {
     const getReviews = async () => {
+      setIsLoading(true); // 로딩 시작
       try {
         const res = await axios.get(
           `/api/restaurant/v3/review?restaurantId=${id}`,
         );
-        console.log(res.data.resultData);
-
         setReviewList({ ...res.data.resultData });
       } catch (error) {
         console.log(error);
+      } finally {
+        setTimeout(() => setIsLoading(false), 500); // UX 개선: 0.5초 후 로딩 종료
       }
     };
     getReviews();
@@ -42,6 +45,11 @@ const RestaurantReviewPage = () => {
 
   return (
     <div className="flex flex-col w-full h-dvh">
+      {isLoading && (
+        <div className="absolute w-full h-full z-50 bg-white top-0 left-0">
+          <LoadingScreen message="리뷰 불러오는 중..." />
+        </div>
+      )}
       <div className="flex absolute z-10 w-full px-3 py-5 justify-between items-center border-b-2 border-gray border-opacity-70 bg-white">
         <span
           onClick={() => navigate(-1)}
