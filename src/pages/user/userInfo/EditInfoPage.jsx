@@ -284,7 +284,7 @@ function EditInfoPage() {
                     type="text"
                     onChange={changeNickName}
                     className="flex w-48 border rounded-md px-2"
-                    defaultValue={userData.nickName}
+                    value={userData.nickName ?? ""}
                   />
                 ) : (
                   <input
@@ -305,7 +305,7 @@ function EditInfoPage() {
               <div className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="tel"
-                  value={displayPhone}
+                  value={displayPhone ?? ""}
                   onChange={changePhoneNumber}
                   className="flex w-48 border rounded-md px-2"
                 />

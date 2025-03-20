@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import DOMPurify from "dompurify";
 import { BsFillTelephoneFill } from "react-icons/bs";
 import { FaAngleDown, FaAngleUp, FaCheck, FaPlus } from "react-icons/fa6";
 import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
@@ -339,7 +340,11 @@ function MenuSelectPage() {
           <span>I</span> {cateName()}
         </div>
         <h1>{formData.restaurantName}</h1>
-        <div>{formData.restaurantDescription}</div>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(String(formData.restaurantDescription)),
+          }}
+        ></div>
 
         <h2>
           <LuMapPin />
