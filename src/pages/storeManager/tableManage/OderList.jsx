@@ -90,7 +90,7 @@ const OrderList = () => {
   };
 
   return (
-    <div className="flex flex-col w-2/5 h-dvh border-l-2 bg-white border-l-gray shadow-xl">
+    <div className="flex flex-col min-w-[350px] h-dvh border-l-2 bg-white border-l-gray shadow-xl">
       <div className="w-100% h-dvh">
         <div>
           <div className="flex w-100% h-100% flex-col text-center pt-10 text-2xl mb-6 font-semibold">
