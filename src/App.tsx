@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AnimatePresence } from "framer-motion";
-import { Suspense, lazy, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import {
   Navigate,
   Route,
@@ -8,8 +8,7 @@ import {
   Routes,
 } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { isLoginStoreAtom, reloadOrderAtom } from "./atoms/restaurantAtom";
-import { loginAtom } from "./atoms/userAtom";
+import { reloadOrderAtom } from "./atoms/restaurantAtom";
 import CompanyLayout from "./components/layouts/CompanyLayout";
 import StoreLayout from "./components/layouts/StoreLayout";
 import UserLayout from "./components/layouts/UserLayout";
@@ -31,9 +30,9 @@ import Member from "./pages/company/member/Member";
 import CpTransaction from "./pages/company/transaction/CpTransaction";
 import ServiceLoginPage from "./pages/service/auth/ServiceLoginPage";
 import DetailPage from "./pages/service/notice/DetailPage";
+import EditPostPage from "./pages/service/notice/EditPostPage";
 import OrderLoading from "./pages/user/order/OrderLoading";
 import RequestPayment from "./pages/user/payment/RequestPayment";
-import EditPostPage from "./pages/service/notice/EditPostPage";
 
 const preload = (importFunc: () => Promise<{ default: any }>) =>
   importFunc().then((module: { default: any }) => ({
@@ -117,8 +116,6 @@ const OrderRequestPage = lazy(
 const App = (): JSX.Element => {
   const sessionRestaurant = sessionStorage.getItem("restaurantId");
   const sessionUser = sessionStorage.getItem("userId");
-  const [isLogin] = useRecoilState(loginAtom);
-  const [isLoginStore] = useRecoilState(isLoginStoreAtom);
   const [_reloadOrders, setReloadOrders] = useRecoilState(reloadOrderAtom);
   const [deviceType, setDeviceType] = useState<string>("desktop");
   const width = window.innerWidth;
