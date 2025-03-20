@@ -8,7 +8,7 @@ const ServiceFooter = (): JSX.Element => {
   const navigate = useNavigate();
   const [_, setRole] = useRecoilState(roleAtom);
 
-  const handleClick = (icon?: string) => {
+  const handleClick = () => {
     // 새 탭에서 GitHub 열기
     window.open(
       "https://github.com/213am/atta_pparune",

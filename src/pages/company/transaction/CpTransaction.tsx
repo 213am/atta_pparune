@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import axios from "axios";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
+import Swal from "sweetalert2";
 import AdminHeader from "../../../components/AdminHeader";
+import { getCookie } from "../../../components/cookie";
 import BuyPoint from "./BuyPoint";
 import SendPoint from "./SendPoint";
 import { PaymentCheckoutPage } from "./toss/PaymentCheckoutPage";
-import axios from "axios";
-import { getCookie } from "../../../components/cookie";
-import Swal from "sweetalert2";
-import { useRecoilValue } from "recoil";
-import { pointState } from "../../../atoms/companyPointAtom";
 
 const CpTransaction = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState({
@@ -20,7 +18,7 @@ const CpTransaction = (): JSX.Element => {
 
   const accessToken = getCookie();
   const adminId = Number(sessionStorage.getItem("adminId") as string);
-  const companyPoint = useRecoilValue(pointState);
+  // const companyPoint = useRecoilValue(pointState);
 
   // 환불 요청
   const postRefund = async () => {
