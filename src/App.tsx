@@ -8,7 +8,7 @@ import {
   Routes,
 } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { isLoginStoreAtom } from "./atoms/restaurantAtom";
+import { isLoginStoreAtom, reloadOrderAtom } from "./atoms/restaurantAtom";
 import { loginAtom } from "./atoms/userAtom";
 import CompanyLayout from "./components/layouts/CompanyLayout";
 import StoreLayout from "./components/layouts/StoreLayout";
@@ -119,6 +119,7 @@ const App = (): JSX.Element => {
   const sessionUser = sessionStorage.getItem("userId");
   const [isLogin] = useRecoilState(loginAtom);
   const [isLoginStore] = useRecoilState(isLoginStoreAtom);
+  const [reloadOrders, setReloadOrders] = useRecoilState(reloadOrderAtom);
   const [deviceType, setDeviceType] = useState<string>("desktop");
   const width = window.innerWidth;
 
@@ -150,7 +151,7 @@ const App = (): JSX.Element => {
     initializeSocket();
 
     if (sessionRestaurant && isLoginStore) {
-      SubscribeStoreLogin(sessionRestaurant);
+      SubscribeStoreLogin(sessionRestaurant, setReloadOrders);
     }
 
     if (sessionUser && isLogin) {

@@ -158,9 +158,7 @@ export const subscribeUserLogin = userId => {
   }
 };
 
-export const SubscribeStoreLogin = restaurantId => {
-  const [reloadOrders, setReloadOrders] = useRecoilState(reloadOrderAtom);
-
+export const SubscribeStoreLogin = (restaurantId, setReloadOrders) => {
   const subscribeFn = () => {
     const url = `/queue/restaurant/${restaurantId}/owner/reservation`;
 

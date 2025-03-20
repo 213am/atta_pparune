@@ -38,7 +38,7 @@ const SideBar = () => {
   const { Modal, open, close } = useModal({
     title: "결제 비밀번호 재설정",
     width: 450,
-    height: 600,
+    height: 650,
   });
   const [title, setTitle] = useState("");
 
@@ -130,7 +130,7 @@ const SideBar = () => {
   }, []);
 
   return (
-    <div className="flex flex-col w-44 h-dvh items-center bg-primaryFocus">
+    <div className="relative flex flex-col w-44 h-dvh items-center bg-primaryFocus">
       <div className="w-full mt-8 flex-grow">
         <div className="flex mb-6 px-4 w-44 justify-center items-center">
           <img src={"/adminLogo.png"} className="flex w-full h-full pb-6" />

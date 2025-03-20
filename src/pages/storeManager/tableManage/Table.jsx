@@ -52,7 +52,7 @@ const Table = () => {
                 // onClick={e => openDescriptHandler(e)}
                 key={item.orderId}
                 // className="w-[calc(33%_-_1rem)] min-w-40 h-48 border-2 border-darkGray bg-white"
-                className={`${isClick ? "w-[calc(33%_-_1rem)]" : "w-[calc(25%_-_1rem)]"} min-w-40 h-48 border-2 border-darkGray bg-white cursor-pointer`}
+                className={`${isClick ? "w-[calc(33%_-_1rem)]" : "w-[calc(25%_-_1rem)]"} min-w-40 h-48 border-2 border-darkGray bg-white`}
               >
                 <div className=" px-4 py-1 bg-third">
                   <div className="flex justify-between items-center gap-3">
