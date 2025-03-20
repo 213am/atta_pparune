@@ -54,6 +54,8 @@ const OrderList = () => {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         const result = res.data.resultData;
+        console.log("지난 주문 내역 : ", result);
+
         setPaymentList(Array.isArray(result) ? result : []);
       } catch (error) {
         console.log(error);

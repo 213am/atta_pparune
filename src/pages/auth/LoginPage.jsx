@@ -23,6 +23,7 @@ import {
   TextSpan,
   TitleDiv,
 } from "./loginStyle";
+import { SubscribeStoreLogin } from "../../components/notification/StompComponent";
 
 function LoginPage() {
   const navigate = useNavigate();
