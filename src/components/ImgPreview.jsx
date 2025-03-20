@@ -9,7 +9,7 @@ const ImgPreview = ({ image, onClose }) => {
         <ImCross className="cursor-pointer" onClick={onClose} />
       </div>
       <div className="flex w-full h-[50%] items-center justify-center">
-        <img src={image} alt="" className="flex w-full h-full" />
+        <img src={image} alt="" className="flex w-full" />
       </div>
     </div>
   );

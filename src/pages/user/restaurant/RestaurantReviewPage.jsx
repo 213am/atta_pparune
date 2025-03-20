@@ -42,7 +42,7 @@ const RestaurantReviewPage = () => {
 
   return (
     <div className="flex flex-col w-full h-dvh">
-      <div className="flex w-full px-3 py-5 justify-between items-center border-b-2 border-gray border-opacity-70 bg-white">
+      <div className="flex absolute z-10 w-full px-3 py-5 justify-between items-center border-b-2 border-gray border-opacity-70 bg-white">
         <span
           onClick={() => navigate(-1)}
           className="flex w-[10%] justify-center text-2xl cursor-pointer"
@@ -54,7 +54,7 @@ const RestaurantReviewPage = () => {
         </span>
         <span className="flex w-[10%] justify-center text-lg">&nbsp;</span>
       </div>
-      <div className="flex w-[90%] bg-gray px-4 py-4 mt-4 justify-betweem mx-auto rounded-sm">
+      <div className="flex w-[90%] bg-gray px-4 py-4 mt-24 justify-between mx-auto rounded-sm">
         <div className="flex flex-col w-[30%] justify-center items-center text-nowrap">
           <div className="flex items-center gap-2">
             <FaStar className="text-yellow text-xl" />

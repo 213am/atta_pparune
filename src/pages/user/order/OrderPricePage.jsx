@@ -16,6 +16,7 @@ const PriceOrderPage = () => {
   const [inputValues, setInputValues] = useState({});
   const [isCompleted, setIsCompleted] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
+  const [originalTotalPrice, setOriginalTotalPrice] = useState(0); // 처음 금액
   const [userData, setUserData] = useRecoilState(userDataAtom);
   const [memberData, setMemberData] = useRecoilState(memberDataAtom);
   const [paymentMemberData, setPaymentMemberData] =
@@ -39,6 +40,7 @@ const PriceOrderPage = () => {
         console.log(res.data.resultData);
         const result = res.data.resultData.totalMenuCost;
         setTotalPrice(result);
+        setOriginalTotalPrice(result);
       } catch (error) {
         console.log(error);
       }
@@ -100,6 +102,19 @@ const PriceOrderPage = () => {
         { userId, point: inputNumber }, // 새로운 값 추가
       ],
     }));
+
+    setTotalPrice(prevTotal => {
+      const prevInput = inputValues[userId]
+        ? parseInt(inputValues[userId], 10) || 0
+        : 0;
+      if (!isCompleted[userId]) {
+        // 확인 시 입력값 빼기
+        return prevTotal - inputNumber;
+      } else {
+        // 수정 시 이전 값 더하기 (입력 값 되돌리기)
+        return prevTotal + prevInput;
+      }
+    });
   };
 
   const backArrow = () => {
@@ -187,7 +202,9 @@ const PriceOrderPage = () => {
               <div className="flex w-[15%] justify-center gap-2 text-nowrap items-center">
                 <span
                   onClick={() => inputApprovalHandler(item.userId)}
-                  className="bg-blue px-2 text-white font-medium rounded-md cursor-pointer"
+                  className={` px-2  font-medium rounded-md cursor-pointer
+                    ${isCompleted[item.userId] ? "bg-red text-white" : "bg-blue text-white"}
+                    `}
                 >
                   {isCompleted[item.userId] ? "수정" : "확인"}
                 </span>

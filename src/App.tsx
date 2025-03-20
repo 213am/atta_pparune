@@ -16,7 +16,7 @@ import UserLayout from "./components/layouts/UserLayout";
 import Loading from "./components/Loading";
 import {
   initializeSocket,
-  subscribeStoreLogin,
+  SubscribeStoreLogin,
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
 import EnquiryPage from "./pages/admin/enquiry/EnquiryPage";
@@ -146,7 +146,7 @@ const App = (): JSX.Element => {
     initializeSocket();
 
     if (sessionRestaurant && isLoginStore) {
-      subscribeStoreLogin(sessionRestaurant);
+      SubscribeStoreLogin(sessionRestaurant);
     }
 
     if (sessionUser && isLogin) {

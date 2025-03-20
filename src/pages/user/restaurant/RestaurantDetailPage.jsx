@@ -12,6 +12,7 @@ import Swal from "sweetalert2";
 import { reserveState } from "../../../atoms/restaurantAtom";
 import { getCookie } from "../../../components/cookie";
 import { DOCKER_URL } from "../../../constants/url";
+import LoadingScreen from "../../../components/LoadingScreen";
 
 const BackDiv = styled.div`
   background-color: #fff;
@@ -170,6 +171,7 @@ function StoreDetailPage() {
   const [isReserve, setIsReserve] = useRecoilState(reserveState);
   const [reserveInfo, setReserveInfo] = useState({});
   const [menu, setMenu] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -178,13 +180,12 @@ function StoreDetailPage() {
     try {
       const res = await axios.get(`/api/restaurant?restaurantId=${id}`);
       const result = res.data.resultData;
-      console.log(result.menuCateList);
-
       setMenu(result.menuCateList);
       setFormData(result);
-      console.log(result);
     } catch (error) {
       console.log(error);
+    } finally {
+      setTimeout(() => setIsLoading(false), 1000);
     }
   };
 
@@ -251,214 +252,255 @@ function StoreDetailPage() {
   }, []);
 
   return (
-    <div style={{ height: "100vh", backgroundColor: "white" }}>
-      {formData?.restaurantPics?.filePath ? (
-        <img
-          src={`${DOCKER_URL}/pic/restaurant/${formData?.restaurantId}/${formData?.restaurantPics?.filePath}`}
-          alt="가게 이미지"
+    <div
+      style={{
+        height: "100vh",
+        backgroundColor: "white",
+        position: "relative",
+      }}
+    >
+      {isLoading && (
+        <div
           style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
             width: "100%",
-            height: 300,
-            position: "relative",
-            objectFit: "cover",
+            height: "100%",
+            backgroundColor: "white",
+            zIndex: 50,
           }}
-        />
-      ) : (
-        <img
-          src={"/restaurant_default.png"}
-          className="object-cover bg-gray py-6"
-        />
+        >
+          <LoadingScreen message="가게 정보 불러오는 중..." />
+        </div>
       )}
 
-      <BackDiv>
-        <IoMdArrowBack
-          style={{ width: "100%", height: "100%" }}
-          onClick={() => navigate(-1)}
-        />
-      </BackDiv>
-      <TitleDiv onClick={() => console.log(menu)}>
-        <div className="w-full">
-          <div>
-            {
-              formData?.restaurantAddress?.match(
-                /^(?:대구광역시|대구)\s*(.+)/,
-              )[1]
-            }{" "}
-            <span>I</span> {cateName()}
-          </div>
-          <section className="flex w-full justify-between items-center pr-16">
-            <h1>{formData?.restaurantName}</h1>
-            <div className="flex w-1/3 h-full items-center gap-2">
-              <div className="flex items-center gap-1 ">
-                <FaStar className="text-yellow text-lg drop-shadow-sm mb-0.5" />
-                <p className="tracking-wide text-black text-base">
-                  {formData?.ratingAvg?.toFixed(1)}
-                </p>
+      {!isLoading && (
+        <>
+          {formData?.restaurantPics?.filePath ? (
+            <img
+              src={`${DOCKER_URL}/pic/restaurant/${formData?.restaurantId}/${formData?.restaurantPics?.filePath}`}
+              alt="가게 이미지"
+              style={{
+                width: "100%",
+                height: 300,
+                position: "relative",
+                objectFit: "cover",
+              }}
+            />
+          ) : (
+            <img
+              src="/restaurant_default.png"
+              className="object-cover bg-gray py-6"
+            />
+          )}
+
+          <BackDiv>
+            <IoMdArrowBack
+              style={{ width: "100%", height: "100%" }}
+              onClick={() => navigate(-1)}
+            />
+          </BackDiv>
+
+          <TitleDiv>
+            <div className="w-full">
+              <div>
+                {
+                  formData?.restaurantAddress?.match(
+                    /^(?:대구광역시|대구)\s*(.+)/,
+                  )[1]
+                }{" "}
+                <span>I</span> {cateName()}
               </div>
-              <p className="text-3xl text-darkGray pb-1.5 ">·</p>
-              <div
-                className="flex text-nowrap text-base gap-1.5 items-center cursor-pointer"
-                onClick={() =>
-                  navigate(
-                    `/user/restaurant/detail/review/${formData.restaurantId}`,
-                    {
-                      state: {
-                        reviewCnt: formData?.reviewCnt,
-                      },
-                    },
-                  )
-                }
-              >
-                <p className="text-black text-base">리뷰</p>
-                <p className="text-black text-base">{formData?.reviewCnt} 개</p>
-                <IoIosArrowForward className="text-black text-base" />
-              </div>
-            </div>
-          </section>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(
-                String(formData?.restaurantDescription),
-              ),
-            }}
-          />
-          <h2>
-            <LuMapPin />
-            {formData?.restaurantAddress}
-          </h2>
-          <h2 style={{ marginTop: 10 }}>
-            <BsFillTelephoneFill />
-            매장 연락처 : {formData?.restaurantNumber}
-          </h2>
-        </div>
-      </TitleDiv>
-      <LineDiv />
-      <ContentDiv>
-        <h1>메뉴</h1>
-        {menu.map((item, index) => (
-          <div key={index}>
-            {item.menuList.map((list, index) => (
-              <div key={index}>
-                <MenuDiv>
-                  <img
-                    src={`${DOCKER_URL}/pic/menu/${list?.menuId}/${list?.menuPic}`}
-                    alt="메뉴 이미지"
-                  />
-                  <div>
-                    <div>
-                      <div>{list?.menuName}</div>
-                      <span>{list?.price.toLocaleString("ko-KR")}원</span>
-                    </div>
-                    <span className="text-darkGray text-opacity-60">
-                      {list?.details}
-                    </span>
+              <section className="flex w-full justify-between items-center pr-16">
+                <h1>{formData?.restaurantName}</h1>
+                <div className="flex w-1/3 h-full items-center gap-2">
+                  <div className="flex items-center gap-1 ">
+                    <FaStar className="text-yellow text-lg drop-shadow-sm mb-0.5" />
+                    <p className="tracking-wide text-black text-base">
+                      {formData?.ratingAvg?.toFixed(1)}
+                    </p>
                   </div>
-                </MenuDiv>
-                <LineDiv
-                  style={{
-                    height: 1,
-                    backgroundColor: "#eee",
-                    marginBottom: 10,
+                  <p className="text-3xl text-darkGray pb-1.5 ">·</p>
+                  <div
+                    className="flex text-nowrap text-base gap-1.5 items-center cursor-pointer"
+                    onClick={() =>
+                      navigate(
+                        `/user/restaurant/detail/review/${formData.restaurantId}`,
+                        {
+                          state: {
+                            reviewCnt: formData?.reviewCnt,
+                          },
+                        },
+                      )
+                    }
+                  >
+                    <p className="text-black text-base">리뷰</p>
+                    <p className="text-black text-base">
+                      {formData?.reviewCnt} 개
+                    </p>
+                    <IoIosArrowForward className="text-black text-base" />
+                  </div>
+                </div>
+              </section>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(
+                    String(formData?.restaurantDescription),
+                  ),
+                }}
+              />
+              <h2>
+                <LuMapPin />
+                {formData?.restaurantAddress}
+              </h2>
+              <h2 style={{ marginTop: 10 }}>
+                <BsFillTelephoneFill />
+                매장 연락처 : {formData?.restaurantNumber}
+              </h2>
+            </div>
+          </TitleDiv>
+
+          <LineDiv />
+
+          <ContentDiv>
+            <h1>메뉴</h1>
+            {menu.map((item, index) => (
+              <div key={index}>
+                {item.menuList.map((list, index) => (
+                  <div key={index}>
+                    <MenuDiv>
+                      <img
+                        src={`${DOCKER_URL}/pic/menu/${list?.menuId}/${list?.menuPic}`}
+                        alt="메뉴 이미지"
+                      />
+                      <div>
+                        <div>
+                          <div>{list?.menuName}</div>
+                          <span>{list?.price.toLocaleString("ko-KR")}원</span>
+                        </div>
+                        <span className="text-darkGray text-opacity-60">
+                          {list?.details}
+                        </span>
+                      </div>
+                    </MenuDiv>
+                    <LineDiv
+                      style={{
+                        height: 1,
+                        backgroundColor: "#eee",
+                        marginBottom: 10,
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </ContentDiv>
+
+          {!isModal && (
+            <FooterDiv>
+              <button onClick={() => handleClickReserve(false)}>
+                앉아서 주문
+              </button>
+              <button onClick={() => handleClickReserve(true)}>예약하기</button>
+            </FooterDiv>
+          )}
+
+          {isModal && (
+            <ModalDiv>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginRight: 10,
+                }}
+              >
+                <IoMdClose
+                  onClick={() => {
+                    setIsModal(false);
+                    setReserveInfo({});
                   }}
                 />
               </div>
-            ))}
-          </div>
-        ))}
-      </ContentDiv>
-      {!isModal && (
-        <FooterDiv>
-          <button onClick={() => handleClickReserve(false)}>앉아서 주문</button>
-          <button onClick={() => handleClickReserve(true)}>예약하기</button>
-        </FooterDiv>
-      )}
-
-      {isModal && (
-        <ModalDiv>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginRight: 10,
-            }}
-          >
-            <IoMdClose
-              onClick={() => {
-                setIsModal(false);
-                setReserveInfo({});
-              }}
-            />
-          </div>
-          <div
-            style={{
-              textAlign: "center",
-              fontSize: 12,
-              marginBottom: 10,
-            }}
-          >
-            예약할 시간과 인원을 선택해주세요
-          </div>
-          <CenterDiv>
-            <span>인원수</span>
-            <div style={{ display: "flex", gap: 10 }}>
-              {userCount.map((item, index) => (
-                <CountDiv
-                  key={index}
-                  style={{
-                    backgroundColor: item === reserveInfo.count && "#6F4CDB",
+              <div
+                style={{
+                  textAlign: "center",
+                  fontSize: 12,
+                  marginBottom: 10,
+                }}
+              >
+                예약할 시간과 인원을 선택해주세요
+              </div>
+              <CenterDiv>
+                <span>인원수</span>
+                <div style={{ display: "flex", gap: 10 }}>
+                  {userCount.map((item, index) => (
+                    <CountDiv
+                      key={index}
+                      style={{
+                        backgroundColor:
+                          item === reserveInfo.count && "#6F4CDB",
+                      }}
+                      onClick={() =>
+                        setReserveInfo({ ...reserveInfo, count: item })
+                      }
+                    >
+                      {item}명
+                    </CountDiv>
+                  ))}
+                </div>
+              </CenterDiv>
+              <CenterDiv>
+                <span>시간 선택</span>
+                <div style={{ display: "flex", gap: 5 }}>
+                  {reserveTime.map((item, index) => (
+                    <p
+                      key={index}
+                      style={{
+                        backgroundColor: item === reserveInfo.time && "#6F4CDB",
+                      }}
+                      onClick={() =>
+                        setReserveInfo({ ...reserveInfo, time: item })
+                      }
+                    >
+                      {item === "11:30" ? "오전" : "오후"}{" "}
+                      {item === "13:00"
+                        ? "1:00"
+                        : item === "13:30"
+                          ? "1:30"
+                          : item}
+                    </p>
+                  ))}
+                </div>
+              </CenterDiv>
+              <CenterDiv style={{ gap: 5, color: "#FF9500" }}>
+                <BsFillTelephoneFill />
+                <div>9명 이상은 가게에 직접 문의해주세요</div>
+              </CenterDiv>
+              <ButtonDiv>
+                <button
+                  onClick={() => {
+                    if (reserveInfo.time && reserveInfo.count) {
+                      navigate(`/user/restaurant/detail/reserve/${id}`, {
+                        state: reserveInfo,
+                      });
+                    } else {
+                      Swal.fire({
+                        title: "시간과 인원을 선택해주세요.",
+                        icon: "error",
+                        confirmButtonText: "확인",
+                        showConfirmButton: true, // ok 버튼 노출 여부
+                        allowOutsideClick: false, // 외부 영역 클릭 방지
+                      });
+                    }
                   }}
-                  onClick={() =>
-                    setReserveInfo({ ...reserveInfo, count: item })
-                  }
                 >
-                  {item}명
-                </CountDiv>
-              ))}
-            </div>
-          </CenterDiv>
-          <CenterDiv>
-            <span>시간 선택</span>
-            <div style={{ display: "flex", gap: 5 }}>
-              {reserveTime.map((item, index) => (
-                <p
-                  key={index}
-                  style={{
-                    backgroundColor: item === reserveInfo.time && "#6F4CDB",
-                  }}
-                  onClick={() => setReserveInfo({ ...reserveInfo, time: item })}
-                >
-                  {item === "11:30" ? "오전" : "오후"}{" "}
-                  {item === "13:00" ? "1:00" : item === "13:30" ? "1:30" : item}
-                </p>
-              ))}
-            </div>
-          </CenterDiv>
-          <CenterDiv style={{ gap: 5, color: "#FF9500" }}>
-            <BsFillTelephoneFill />
-            <div>9명 이상은 가게에 직접 문의해주세요</div>
-          </CenterDiv>
-          <ButtonDiv>
-            <button
-              onClick={() => {
-                if (reserveInfo.time && reserveInfo.count) {
-                  navigate(`/user/restaurant/detail/reserve/${id}`, {
-                    state: reserveInfo,
-                  });
-                } else {
-                  Swal.fire({
-                    title: "시간과 인원을 선택해주세요.",
-                    icon: "error",
-                    confirmButtonText: "확인",
-                    showConfirmButton: true, // ok 버튼 노출 여부
-                    allowOutsideClick: false, // 외부 영역 클릭 방지
-                  });
-                }
-              }}
-            >
-              확인
-            </button>
-          </ButtonDiv>
-        </ModalDiv>
+                  확인
+                </button>
+              </ButtonDiv>
+            </ModalDiv>
+          )}
+        </>
       )}
     </div>
   );

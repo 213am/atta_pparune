@@ -9,13 +9,13 @@ import { LuClipboardList } from "react-icons/lu";
 import { HiOutlineTicket } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
 import { getCookie } from "../../../components/cookie";
-import QRCode from "../order/QRCode";
 import { DOCKER_URL } from "../../../constants/url";
 import dayjs from "dayjs";
 import { ClipLoader } from "react-spinners";
 import Notification from "../../../components/notification/NotificationIcon";
 import { isWhiteIcon } from "../../../atoms/noticeAtom";
 import { useRecoilState } from "recoil";
+import LoadingScreen from "../../../components/LoadingScreen";
 
 const OrderList = () => {
   const navigate = useNavigate();
@@ -23,89 +23,81 @@ const OrderList = () => {
   const [paymentList, setPaymentList] = useState([]);
   const [activeList, setActiveList] = useState({});
   const [isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
+  const [isLoading, setIsLoading] = useState(false);
 
   const sessionUserId = window.sessionStorage.getItem("userId");
   const accessToken = getCookie();
 
-  useEffect(() => {
-    setIsWhite(false);
-
-    const getPaymentList = async () => {
-      try {
-        if (sessionUserId) {
-          const res = await axios.get(`/api/user/pastOrderCheck`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-          const result = res.data.resultData;
-          setPaymentList([...result]);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getPaymentList();
-  }, []);
-
-  useEffect(() => {
-    const params = {
-      userId: sessionUserId,
-    };
-    const getMyOrder = async () => {
-      try {
-        const res = await axios.get(`/api/user/activeOrderCheck`, {
-          params,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        console.log(res.data);
-        const result = res.data.resultData;
-        const date = dayjs(result.orderDate).format("YYYY-MM-DD HH:mm");
-
-        setActiveList({ ...result, orderDate: date });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getMyOrder();
-  }, []);
-  console.log("진행중인 주문내역 : ", activeList);
-  console.log("지난 주문 내역 : ", paymentList);
-
-  const linkToTicket = e => {
-    if (activeList.ticketId) {
-      navigate(`/user/placetoorder/coupon/${e.ticketId}`, {
-        state: {
-          ...e,
-        },
+  const fetchActiveOrder = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axios.get(`/api/user/activeOrderCheck`, {
+        params: { userId: sessionUserId },
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
-    } else {
-      return;
+      const result = res.data.resultData;
+      const date = dayjs(result.orderDate).format("YYYY-MM-DD HH:mm");
+      setActiveList({ ...result, orderDate: date });
+    } catch (error) {
+      console.log(error);
+      setActiveList({});
+    } finally {
+      setTimeout(() => setIsLoading(false), 1000);
     }
   };
 
+  useEffect(() => {
+    setIsWhite(false);
+    const getPaymentList = async () => {
+      try {
+        const res = await axios.get(`/api/user/pastOrderCheck`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const result = res.data.resultData;
+        setPaymentList(Array.isArray(result) ? result : []);
+      } catch (error) {
+        console.log(error);
+        setPaymentList([]);
+      }
+    };
+    getPaymentList();
+    fetchActiveOrder();
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(true); // 탭 전환 즉시 로딩 활성화
+
+    if (isTap) {
+      fetchActiveOrder();
+    } else {
+      const delay = setTimeout(() => setIsLoading(false), 1000);
+      return () => clearTimeout(delay);
+    }
+  }, [isTap]);
+
   const formatPhoneNumber = phone => {
-    if (!phone || phone.length !== 11) return phone; // 유효성 체크
+    if (!phone || phone.length !== 11) return phone;
     return phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
   };
 
-  const linkToReview = e => {
-    console.log("리뷰써보자 : ", e);
+  const handleTabSwitch = tapState => {
+    setIsLoading(true);
+    setIsTap(tapState);
+  };
 
-    navigate(`/user/review/${e.orderId}`, {
-      state: {
-        ...e,
-      },
-    });
+  const linkToTicket = e => {
+    if (e.ticketId) {
+      navigate(`/user/placetoorder/coupon/${e.ticketId}`, { state: { ...e } });
+    }
+  };
+
+  const linkToReview = e => {
+    navigate(`/user/review/${e.orderId}`, { state: { ...e } });
   };
 
   const linkToDetailPage = id => {
     navigate(`/user/restaurant/detail/${id}`, {
-      state: {
-        from: "/user/order",
-      },
+      state: { from: "/user/order" },
     });
   };
 
@@ -119,19 +111,30 @@ const OrderList = () => {
       </div>
       <div className="absolute top-16 left-0 w-full flex justify-between border-b-2 border-gray border-opacity-70 bg-white">
         <div
-          onClick={() => setIsTap(true)}
+          onClick={() => handleTabSwitch(true)}
           className={`w-1/2 text-center text-xl font-semibold py-3 ${isTap ? "border-b-2 border-black" : "text-darkGray font-normal"}`}
         >
           진행 중인 주문
         </div>
         <div
-          onClick={() => setIsTap(false)}
+          onClick={() => handleTabSwitch(false)}
           className={`w-1/2 text-center text-xl font-semibold py-3 ${isTap ? "text-darkGray font-normal" : "border-b-2 border-black"}`}
         >
           지난 주문 내역
         </div>
       </div>
-      {isTap ? (
+
+      {isLoading ? (
+        <div className="flex flex-col w-full h-dvh justify-center items-center">
+          <LoadingScreen
+            message={
+              isTap
+                ? "진행 중인 주문 불러오는 중..."
+                : "주문 내역 불러오는 중..."
+            }
+          />
+        </div>
+      ) : isTap ? (
         activeList.orderId ? (
           <div className="flex flex-col w-full h-dvh gap-10 pt-24 pb-20">
             <div className="flex w-full h-[14%] justify-center items-end text-primary text-2xl font-semibold tracking-widest">
@@ -162,7 +165,7 @@ const OrderList = () => {
                     {dayjs(activeList.orderDate).format("YYYY-MM-DD")}
                   </span>
                 </div>
-                {activeList.orderDetails.map(item => (
+                {activeList.orderDetails?.map(item => (
                   <div
                     key={item.menuId}
                     className="flex w-full justify-between"
@@ -248,7 +251,7 @@ const OrderList = () => {
               진행 중인 주문이 없습니다
             </span>
             <div
-              onClick={() => setIsTap(false)}
+              onClick={() => handleTabSwitch(false)}
               className="flex items-center gap-1 mt-3 text-xl border border-darkGray px-3 py-1 rounded-lg bg-white cursor-pointer"
             >
               지난 주문 내역 보기
@@ -256,19 +259,20 @@ const OrderList = () => {
             </div>
           </div>
         )
+      ) : isLoading ? (
+        <div className="flex flex-col w-full h-dvh justify-center items-center">
+          <LoadingScreen message="주문 내역 불러오는 중..." />
+        </div>
       ) : (
-        <div
-          className={`flex flex-col w-full h-dvh justify-start items-center gap-5 overflow-x-hidden overflow-y-scroll scrollbar-hide ${paymentList.length === 0 ? "" : "py-36"}`}
-        >
-          {/* 주문내역 카드 */}
-          {paymentList.length === 0 ? (
+        <div className="flex flex-col w-full h-dvh justify-start items-center gap-5 overflow-x-hidden overflow-y-scroll scrollbar-hide py-36">
+          {Array.isArray(paymentList) && paymentList.length === 0 ? (
             <div className="flex flex-col w-full h-dvh justify-center items-center gap-3">
               <LuClipboardList className="text-8xl text-darkGray" />
               <span className="text-2xl text-darkGray">
                 아직 주문 내역이 없습니다
               </span>
               <div
-                onClick={() => setIsTap(true)}
+                onClick={() => handleTabSwitch(true)}
                 className="flex items-center gap-1 mt-3 text-xl border border-darkGray px-3 py-1 rounded-lg bg-white cursor-pointer"
               >
                 진행 중인 주문 보기
@@ -335,15 +339,16 @@ const OrderList = () => {
                   <button
                     onClick={() => linkToReview(item)}
                     className={`h-2/3 flex p-4 border border-darkGray rounded-sm text-nowrap items-center justify-center 
-                        ${
-                          item.reviewStatus === 1
-                            ? "cursor-not-allowed text-darkGray border-gray"
-                            : "hover:bg-primary hover:text-white cursor-pointer focus:outline focus:outline-2 focus:outline-primary hover:border-none"
-                        }
-                      `}
-                    disabled={item.reviewStatus === 1}
+                      ${item.reviewStatus === 1 || item.is24hourLeft === 1 ? "cursor-not-allowed text-darkGray border-gray" : "hover:bg-primary hover:text-white cursor-pointer focus:outline focus:outline-2 focus:outline-primary hover:border-none"}`}
+                    disabled={
+                      item.reviewStatus === 1 || item.is24hourLeft === 1
+                    }
                   >
-                    {item.reviewStatus === 1 ? "리뷰 작성완료" : "리뷰 작성"}
+                    {item.is24hourLeft === 1
+                      ? "작성 기한 만료"
+                      : item.reviewStatus === 1
+                        ? "리뷰 작성완료"
+                        : "리뷰 작성"}
                   </button>
                 </div>
               </div>
