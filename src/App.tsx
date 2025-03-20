@@ -120,18 +120,22 @@ const App = (): JSX.Element => {
   const [isLogin] = useRecoilState(loginAtom);
   const [isLoginStore] = useRecoilState(isLoginStoreAtom);
   const [deviceType, setDeviceType] = useState<string>("desktop");
+  const width = window.innerWidth;
 
   function getDeviceType(): string {
     const userAgent = navigator.userAgent.toLowerCase();
     if (/mobile/i.test(userAgent)) {
       return "mobile";
     }
+
     if (
-      /tablet/i.test(userAgent) ||
-      (/ipad/i.test(userAgent) && !/mobile/i.test(userAgent))
+      /ipad|tablet/i.test(userAgent) ||
+      (/android/i.test(userAgent) && !/mobile/i.test(userAgent)) ||
+      (width >= 768 && width <= 1400) // 태블릿 화면 크기 범위 추가
     ) {
       return "tablet";
     }
+
     return "desktop";
   }
 

@@ -20,6 +20,7 @@ import PwKeyboard from "../../components/PwKeyboard";
 import useModal from "../../components/useModal";
 import { STORE } from "../../constants/Role";
 import axios from "axios";
+import { isLoginStoreAtom } from "../../atoms/restaurantAtom";
 
 const SubMenuDiv = styled.div`
   padding: 5px 10px;
@@ -40,6 +41,7 @@ const SideBar = () => {
     height: 600,
   });
   const [title, setTitle] = useState("");
+  const [isLogin, setIsLogin] = useRecoilState(isLoginStoreAtom);
 
   const accessToken = getCookie();
   const adminId = parseInt(sessionStorage.getItem("adminId"));
@@ -248,7 +250,7 @@ const SideBar = () => {
             allowOutsideClick: false, // 외부 영역 클릭 방지
           }).then(result => {
             if (result.isConfirmed) {
-              navigate("/");
+              setIsLogin(false);
             }
           });
         }}
