@@ -159,7 +159,7 @@ const MyReviewPage = () => {
                 ></span>
               </div>
 
-              <div className="flex w-full gap-4 items-center">
+              <div className="flex w-full gap-4 flex-wrap items-center">
                 {data.menuName?.map((name, i) => (
                   <span
                     className="flex px-2 py-1 border bg-white rounded-xl"
