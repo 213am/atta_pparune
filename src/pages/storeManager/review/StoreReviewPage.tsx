@@ -20,6 +20,7 @@ const LayoutDiv = styled.div`
   max-height: 100vh;
   height: auto;
   overflow: hidden;
+  gap: 15px;
 `;
 
 const ContentDiv = styled.div`
@@ -28,11 +29,14 @@ const ContentDiv = styled.div`
   padding: 20px 30px;
   padding-bottom: 30px;
   border-radius: 10px;
-  width: 830px;
+  width: 100%;
   max-height: calc(100vh - 60px);
   overflow-y: auto;
   overflow-x: hidden;
   background-color: #fff;
+  box-shadow:
+    0px 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0px 10px 10px -5px rgba(0, 0, 0, 0.04);
 `;
 
 const TitleDiv = styled.div`
@@ -45,8 +49,8 @@ const SideBarRightDiv = styled.div`
   box-shadow:
     0px 20px 25px -5px rgba(0, 0, 0, 0.1),
     0px 10px 10px -5px rgba(0, 0, 0, 0.04);
-  width: 350px;
   background-color: #fff;
+  min-width: 350px;
   display: flex;
   flex-direction: column;
 `;
@@ -471,18 +475,6 @@ function StoreReviewPage(): JSX.Element {
                     </div>
                   )}
                 </div>
-                {/* <div
-                  className={
-                    "flex gap-2 items-center cursor-pointer text-red h-4 text-nowrap"
-                  }
-                  onClick={() => {
-                    postBlackList(item.userId);
-                    patchReviewReq(item.orderId);
-                  }}
-                >
-                  <PiSirenFill className="w-[20px] h-[20px]" />
-                  <div>신고하기</div>
-                </div> */}
               </div>
               <div className="border-gray border my-5"></div>
             </div>
@@ -512,59 +504,6 @@ function StoreReviewPage(): JSX.Element {
                 <div className="border-gray border mt-2"></div>
               </div>
             ))}
-            {/* <div>
-              <div className="flex justify-between mt-2">
-                <div>배고픈직장인(10001211)</div>
-                {edit && (
-                  <RiDeleteBin6Fill className="cursor-pointer w-5 h-5" />
-                )}
-              </div>
-              <div className="border-gray border mt-2"></div>
-            </div>
-            <div>
-              <div className="flex justify-between mt-2">
-                <div>점심사냥꾼(10002213)</div>
-                {edit && (
-                  <button>
-                    <RiDeleteBin6Fill className="cursor-pointer w-5 h-5" />
-                  </button>
-                )}
-              </div>
-              <div className="border-gray border mt-2"></div>
-            </div>
-            <div>
-              <div className="flex justify-between mt-2">
-                <div>밥심으로버틴다(10003211)</div>
-                {edit && (
-                  <button>
-                    <RiDeleteBin6Fill className="cursor-pointer w-5 h-5" />
-                  </button>
-                )}
-              </div>
-              <div className="border-gray border mt-2"></div>
-            </div>
-            <div>
-              <div className="flex justify-between mt-2">
-                <div>맛집탐험가(10001201)</div>
-                {edit && (
-                  <button>
-                    <RiDeleteBin6Fill className="cursor-pointer w-5 h-5" />
-                  </button>
-                )}
-              </div>
-              <div className="border-gray border mt-2"></div>
-            </div>
-            <div>
-              <div className="flex justify-between mt-2">
-                <div>오늘뭐먹지(10001011)</div>
-                {edit && (
-                  <button>
-                    <RiDeleteBin6Fill className="cursor-pointer w-5 h-5" />
-                  </button>
-                )}
-              </div>
-              <div className="border-gray border mt-2"></div>
-            </div> */}
           </div>
           <div className="mt-auto mb-5 flex justify-center">
             {edit ? (

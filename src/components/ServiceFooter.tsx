@@ -2,19 +2,30 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { roleAtom } from "../atoms/roleAtom";
 import { COMPANY, STORE, USER } from "../constants/Role";
-import { IoLogoGithub } from "react-icons/io5";
+import { IoLogoFigma, IoLogoGithub } from "react-icons/io5";
+import { RiNotionFill } from "react-icons/ri";
 
 const ServiceFooter = (): JSX.Element => {
   const navigate = useNavigate();
   const [_, setRole] = useRecoilState(roleAtom);
 
-  const handleClick = () => {
-    // 새 탭에서 GitHub 열기
-    window.open(
-      "https://github.com/213am/atta_pparune",
-      "_blank",
-      "noopener noreferrer",
-    );
+  const handleClick = (icon: string) => {
+    let url;
+    switch (icon) {
+      case "GitHub":
+        url = "https://github.com/213am/atta_pparune";
+        break;
+      case "Notion":
+        url =
+          "https://buttercup-lyric-4ee.notion.site/19f6cf890caa80118725cc8758d33945?pvs=4";
+        break;
+      case "Figma":
+        url =
+          "https://www.figma.com/design/25XZ970lOnvXHOMTTKk9DG/3%EC%B0%A8-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0-1&p=f&t=X24f0fauGuIFK0KT-0";
+        break;
+    }
+
+    window.open(url, "_blank", "noopener noreferrer");
   };
 
   return (
@@ -75,17 +86,31 @@ const ServiceFooter = (): JSX.Element => {
           <div>© 2025. Atta Pparune All rights reserved.</div>
           <div className="flex gap-5 text-white">
             {/* 깃허브 */}
-            {/* <div className="cursor-pointer">
+            <div
+              onClick={() => handleClick("GitHub")}
+              className="cursor-pointer"
+            >
               <div className="flex justify-center">
                 <IoLogoGithub className="w-8 h-8" />
               </div>
-              <div className="text-[14px]">GitHub</div>
-            </div> */}
-            <div onClick={() => handleClick()} className="cursor-pointer">
+            </div>
+            {/* 노션 */}
+            <div
+              onClick={() => handleClick("Notion")}
+              className="cursor-pointer"
+            >
               <div className="flex justify-center">
-                <IoLogoGithub className="w-8 h-8" />
+                <RiNotionFill className="w-8 h-8" />
               </div>
-              <div className="text-[14px]">GitHub</div>
+            </div>
+            {/* 피그마 */}
+            <div
+              onClick={() => handleClick("Figma")}
+              className="cursor-pointer"
+            >
+              <div className="flex justify-center">
+                <IoLogoFigma className="w-8 h-8" />
+              </div>
             </div>
           </div>
         </div>
