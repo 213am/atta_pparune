@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AnimatePresence } from "framer-motion";
-import { Suspense, lazy, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import {
   Navigate,
   Route,
@@ -8,8 +8,7 @@ import {
   Routes,
 } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { isLoginStoreAtom, reloadOrderAtom } from "./atoms/restaurantAtom";
-import { loginAtom } from "./atoms/userAtom";
+import { reloadOrderAtom } from "./atoms/restaurantAtom";
 import CompanyLayout from "./components/layouts/CompanyLayout";
 import StoreLayout from "./components/layouts/StoreLayout";
 import UserLayout from "./components/layouts/UserLayout";
@@ -31,9 +30,9 @@ import Member from "./pages/company/member/Member";
 import CpTransaction from "./pages/company/transaction/CpTransaction";
 import ServiceLoginPage from "./pages/service/auth/ServiceLoginPage";
 import DetailPage from "./pages/service/notice/DetailPage";
+import EditPostPage from "./pages/service/notice/EditPostPage";
 import OrderLoading from "./pages/user/order/OrderLoading";
 import RequestPayment from "./pages/user/payment/RequestPayment";
-import EditPostPage from "./pages/service/notice/EditPostPage";
 
 const preload = (importFunc: () => Promise<{ default: any }>) =>
   importFunc().then((module: { default: any }) => ({
@@ -117,8 +116,6 @@ const OrderRequestPage = lazy(
 const App = (): JSX.Element => {
   const sessionRestaurant = sessionStorage.getItem("restaurantId");
   const sessionUser = sessionStorage.getItem("userId");
-  const [isLogin] = useRecoilState(loginAtom);
-  const [isLoginStore] = useRecoilState(isLoginStoreAtom);
   const [_reloadOrders, setReloadOrders] = useRecoilState(reloadOrderAtom);
   const [deviceType, setDeviceType] = useState<string>("desktop");
   const width = window.innerWidth;
@@ -146,18 +143,36 @@ const App = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
+    // 결제 관련 세션/로컬스토리지 정리
     localStorage.removeItem("@tosspayments/merchant-browser-id");
     sessionStorage.removeItem("@tosspayments/session-id");
-    initializeSocket();
 
-    if (sessionRestaurant && isLoginStore) {
-      SubscribeStoreLogin(sessionRestaurant, setReloadOrders);
-    }
+    console.log("세션 식당 ID:", sessionRestaurant);
+    console.log("세션 유저 ID:", sessionUser);
 
-    if (sessionUser && isLogin) {
-      subscribeUserLogin(sessionUser);
+    const shouldConnectStore = !!sessionRestaurant;
+    const shouldConnectUser = !!sessionUser;
+
+    if (shouldConnectStore || shouldConnectUser) {
+      initializeSocket()
+        .then(() => {
+          if (shouldConnectStore) {
+            console.log("소켓 연결 및 식당 구독 실행");
+            SubscribeStoreLogin(sessionRestaurant, setReloadOrders);
+          }
+
+          if (shouldConnectUser) {
+            console.log("소켓 연결 및 유저 구독 실행");
+            subscribeUserLogin(sessionUser);
+          }
+        })
+        .catch(error => {
+          console.error("소켓 연결 실패:", error);
+        });
+    } else {
+      console.log("세션 없음 - 소켓 연결 생략");
     }
-  }, [sessionRestaurant, sessionUser, isLogin, isLoginStore]);
+  }, [sessionRestaurant, sessionUser]);
 
   return (
     <AnimatePresence mode="wait">

@@ -8,7 +8,7 @@ const StoreLayout = ({ children }) => {
   }, []);
 
   return (
-    <div className="store-layout w-full block bg-white overflow-y-scroll overflow-x-hidden scrollbar-hide">
+    <div className="store-layout w-full block bg-white shadow-xl overflow-y-scroll overflow-x-hidden scrollbar-hide">
       {children}
     </div>
   );

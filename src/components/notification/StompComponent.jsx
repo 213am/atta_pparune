@@ -36,19 +36,29 @@ const getAlert = async () => {
 
 export const initializeSocket = () => {
   return new Promise((resolve, reject) => {
+    if (stompClient.connected) {
+      console.log("이미 STOMP 연결됨");
+      resolve("이미 연결됨");
+      return;
+    }
+
     stompClient.reconnectDelay = 5000;
 
     stompClient.onConnect = frame => {
-      console.log("Connected 성공 : " + frame);
+      console.log("STOMP 연결 성공:", frame);
       resolve(frame);
     };
 
-    stompClient.onError = frame => {
-      console.log("Connected 실패 : " + frame);
-      reject(frame);
+    stompClient.onStompError = frame => {
+      console.error("STOMP 오류 발생:", frame);
     };
 
-    stompClient.activate();
+    stompClient.onWebSocketError = event => {
+      console.error("WebSocket 오류 발생:", event);
+      reject(event);
+    };
+
+    stompClient.activate(); // 연결 시도
   });
 };
 
@@ -115,19 +125,15 @@ export const subscribeToReservationStatus = orderId => {
     });
   };
 
-  // STOMP 클라이언트가 연결되어 있지 않으면 먼저 연결 후 구독 등록
-  if (!stompClient.connected) {
-    initializeSocket()
-      .then(frame => {
-        console.log("STOMP 연결 성공 후 구독 시작:", frame);
-        subscribeFn();
-      })
-      .catch(error => {
-        console.error("STOMP 연결 실패, 구독을 등록할 수 없습니다:", error);
-      });
-  } else {
-    subscribeFn();
-  }
+  // 항상 연결 후 구독
+  initializeSocket()
+    .then(frame => {
+      console.log("STOMP 연결 후 예약 상태 구독 실행:", frame);
+      subscribeFn();
+    })
+    .catch(error => {
+      console.error("STOMP 연결 실패, 예약 상태 구독 불가:", error);
+    });
 };
 
 export const subscribeUserLogin = userId => {
@@ -143,19 +149,15 @@ export const subscribeUserLogin = userId => {
     });
   };
 
-  // STOMP 클라이언트가 연결되어 있지 않다면 연결 시도 후 구독 실행
-  if (!stompClient.connected) {
-    initializeSocket()
-      .then(frame => {
-        console.log("소켓 연결 후 구독 시작:", frame);
-        subscribeFn();
-      })
-      .catch(error => {
-        console.error("STOMP 연결 실패, 구독할 수 없습니다:", error);
-      });
-  } else {
-    subscribeFn();
-  }
+  // 항상 소켓 연결 후 구독
+  initializeSocket()
+    .then(frame => {
+      console.log("STOMP 연결 후 유저 구독 실행:", frame);
+      subscribeFn();
+    })
+    .catch(error => {
+      console.error("STOMP 연결 실패, 유저 구독 불가:", error);
+    });
 };
 
 export const SubscribeStoreLogin = (restaurantId, setReloadOrders) => {
@@ -171,10 +173,10 @@ export const SubscribeStoreLogin = (restaurantId, setReloadOrders) => {
       try {
         const messageObj = JSON.parse(message.body);
         console.log("메세지 수신 완료 : ", messageObj);
-        console.log("식당 관리자 로그인 : ", messageObj);
+
         Swal.fire({
           title: "새로운 알림",
-          text: messageObj,
+          text: messageObj.typeMessage || JSON.stringify(messageObj),
           icon: "question",
           showCancelButton: true,
           confirmButtonColor: "#79BAF2",
@@ -185,7 +187,7 @@ export const SubscribeStoreLogin = (restaurantId, setReloadOrders) => {
         }).then(result => {
           if (result.isConfirmed) {
             setReloadOrders(true);
-            Swal.fire("오른쪽 주문목록을 확인해주세요", "", "success");
+            Swal.fire("주문을 확인해주세요", "", "success");
           }
         });
       } catch (error) {
@@ -194,19 +196,15 @@ export const SubscribeStoreLogin = (restaurantId, setReloadOrders) => {
     });
   };
 
-  // stompClient가 연결되어 있지 않으면 연결을 먼저 시도하고, 연결 후 구독을 등록합니다.
-  if (!stompClient.connected) {
-    initializeSocket()
-      .then(frame => {
-        console.log("STOMP 소켓 연결 성공 후 구독 시작:", frame);
-        subscribeFn();
-      })
-      .catch(error => {
-        console.error("STOMP 연결 실패, 구독을 등록할 수 없습니다:", error);
-      });
-  } else {
-    subscribeFn();
-  }
+  // 항상 initializeSocket 호출 → 연결 후 구독 실행
+  initializeSocket()
+    .then(frame => {
+      console.log("STOMP 연결 후 구독 실행:", frame);
+      subscribeFn();
+    })
+    .catch(error => {
+      console.error("STOMP 연결 실패, 구독 불가:", error);
+    });
 };
 
 // 사용자 결재 승인 요청 알림(N명 예약시): "/queue/user/{사용자 PK}/user/userPaymentMember"
