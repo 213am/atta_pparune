@@ -6,10 +6,12 @@ import { useRecoilState } from "recoil";
 import Swal from "sweetalert2";
 import { ticketIdAtom } from "../../../atoms/userAtom";
 import PwKeyboard from "../../../components/PwKeyboard";
+import LoadingScreen from "../../../components/LoadingScreen"; // 로딩 컴포넌트
 
 const RequestPayment = () => {
   const navigate = useNavigate();
   const [isConfirm, setIsConfirm] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const ticketId = searchParams.get("ticketId");
@@ -17,6 +19,11 @@ const RequestPayment = () => {
 
   console.log(ticketId);
   console.log(restaurantId);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsPageLoading(false), 500); // 0.5초 후 로딩 종료
+    return () => clearTimeout(timer);
+  }, []);
 
   const usedCoupon = async password => {
     const payload = {
@@ -42,15 +49,11 @@ const RequestPayment = () => {
       console.log(error);
       Swal.fire({
         title: "결제 중 오류 발생",
-        text: "한번 더 결제 요청을 보내시겠습니까?",
+        text: "비밀번호 확인 후 다시 시도해주세요",
         icon: "info",
         confirmButtonText: "확인",
         showConfirmButton: true,
         allowOutsideClick: false,
-      }).then(result => {
-        if (result.isConfirmed) {
-          usedCoupon();
-        }
       });
     }
   };
@@ -63,7 +66,13 @@ const RequestPayment = () => {
 
   return (
     <div className="relative flex w-full h-dvh justify-center items-center overflow-x-hidden overflow-y-scroll scrollbar-hide">
-      {isConfirm ? (
+      {isPageLoading ? (
+        // 첫 진입 로딩화면
+        <div className="absolute inset-0 z-50 bg-white flex items-center justify-center">
+          <LoadingScreen message="결제 준비중..." />
+        </div>
+      ) : isConfirm ? (
+        // 결제 요청 중
         <>
           <img
             src="/loadingImage.jpg"
@@ -77,21 +86,11 @@ const RequestPayment = () => {
             <img src="/logo.png" className="w-96" />
           </div>
           <div className="absolute flex flex-col items-center gap-4">
-            <ClipLoader
-              cssOverride={{
-                borderWidth: "7px",
-              }}
-              loading
-              size={100}
-              speedMultiplier={0.8}
-              color="#333333"
-            />
-            <div className="text-2xl font-semibold drop-shadow-xl text-black">
-              결제 요청중
-            </div>
+            <LoadingScreen message="결제 요청중" />
           </div>
         </>
       ) : (
+        // 비밀번호 입력 컴포넌트
         <div className="flex bg-white z-10">
           <PwKeyboard
             mode="input"
@@ -103,4 +102,5 @@ const RequestPayment = () => {
     </div>
   );
 };
+
 export default RequestPayment;
