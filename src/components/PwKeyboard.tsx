@@ -20,6 +20,8 @@ const PwKeyboard: React.FC<PwKeyboardProps> = ({
   const nums_init = Array.from({ length: 10 }, (_, k) => k);
   const [nums, setNums] = useState(nums_init);
   const [password, setPassword] = useState("");
+  const [lastClickedIndex, setLastClickedIndex] = useState<number | null>(null);
+
   const accessToken = getCookie();
   const adminId = sessionStorage.getItem("adminId") as string;
   const restaurantId = sessionStorage.getItem("restaurantId") as string;
@@ -46,15 +48,6 @@ const PwKeyboard: React.FC<PwKeyboardProps> = ({
       setPassword("");
     },
     [],
-  );
-
-  const shuffleNums = useCallback(
-    (num: number) => (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.blur();
-      setNums(prev => [...prev.sort(() => Math.random() - 0.5)]);
-      handlePasswordChange(num);
-    },
-    [handlePasswordChange],
   );
 
   const editPinHandler = async () => {
@@ -87,7 +80,7 @@ const PwKeyboard: React.FC<PwKeyboardProps> = ({
   const onClickSubmitButton = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.currentTarget.blur();
     if (password.length !== 6) {
-      alert("비밀번호 6자리를 모두 입력해주세요!");
+      Swal.fire("변경 실패!", "비밀번호 6자리를 모두 입력해주세요!", "error");
       return;
     }
 
@@ -97,6 +90,25 @@ const PwKeyboard: React.FC<PwKeyboardProps> = ({
       onSubmit(password); // 부모 컴포넌트에서 전달받은 함수 실행
     }
   };
+
+  const handleNumberClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>, num: number, index: number) => {
+      e.currentTarget.blur();
+      setLastClickedIndex(index); // 클릭된 버튼 인덱스 저장
+
+      setNums(prev => {
+        const array = [...prev];
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      });
+
+      handlePasswordChange(num);
+    },
+    [handlePasswordChange],
+  );
 
   return (
     <div className="flex flex-col w-full items-center px-10 justify-center">
@@ -121,19 +133,24 @@ const PwKeyboard: React.FC<PwKeyboardProps> = ({
         {nums.map((n, i) => (
           <button
             key={i}
-            className="w-1/3 h-1/4 border flex items-center justify-center text-2xl font-fantasy transition-all duration-300 ease-in-out hover:shadow-lg hover:text-white hover:bg-primaryFocus"
-            onClick={e => shuffleNums(n)(e)}
+            aria-label={`숫자 ${n}`}
+            className={`w-1/3 h-1/4 border flex items-center justify-center text-2xl font-fantasy transition-all duration-300 ease-in-out 
+      ${lastClickedIndex !== i ? "hover:shadow-lg hover:text-white hover:bg-primaryFocus" : ""}`}
+            onClick={e => handleNumberClick(e, n, i)}
           >
             {n}
           </button>
         ))}
+
         <button
+          aria-label="비밀번호 전체 삭제"
           className="w-1/3 h-1/4 border flex items-center justify-center text-lg font-fantasy transition-all duration-300 ease-in-out hover:shadow-lg hover:text-white hover:bg-red"
           onClick={erasePasswordAll}
         >
           전체삭제
         </button>
         <button
+          aria-label="비밀번호 한 글자 삭제"
           className="w-1/3 h-1/4 border flex items-center justify-center text-2xl font-fantasy transition-all duration-300 ease-in-out hover:shadow-lg hover:text-white hover:bg-slate-600"
           onClick={erasePasswordOne}
         >

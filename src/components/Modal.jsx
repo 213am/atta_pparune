@@ -6,7 +6,7 @@ const Modal = ({ onClose, children, title, width = 400, height = 450 }) => {
       <div
         onClick={e => e.stopPropagation()}
         style={{ width: `${width}px`, height: `${height}px` }}
-        className="absolute top-40 z-50 bg-white border-2 border-darkGray rounded-lg border-opacity-30 overflow-x-hidden overflow-y-scroll scrollbar-hide max-w-[90vw] max-h-[90vh]"
+        className="absolute z-50 bg-white border-2 border-darkGray rounded-lg border-opacity-30 overflow-x-hidden overflow-y-scroll scrollbar-hide max-w-[90vw] max-h-[90vh]"
       >
         <div className="relative flex w-full h-[15%]">
           <div className="absolute top-0 left-0 flex w-full h-full justify-between items-center px-5 border-b-2 border-gray">
