@@ -15,6 +15,7 @@ const CpTransaction = (): JSX.Element => {
     refund: false,
   });
   const [point, setPoint] = useState("");
+  const [displayPoint, setDisplayPoint] = useState("");
 
   const accessToken = getCookie();
   const adminId = Number(sessionStorage.getItem("adminId") as string);
@@ -80,11 +81,18 @@ const CpTransaction = (): JSX.Element => {
             </h2>
             <div className="flex gap-5">
               <input
-                type="number"
+                type="text"
                 className="w-[250px] border border-darkGray px-2 rounded-[5px]"
                 placeholder="구매할 포인트 금액을 입력해주세요."
-                value={point}
-                onChange={e => setPoint(e.target.value)}
+                value={displayPoint}
+                onChange={e => {
+                  const rawValue = e.target.value.replace(/,/g, "");
+                  if (!isNaN(Number(rawValue))) {
+                    setPoint(rawValue); // 서버 전송용
+                    const formatted = Number(rawValue).toLocaleString("ko-KR");
+                    setDisplayPoint(formatted); // 화면 표시용
+                  }
+                }}
               />
               <PaymentCheckoutPage point={point} />
             </div>
@@ -110,11 +118,18 @@ const CpTransaction = (): JSX.Element => {
             </h2>
             <div className="flex gap-5">
               <input
-                type="number"
+                type="text"
                 className="w-[250px] border border-darkGray px-2 rounded-[5px]"
                 placeholder="환불할 포인트 금액을 입력해주세요."
-                value={point}
-                onChange={e => setPoint(e.target.value)}
+                value={displayPoint}
+                onChange={e => {
+                  const rawValue = e.target.value.replace(/,/g, "");
+                  if (!isNaN(Number(rawValue))) {
+                    setPoint(rawValue); // 서버 전송용
+                    const formatted = Number(rawValue).toLocaleString("ko-KR");
+                    setDisplayPoint(formatted); // 화면 표시용
+                  }
+                }}
               />
               <button
                 type="button"
@@ -122,6 +137,7 @@ const CpTransaction = (): JSX.Element => {
                   if (Number(point)) {
                     postRefund();
                     setPoint("");
+                    setDisplayPoint("");
                   } else {
                     Swal.fire("0보다 큰 금액을 입력해 주세요.", "", "error");
                   }
@@ -137,6 +153,7 @@ const CpTransaction = (): JSX.Element => {
                 onClick={() => {
                   setIsOpen({ buy: false, refund: false });
                   setPoint("");
+                  setDisplayPoint(""); // 입력 초기화
                 }}
               >
                 <IoMdClose className="w-full h-full" />
