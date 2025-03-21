@@ -5,7 +5,7 @@ import { IoMdClose } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Swal from "sweetalert2";
-import { isLoginStoreAtom } from "../../atoms/restaurantAtom";
+import { isLoginStoreAtom, reloadOrderAtom } from "../../atoms/restaurantAtom";
 import { roleAtom } from "../../atoms/roleAtom";
 import { loginAtom, userDataAtom } from "../../atoms/userAtom";
 import { setCookie } from "../../components/cookie";
@@ -30,6 +30,7 @@ function LoginPage() {
   const [isLogin, setIsLogin] = useRecoilState(loginAtom);
   const [isLoginStore, setIsLoginStore] = useRecoilState(isLoginStoreAtom);
   const [userData, setUserData] = useRecoilState(userDataAtom);
+  const [_reloadOrders, setReloadOrders] = useRecoilState(reloadOrderAtom);
   const [formData, setFormData] = useState({ id: "", pw: "" });
   const [hasVal, setHasVal] = useState(false);
   const sessionUserId = sessionStorage.getItem("userId");
@@ -91,7 +92,7 @@ function LoginPage() {
         window.sessionStorage.setItem("coalitionState", coalitionState);
         setCookie(accessToken);
         setIsLoginStore(true);
-        // subscribeStoreLogin(restaurantId);
+        subscribeStoreLogin(restaurantId);
       } else if (role === COMPANY) {
         const res = await axios.post("/api/admin/sign-in", formData);
         console.log(res.data.resultData);

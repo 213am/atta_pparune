@@ -303,6 +303,7 @@ const SideBar = () => {
             }).then(result => {
               if (result.isConfirmed) {
                 navigate("/store");
+                location.reload(true);
               }
             });
           }}

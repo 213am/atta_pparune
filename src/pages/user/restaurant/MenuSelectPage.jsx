@@ -14,7 +14,7 @@ import dayjs from "dayjs";
 import { userDataAtom } from "../../../atoms/userAtom";
 import Swal from "sweetalert2";
 import { getCookie } from "../../../components/cookie";
-import { SubscribeToReservationStatus } from "../../../components/notification/StompComponent";
+import { subscribeToReservationStatus } from "../../../components/notification/StompComponent";
 import { DOCKER_URL } from "../../../constants/url";
 
 const BackDiv = styled.div`
@@ -195,7 +195,7 @@ function MenuSelectPage() {
         });
         console.log(res.data.resultData);
         setOrderId(res.data.resultData);
-        SubscribeToReservationStatus(res.data?.resultData);
+        subscribeToReservationStatus(res.data?.resultData);
         Swal.fire({
           title: `${time}에 예약이 완료 되었습니다.`,
           icon: "success",
@@ -215,7 +215,7 @@ function MenuSelectPage() {
         });
         console.log(res.data.resultData);
         setOrderId(res.data.resultData);
-        SubscribeToReservationStatus(res.data?.resultData);
+        subscribeToReservationStatus(res.data?.resultData);
 
         const titleMessage = time
           ? `${time}에 예약이 완료 되었습니다.`

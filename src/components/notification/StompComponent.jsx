@@ -44,10 +44,7 @@ export const initializeSocket = () => {
   });
 };
 
-export const SubscribeToReservationStatus = orderId => {
-  const [isNotice, setIsNotice] = useRecoilState(noticeState);
-  const [isLogin, setIsLogin] = useRecoilState(loginAtom);
-
+export const subscribeToReservationStatus = orderId => {
   const subscribeFn = () => {
     const url = `/queue/reservation/${orderId}/user/reservation`;
 
@@ -100,12 +97,9 @@ export const SubscribeToReservationStatus = orderId => {
             showCancelButton: true,
           }).then(result => {
             if (result.isConfirmed) {
-              console.log("사용자에게 알림 보내줘 : ", result);
               getAlert({
                 sessionId: sessionUser,
                 accessToken,
-                isLogin,
-                setIsNotice,
               });
             }
           });
