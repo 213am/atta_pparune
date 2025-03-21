@@ -1,11 +1,12 @@
 import { Stomp } from "@stomp/stompjs";
+import { useRecoilState } from "recoil";
 import SockJS from "sockjs-client";
 import Swal from "sweetalert2";
-import axios from "axios";
+import { noticeState } from "../../atoms/noticeAtom";
+import { loginAtom } from "../../atoms/userAtom";
 import { getCookie } from "../../components/cookie";
-import { reloadOrderAtom } from "../../atoms/restaurantAtom";
-import { useRecoilState } from "recoil";
 import { DOCKER_URL } from "../../constants/url";
+import { getAlert } from "./getAlert";
 
 // SockJS로 WebSocket 연결 설정
 const socket = new SockJS(`${DOCKER_URL}/ws-stomp`);
@@ -14,25 +15,6 @@ const stompClient = Stomp.over(() => socket); // SockJS 팩토리를 함수로 �
 const sessionStoreId = window.sessionStorage.getItem("restaurantId");
 const sessionUser = window.sessionStorage.getItem("userId");
 const accessToken = getCookie();
-
-const getAlert = async () => {
-  const params = {
-    userId: sessionUser,
-  };
-  try {
-    const res = await axios.get(`/api/user/alert`, {
-      params,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    console.log(res.data.resultData);
-    const result = res.data.resultData;
-    console.log(result);
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 export const initializeSocket = () => {
   return new Promise((resolve, reject) => {
@@ -62,7 +44,10 @@ export const initializeSocket = () => {
   });
 };
 
-export const subscribeToReservationStatus = orderId => {
+export const SubscribeToReservationStatus = orderId => {
+  const [isNotice, setIsNotice] = useRecoilState(noticeState);
+  const [isLogin, setIsLogin] = useRecoilState(loginAtom);
+
   const subscribeFn = () => {
     const url = `/queue/reservation/${orderId}/user/reservation`;
 
@@ -115,7 +100,13 @@ export const subscribeToReservationStatus = orderId => {
             showCancelButton: true,
           }).then(result => {
             if (result.isConfirmed) {
-              getAlert();
+              console.log("사용자에게 알림 보내줘 : ", result);
+              getAlert({
+                sessionId: sessionUser,
+                accessToken,
+                isLogin,
+                setIsNotice,
+              });
             }
           });
         }
@@ -160,7 +151,7 @@ export const subscribeUserLogin = userId => {
     });
 };
 
-export const SubscribeStoreLogin = (restaurantId, setReloadOrders) => {
+export const subscribeStoreLogin = (restaurantId, setReloadOrders) => {
   const subscribeFn = () => {
     const url = `/queue/restaurant/${restaurantId}/owner/reservation`;
 
@@ -174,22 +165,36 @@ export const SubscribeStoreLogin = (restaurantId, setReloadOrders) => {
         const messageObj = JSON.parse(message.body);
         console.log("메세지 수신 완료 : ", messageObj);
 
-        Swal.fire({
-          title: "새로운 알림",
-          text: messageObj.typeMessage || JSON.stringify(messageObj),
-          icon: "question",
-          showCancelButton: true,
-          confirmButtonColor: "#79BAF2",
-          cancelButtonColor: "#E44B58",
-          confirmButtonText: "확인",
-          cancelButtonText: "취소",
-          reverseButtons: false,
-        }).then(result => {
-          if (result.isConfirmed) {
-            setReloadOrders(true);
-            Swal.fire("주문을 확인해주세요", "", "success");
-          }
-        });
+        if (messageObj.typeMessage) {
+          Swal.fire({
+            title: "주문 완료!",
+            text: "고객님의 주문 결제가 완료됐습니다",
+            icon: "success",
+            confirmButtonColor: "#79BAF2",
+            confirmButtonText: "확인",
+            reverseButtons: false,
+          }).then(result => {
+            if (result.isConfirmed) {
+              setReloadOrders(true);
+            }
+          });
+        } else {
+          Swal.fire({
+            title: "새로운 주문 도착",
+            text: "주문을 확인해주세요",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#79BAF2",
+            cancelButtonColor: "#E44B58",
+            confirmButtonText: "확인",
+            cancelButtonText: "취소",
+            reverseButtons: false,
+          }).then(result => {
+            if (result.isConfirmed) {
+              setReloadOrders(true);
+            }
+          });
+        }
       } catch (error) {
         console.error("메시지 처리 중 오류 발생:", error);
       }

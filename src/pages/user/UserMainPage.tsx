@@ -1,20 +1,20 @@
 import axios from "axios";
+import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { LuArrowDownUp } from "react-icons/lu";
 import { useInView } from "react-intersection-observer";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import DOMPurify from "dompurify";
-import "swiper/swiper-bundle.css";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper-bundle.css";
 import { isClickIcon, isWhiteIcon } from "../../atoms/noticeAtom";
 import { loginAtom } from "../../atoms/userAtom";
+import { getCookie } from "../../components/cookie";
 import MenuBar from "../../components/MenuBar";
 import Notification from "../../components/notification/NotificationIcon";
 import { DOCKER_URL, STORE_IMAGE_URL } from "../../constants/url";
-import { getCookie } from "../../components/cookie";
 
 interface IRestaurantList {
   avgRestaurant: number;

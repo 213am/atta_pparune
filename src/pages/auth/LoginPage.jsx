@@ -23,7 +23,7 @@ import {
   TextSpan,
   TitleDiv,
 } from "./loginStyle";
-import { SubscribeStoreLogin } from "../../components/notification/StompComponent";
+import { subscribeStoreLogin } from "../../components/notification/StompComponent";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -91,7 +91,7 @@ function LoginPage() {
         window.sessionStorage.setItem("coalitionState", coalitionState);
         setCookie(accessToken);
         setIsLoginStore(true);
-        // SubscribeStoreLogin(restaurantId);
+        // subscribeStoreLogin(restaurantId);
       } else if (role === COMPANY) {
         const res = await axios.post("/api/admin/sign-in", formData);
         console.log(res.data.resultData);

@@ -17,10 +17,8 @@ import { getAlert } from "./getAlert";
 const Notification = () => {
   const [isWhite, setIsWhite] = useRecoilState(isWhiteIcon);
   const [isNotice, setIsNotice] = useRecoilState(noticeState);
-  const [isPriceNotice, setIsPriceNotice] = useRecoilState(priceNoticeAtom);
-  const [isOrderNotice, setIsOrderNotice] = useRecoilState(orderNoticeAtom);
-  const [isClick, setIsClick] = useRecoilState(isClickIcon);
   const [isLogin, setIsLogin] = useRecoilState(loginAtom);
+  const [isClick, setIsClick] = useRecoilState(isClickIcon);
   const sessionId = sessionStorage.getItem("userId");
   const accessToken = getCookie();
 
@@ -30,8 +28,6 @@ const Notification = () => {
       accessToken,
       isLogin,
       setIsNotice,
-      setIsPriceNotice,
-      setIsOrderNotice,
     });
   }, []);
 

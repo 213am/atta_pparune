@@ -20,11 +20,6 @@ const RequestPayment = () => {
   console.log(ticketId);
   console.log(restaurantId);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setIsPageLoading(false), 500); // 0.5초 후 로딩 종료
-    return () => clearTimeout(timer);
-  }, []);
-
   const usedCoupon = async password => {
     const payload = {
       ticketId: parseInt(ticketId),
@@ -66,12 +61,7 @@ const RequestPayment = () => {
 
   return (
     <div className="relative flex w-full h-dvh justify-center items-center overflow-x-hidden overflow-y-scroll scrollbar-hide">
-      {isPageLoading ? (
-        // 첫 진입 로딩화면
-        <div className="absolute inset-0 z-50 bg-white flex items-center justify-center">
-          <LoadingScreen message="결제 준비중..." />
-        </div>
-      ) : isConfirm ? (
+      {isConfirm ? (
         // 결제 요청 중
         <>
           <img

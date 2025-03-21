@@ -31,9 +31,10 @@ const EmployeeList = (): JSX.Element => {
     deposit: false,
     collect: false,
   });
-  const [pointAmount, setPointAmount] = useState("");
-  // patch할 userId
-  const [userId, setUserId] = useState(0);
+
+  const [pointAmount, setPointAmount] = useState(""); // 서버 전송용
+  const [displayPointAmount, setDisplayPointAmount] = useState(""); // 화면 표시용
+  const [userId, setUserId] = useState(0); // patch할 userId
   const [_, setPoint] = useRecoilState(pointState);
 
   const companyId = sessionStorage.getItem("companyId");
@@ -42,24 +43,31 @@ const EmployeeList = (): JSX.Element => {
   const date = dayjs(new Date()).format("YYYY-MM");
 
   const EMPTY_ROW_COUNT = 15;
-  const tableData = data;
 
-  // 입금 포인트 내용 오른쪽 정렬
-  const PointRenderer = (props: any) => {
-    return (
-      <div className="flex justify-end items-center">
-        <span className="font-bold italic">{props.value}</span>
-      </div>
-    );
+  // 포인트 입력 핸들러 (콤마 표시)
+  const handlePointInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/,/g, "");
+    if (!isNaN(Number(rawValue))) {
+      setPointAmount(rawValue); // 서버 전송용
+      const formatted = Number(rawValue).toLocaleString("ko-KR");
+      setDisplayPointAmount(formatted); // 화면 표시용
+    }
   };
 
-  // 활성화 / 비활성화 버튼
-  const ActiveRenderer = (props: any) => {
-    // 데이터가 없으면 버튼을 렌더링하지 않음
-    if (!props.data || !props.data.id || !props.data.uid) {
-      return null; // 빈 데이터나 인덱스가 비어있으면 버튼을 렌더링하지 않음
-    }
+  // 입력 초기화
+  const resetInput = () => {
+    setPointAmount("");
+    setDisplayPointAmount("");
+  };
 
+  const PointRenderer = (props: any) => (
+    <div className="flex justify-end items-center">
+      <span className="font-bold italic">{props.value}</span>
+    </div>
+  );
+
+  const ActiveRenderer = (props: any) => {
+    if (!props.data || !props.data.id || !props.data.uid) return null;
     return (
       <div className="flex justify-center">
         <span
@@ -89,12 +97,8 @@ const EmployeeList = (): JSX.Element => {
     );
   };
 
-  // 입금하기 버튼
   const SendRenderer = (props: any) => {
-    if (!props.data || !props.data.id || !props.data.uid) {
-      return null;
-    }
-
+    if (!props.data || !props.data.id || !props.data.uid) return null;
     return (
       <div className="flex justify-center">
         <span
@@ -118,26 +122,17 @@ const EmployeeList = (): JSX.Element => {
     );
   };
 
-  // 회수하기 버튼
   const CollectRenderer = (props: any) => {
-    if (!props.data || !props.data.id || !props.data.uid) {
-      return null;
-    }
-
+    if (!props.data || !props.data.id || !props.data.uid) return null;
+    const pointValue = Number(props.data.point.replace(/,/g, ""));
     return (
       <div className="flex justify-center">
         <span
           onClick={() => {
-            if (
-              props.data.activation === 0 &&
-              Number(props.data.point.replace(/,/g, ""))
-            ) {
+            if (props.data.activation === 0 && pointValue) {
               setUserId(props.data.userId);
               setIsOpen({ deposit: false, collect: true });
-            } else if (
-              !Number(props.data.point.replace(/,/g, "")) &&
-              props.data.activation === 0
-            ) {
+            } else if (!pointValue && props.data.activation === 0) {
               Swal.fire(
                 "회수할 수 있는\n포인트가 남아있지 않습니다.",
                 "",
@@ -174,9 +169,9 @@ const EmployeeList = (): JSX.Element => {
   );
 
   const rowDefs =
-    tableData.length < EMPTY_ROW_COUNT
-      ? [...tableData, ...emptyRows.slice(tableData.length)]
-      : tableData;
+    data.length < EMPTY_ROW_COUNT
+      ? [...data, ...emptyRows.slice(data.length)]
+      : data;
 
   const columnDefs: ColDef<EmployeeListType>[] = [
     {
@@ -222,68 +217,40 @@ const EmployeeList = (): JSX.Element => {
       width: 250,
       cellRenderer: PointRenderer,
     },
-    {
-      headerName: "입금하기",
-      width: 100,
-      cellRenderer: SendRenderer,
-    },
-    {
-      headerName: "회수하기",
-      width: 100,
-      cellRenderer: CollectRenderer,
-    },
-    {
-      headerName: "상태변경",
-      width: 100,
-      cellRenderer: ActiveRenderer,
-    },
+    { headerName: "입금하기", width: 100, cellRenderer: SendRenderer },
+    { headerName: "회수하기", width: 100, cellRenderer: CollectRenderer },
+    { headerName: "상태변경", width: 100, cellRenderer: ActiveRenderer },
   ];
 
-  // 사원정보 가져오기
   const getEmployee = async (page: number) => {
-    const params = {
-      searchFilter: "",
-      companyId,
-      adminId,
-      page,
-      size: 15,
-    };
+    const params = { searchFilter: "", companyId, adminId, page, size: 15 };
     try {
       const res = await axios.get("/api/admin/company/v3/employee", {
         params,
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setTotalPage(res.data.resultData.totalPageCount);
-
-      console.log(res);
-
-      // 폰번호 하이픈 추가
       const formatPhoneNumber = (value: string) => {
-        if (!value) return ""; // 빈 값 예외 처리
-        value = value.replace(/\D/g, ""); // 숫자만 남기기
+        if (!value) return "";
+        value = value.replace(/\D/g, "");
         if (value.length <= 3) return value;
         if (value.length <= 7) return `${value.slice(0, 3)}-${value.slice(3)}`;
         return `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`;
       };
-
-      // `id`가 없는 데이터를 index + 1로 추가
       const formattedData = res.data.resultData.employeeList.map(
         (item: Omit<EmployeeListType, "id">, index: number) => ({
           ...item,
           point: `${item.point.toLocaleString()}`,
           phone: formatPhoneNumber(item.phone),
-          id: index + 1, // 인덱스를 기반으로 ID 추가
+          id: index + 1,
         }),
       );
-      console.log("이거 먼데", formattedData);
-
       setData(formattedData);
     } catch (error) {
       console.log(error);
     }
   };
 
-  // 포인트
   const getPoint = async () => {
     const params = { companyId, date };
     try {
@@ -291,9 +258,7 @@ const EmployeeList = (): JSX.Element => {
         "/api/admin/company/dashboard/v3/Transaction",
         {
           params,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+          headers: { Authorization: `Bearer ${accessToken}` },
         },
       );
       sessionStorage.setItem("point", res.data.resultData.currentPoint);
@@ -303,29 +268,22 @@ const EmployeeList = (): JSX.Element => {
     }
   };
 
-  // 포인트 입금
   const patchPoint = async () => {
-    const data = {
-      userId,
-      pointAmount: Number(pointAmount),
-    };
+    const data = { userId, pointAmount: Number(pointAmount) };
     try {
       await axios.patch("/api/admin/company/v3/point/user", data, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
       getEmployee(1);
       Swal.fire({
         title: "포인트 입금에 성공하였습니다.",
         icon: "success",
         confirmButtonText: "확인",
-        showConfirmButton: true,
         allowOutsideClick: false,
       }).then(result => {
         if (result.isConfirmed) {
           getPoint();
-          setPointAmount("");
+          resetInput();
         }
       });
       setIsOpen({ deposit: false, collect: false });
@@ -339,30 +297,22 @@ const EmployeeList = (): JSX.Element => {
     }
   };
 
-  // 포인트 회수
   const patchPointCollect = async () => {
-    const data = {
-      userId,
-      point: Number(pointAmount),
-      adminId,
-    };
+    const data = { userId, point: Number(pointAmount), adminId };
     try {
       await axios.patch("/api/admin/company/v3/employee/point/collect", data, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
       getEmployee(1);
       Swal.fire({
         title: "포인트 회수에 성공하였습니다.",
         icon: "success",
         confirmButtonText: "확인",
-        showConfirmButton: true,
         allowOutsideClick: false,
       }).then(result => {
         if (result.isConfirmed) {
           getPoint();
-          setPointAmount("");
+          resetInput();
         }
       });
       setIsOpen({ deposit: false, collect: false });
@@ -376,29 +326,20 @@ const EmployeeList = (): JSX.Element => {
     }
   };
 
-  // 사원 활성화 / 비활성화
   const patchEmployee = async (
     userId: number,
     name: string,
     active: number,
   ) => {
-    const data = {
-      adminId,
-      userId,
-      activation: active === 0 ? 1 : 0,
-    };
+    const data = { adminId, userId, activation: active === 0 ? 1 : 0 };
     try {
-      const res = await axios.patch("/api/admin/company/v3/employee", data, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+      await axios.patch("/api/admin/company/v3/employee", data, {
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
-      console.log(res);
       Swal.fire({
         title: `${name}님의 상태가 변경되었습니다.`,
         icon: "success",
         confirmButtonText: "확인",
-        showConfirmButton: true,
         allowOutsideClick: false,
       }).then(result => {
         if (result.isConfirmed) {
@@ -411,18 +352,13 @@ const EmployeeList = (): JSX.Element => {
     }
   };
 
-  // antDesign
   const itemRender: PaginationProps["itemRender"] = (
     _,
     type,
     originalElement,
   ) => {
-    if (type === "prev") {
-      return <a>{`<`}</a>;
-    }
-    if (type === "next") {
-      return <a>{`>`}</a>;
-    }
+    if (type === "prev") return <a>{"<"}</a>;
+    if (type === "next") return <a>{">"}</a>;
     return originalElement;
   };
 
@@ -465,26 +401,26 @@ const EmployeeList = (): JSX.Element => {
             </h2>
             <div className="flex gap-5">
               <input
-                type="number"
+                type="text"
                 className="w-[250px] border border-darkGray px-2 rounded-[5px]"
                 placeholder="입금할 포인트 금액을 입력해주세요."
-                value={pointAmount}
-                onChange={e => setPointAmount(e.target.value)}
+                value={displayPointAmount}
+                onChange={handlePointInputChange}
               />
               <button
                 type="button"
-                onClick={() => patchPoint()}
+                onClick={patchPoint}
                 className="px-4 py-2 rounded-[5px] bg-lightGreen hover:bg-green text-white"
               >
                 입금하기
               </button>
             </div>
-            <div className="absolute top-0 right-0 flex justify-end mt-3 mr-3">
+            <div className="absolute top-0 right-0 mt-3 mr-3">
               <button
                 className="text-black w-5 h-5"
                 onClick={() => {
                   setIsOpen({ deposit: false, collect: false });
-                  setPointAmount("");
+                  resetInput();
                 }}
               >
                 <IoMdClose className="w-full h-full" />
@@ -503,26 +439,26 @@ const EmployeeList = (): JSX.Element => {
             </h2>
             <div className="flex gap-5">
               <input
-                type="number"
+                type="text"
                 className="w-[250px] border border-darkGray px-2 rounded-[5px]"
                 placeholder="회수할 포인트 금액을 입력해주세요."
-                value={pointAmount}
-                onChange={e => setPointAmount(e.target.value)}
+                value={displayPointAmount}
+                onChange={handlePointInputChange}
               />
               <button
                 type="button"
-                onClick={() => patchPointCollect()}
+                onClick={patchPointCollect}
                 className="px-4 py-2 rounded-[5px] bg-red hover:bg-redHover text-white"
               >
                 회수하기
               </button>
             </div>
-            <div className="absolute top-0 right-0 flex justify-end mt-3 mr-3">
+            <div className="absolute top-0 right-0 mt-3 mr-3">
               <button
                 className="text-black w-5 h-5"
                 onClick={() => {
                   setIsOpen({ deposit: false, collect: false });
-                  setPointAmount("");
+                  resetInput();
                 }}
               >
                 <IoMdClose className="w-full h-full" />
@@ -534,4 +470,5 @@ const EmployeeList = (): JSX.Element => {
     </div>
   );
 };
+
 export default EmployeeList;

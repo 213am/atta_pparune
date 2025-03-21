@@ -80,7 +80,10 @@ const OrderList = () => {
       reservationStatus: 2,
     };
     try {
-      const res = await axios.put(`/api/order/access`, payload);
+      const res = await axios.put(
+        `/api/admin/restaurant/order/reservation/status`,
+        payload,
+      );
       console.log(res);
       close();
       triggerReload();

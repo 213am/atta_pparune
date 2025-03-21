@@ -15,7 +15,7 @@ import UserLayout from "./components/layouts/UserLayout";
 import Loading from "./components/Loading";
 import {
   initializeSocket,
-  SubscribeStoreLogin,
+  subscribeStoreLogin,
   subscribeUserLogin,
 } from "./components/notification/StompComponent";
 import EnquiryPage from "./pages/admin/enquiry/EnquiryPage";
@@ -158,7 +158,7 @@ const App = (): JSX.Element => {
         .then(() => {
           if (shouldConnectStore) {
             console.log("소켓 연결 및 식당 구독 실행");
-            SubscribeStoreLogin(sessionRestaurant, setReloadOrders);
+            subscribeStoreLogin(sessionRestaurant, setReloadOrders);
           }
 
           if (shouldConnectUser) {

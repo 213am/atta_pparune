@@ -51,8 +51,8 @@ const Table = () => {
               <div
                 // onClick={e => openDescriptHandler(e)}
                 key={item.orderId}
-                // className="w-[calc(33%_-_1rem)] min-w-40 h-48 border-2 border-darkGray bg-white"
-                className={`${isClick ? "w-[calc(33%_-_1rem)]" : "w-[calc(25%_-_1rem)]"} min-w-40 h-48 border-2 border-darkGray bg-white`}
+                className="w-[calc(33%_-_1rem)] min-w-48 h-48 border-2 border-darkGray bg-white"
+                // className={`${isClick ? "w-[calc(33%_-_1rem)]" : "w-[calc(25%_-_1rem)]"} min-w-40 h-48 border-2 border-darkGray bg-white`}
               >
                 <div className=" px-4 py-1 bg-third">
                   <div className="flex justify-between items-center gap-3">
@@ -60,10 +60,10 @@ const Table = () => {
                       <span className="text-sm text-nowrap">주문번호</span>
                       <span className="text-lg">{item.orderId}</span>
                     </div>
-                    <span className="font-semibold text-nowrap">
+                    <span className="font-base text-nowrap text-white">
                       {item?.orderDetails
                         .reduce((prev, current) => prev + current.price, 0)
-                        .toLocaleString("ko-KR")}{" "}
+                        .toLocaleString("ko-KR")}
                       원
                     </span>
                   </div>

@@ -193,9 +193,9 @@ const OrderList = () => {
                   {activeList.ticketId ? (
                     <div
                       onClick={() => linkToTicket(activeList)}
-                      className="flex w-[15%] text-3xl justify-start"
+                      className="flex w-[15%] text-4xl justify-start"
                     >
-                      <HiOutlineTicket className="cursor-pointer" />
+                      <HiOutlineTicket className="cursor-pointer animate-bounce" />
                     </div>
                   ) : (
                     <div className="flex w-[15%] text-3xl justify-start"></div>
@@ -303,7 +303,7 @@ const OrderList = () => {
                         : `${DOCKER_URL}/pic/restaurant/${item?.restaurantId}/${item?.pic}`
                     }
                     alt="식당이미지"
-                    className="w-16 h-16 rounded-xl border border-neutral-200 object-cover shadow-sm p-0.5"
+                    className="min-w-16 w-16 h-16 rounded-xl border border-neutral-200 object-cover shadow-sm p-0.5"
                   />
                   <div className="flex flex-col w-full">
                     <div className="flex font-semibold text-2xl">
