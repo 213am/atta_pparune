@@ -13,17 +13,22 @@
 
 ---
 
+## 2. 시연 영상
+
+
+
+<br/>
+
 ## 👩‍💻👨‍💻 **2. 프로젝트 참여자**
 
-### 🎨 **Front-End (FE)**
+| [이한샘](https://github.com/213am) | [강정호](https://github.com/jungho-Kang) | 권혜지 | 사공수기 | 이어진 | 김우준 |
+| :--: | :--: | :--: | :--: | :--: | :--: |
+| <img src="https://avatars.githubusercontent.com/u/93510588?v=4" alt="이한샘 프로필" width="120"/> | <img src="https://avatars.githubusercontent.com/u/186558760?v=4" alt="강정호 프로필" width="120"/> | <img src="https://avatars.githubusercontent.com/u/173993634?v=4" alt="권혜지 프로필" width="120"/> | <img src="https://user-images.githubusercontent.com/91620721/152671737-f29d8e5c-76fd-482f-a133-32bedf3a4805.png" alt="사공수기 프로필" width="120"/> | <img src="https://user-images.githubusercontent.com/91620721/152671740-bbd22424-7aca-4c89-a861-da87c1a25773.png" alt="이어진 프로필" width="120"/> | <img src="https://user-images.githubusercontent.com/91620721/152671740-bbd22424-7aca-4c89-a861-da87c1a25773.png" alt="김우준 프로필" width="120"/> |
+| `Front-end` | `Front-end` | `Back-end` | `Back-end` | `Back-end` | `Back-end` |
 
-- **🧑‍💼 팀장**: 강정호
-- **👨‍💻 팀원**: 이한샘
 
-### 🔧 **Back-End (BE)**
+<br/>
 
-- **🧑‍💼 팀장**: 김우준
-- **👩‍💻 팀원**: 권혜지, 김일지, 사공수기, 이어진
 
 ---
 
