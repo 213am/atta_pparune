@@ -1,6 +1,62 @@
-### 🌟 **아따빠르네 프로젝트** 🍽️💼
+# 🌟 **아따빠르네 프로젝트** 🍽️💼
 
 🚀 **회사원의 점심 예약 & 식대 관리 솔루션**
+
+## 🌐 사이트 접속 정보
+
+- **서비스 주소**: [https://attaparune.kro.kr:5232](https://attaparune.kro.kr:5232)
+- **각 서비스별 접속 페이지**는 **서비스 하단 우측**에서 확인할 수 있습니다.
+
+## 📱 디바이스 기반 자동 라우팅
+
+접속 디바이스의 종류에 따라 사용자를 적절한 페이지로 자동 유도합니다.  
+User-Agent 분석 + 화면 너비 조건을 함께 고려한 **맞춤형 라우팅 전략**을 적용했습니다.
+
+---
+
+### 🧠 구현 방식
+
+```ts
+function getDeviceType(): string {
+  const userAgent = navigator.userAgent.toLowerCase();
+
+  if (/mobile/i.test(userAgent)) {
+    return "mobile";
+  }
+
+  if (
+    /ipad|tablet/i.test(userAgent) ||
+    (/android/i.test(userAgent) && !/mobile/i.test(userAgent)) ||
+    (width >= 768 && width <= 1400) // 태블릿 해상도
+  ) {
+    return "tablet";
+  }
+
+  return "desktop";
+}
+```
+
+📍 라우팅 기준
+디바이스	조건	기본 라우팅
+📱 모바일	userAgent.includes('mobile')	/user (일반 사용자 페이지)
+📟 태블릿	userAgent.includes('tablet') or width 768 ~ 1400px	/store (식당 관리자 페이지)
+💻 데스크탑	그 외 모든 경우	/service (서비스 소개 페이지)
+
+---
+
+## 🧪 테스트 계정 정보
+
+### 👤 사용자
+- **ID**: `00010009`  
+- **PW**: `qwer12#$`
+
+### 🍽️ 식당 관리자
+- **ID**: `restaurant5`  
+- **PW**: `qwer12#$`
+
+### 🏢 회사 관리자
+- **ID**: `companyadmin1`  
+- **PW**: `qwer12#$`
 
 ---
 
@@ -163,9 +219,9 @@
 
 ## 👩‍💻👨‍💻 **3. 프로젝트 참여자**
 
-| [이한샘](https://github.com/213am) | [강정호](https://github.com/jungho-Kang) | 권혜지 | 사공수기 | 이어진 | 김우준 |
+| [이한샘](https://github.com/213am) | [강정호](https://github.com/jungho-Kang) | [권혜지](https://github.com/hyeji-007) | [사공수기](https://github.com/proregular) | [이어진](https://github.com/djwls0823) | [김우준](https://github.com/KWooJun) |
 | :--: | :--: | :--: | :--: | :--: | :--: |
-| <img src="https://avatars.githubusercontent.com/u/93510588?v=4" alt="이한샘 프로필" width="120"/> | <img src="https://avatars.githubusercontent.com/u/186558760?v=4" alt="강정호 프로필" width="120"/> | <img src="https://avatars.githubusercontent.com/u/173993634?v=4" alt="권혜지 프로필" width="120"/> | <img src="https://user-images.githubusercontent.com/91620721/152671737-f29d8e5c-76fd-482f-a133-32bedf3a4805.png" alt="사공수기 프로필" width="120"/> | <img src="https://user-images.githubusercontent.com/91620721/152671740-bbd22424-7aca-4c89-a861-da87c1a25773.png" alt="이어진 프로필" width="120"/> | <img src="https://user-images.githubusercontent.com/91620721/152671740-bbd22424-7aca-4c89-a861-da87c1a25773.png" alt="김우준 프로필" width="120"/> |
+| <img src="https://avatars.githubusercontent.com/u/93510588?v=4" alt="이한샘 프로필" width="120"/> | <img src="https://avatars.githubusercontent.com/u/186558760?v=4" alt="강정호 프로필" width="120"/> | <img src="https://avatars.githubusercontent.com/u/173993634?v=4" alt="권혜지 프로필" width="120"/> | <img src="https://avatars.githubusercontent.com/u/111679358?v=4" alt="사공수기 프로필" width="120"/> | <img src="https://avatars.githubusercontent.com/u/184086242?v=4" alt="이어진 프로필" width="120"/> | <img src="https://avatars.githubusercontent.com/u/130899969?v=4" alt="김우준 프로필" width="120"/> |
 | `Front-end` | `Front-end` | `Back-end` | `Back-end` | `Back-end` | `Back-end` |
 
 <br/>
@@ -174,25 +230,34 @@
 
 ## ✍️ **4. FE 역할 분담**
 
-### 💡 **강정호**
+### 💡 강정호
 
-- 🔑 **로그인 기능** (Cookie, Recoil)  
-- 🗺️ **식당 찾기** (Kakao Map)  
-- 🍽️ **사용자 예약 & 앉아서 주문**  
-- 📋 **식당 메뉴 CRUD**  
-- 🏠 **사장님 정보 관리**  
-- 🏢 **가게 등록**
+#### 📌 2차 작업
+- 🔑 **로그인 기능** (Cookie, Recoil)
+- 🗺️ **식당 찾기** (Kakao Map)
+- 🍽️ **사용자 예약 & 앉아서 주문**
+- 📋 **식당 메뉴 CRUD**
+- 🏠 **사장님 정보 관리**
+- 🏢 **가게 등록 기능**
 
-### 📲 **이한샘**
+#### 📌 3차 작업
+- ⏳ 진행 예정
 
-- 🔔 **알림 기능** (Socket)  
-- 📜 **주문 내역 관리**  
-- 🔳 **QR 코드 생성** (qrcode.react)  
-- 💳 **사용자 결제 기능**  
-- 🛠️ **사용자 정보 관리**  
-- 🛎️ **주문 CRUD**  
+---
+
+### 📲 이한샘
+
+#### 📌 2차 작업
+- 🔔 **알림 기능** (WebSocket + Stomp)
+- 📜 **주문 내역 관리**
+- 🔳 **QR 코드 생성** (qrcode.react)
+- 💳 **사용자 결제 기능**
+- 🛠️ **사용자 정보 관리**
+- 🛎️ **주문 CRUD**
 - 🏠 **메인 화면 개발**
 
+#### 📌 3차 작업
+- ⏳ 진행 예정
 ---
 
 ## 📅 **5. 개발 기간**
@@ -277,194 +342,36 @@
 📁 **프로젝트 디렉토리**
 
 ```
-atta_pparune
-├─ .prettierrc
-├─ eslint.config.js
-├─ index.html
-├─ manifest.json
-├─ package-lock.json
-├─ package.json
-├─ public
-│  ├─ adminLogo.png
-│  ├─ background.webp
-│  ├─ emailauth.png
-│  ├─ guide1.PNG
-│  ├─ lightLogo.png
-│  ├─ loadingImage.jpg
-│  ├─ logo.png
-│  ├─ mobile_frame.jpg
-│  ├─ profile.jpeg
-│  ├─ restaurant_default.png
-│  ├─ startingPage.webp
-│  ├─ swiper1.webp
-│  ├─ swiper2.webp
-│  └─ swiper3.webp
-├─ README.md
-├─ src
-│  ├─ App.css
-│  ├─ App.tsx
-│  ├─ assets
-│  │  └─ favicon.png
-│  ├─ atoms
-│  │  ├─ companyPointAtom.ts
-│  │  ├─ noticeAtom.jsx
-│  │  ├─ restaurantAtom.jsx
-│  │  ├─ roleAtom.jsx
-│  │  ├─ serviceAtom.ts
-│  │  ├─ SideBarAtom.ts
-│  │  └─ userAtom.jsx
-│  ├─ components
-│  │  ├─ addHypen.ts
-│  │  ├─ AdminHeader.tsx
-│  │  ├─ AdminSideBar.tsx
-│  │  ├─ api.js
-│  │  ├─ cookie.ts
-│  │  ├─ ImgPreview.jsx
-│  │  ├─ layouts
-│  │  │  ├─ CompanyLayout.jsx
-│  │  │  ├─ CompanySideBar.tsx
-│  │  │  ├─ store.css
-│  │  │  ├─ StoreLayout.jsx
-│  │  │  ├─ user.css
-│  │  │  └─ UserLayout.jsx
-│  │  ├─ Loading.jsx
-│  │  ├─ LoadingScreen.jsx
-│  │  ├─ MenuBar.jsx
-│  │  ├─ Modal.jsx
-│  │  ├─ notification
-│  │  │  ├─ getAlert.js
-│  │  │  ├─ getAlert.module.css
-│  │  │  ├─ NotificationIcon.jsx
-│  │  │  ├─ NotificationPage.jsx
-│  │  │  └─ StompComponent.jsx
-│  │  ├─ PwKeyboard.tsx
-│  │  ├─ ServiceFooter.tsx
-│  │  ├─ ServiceHeader.tsx
-│  │  ├─ useAuth.jsx
-│  │  └─ useModal.jsx
-│  ├─ constants
-│  │  ├─ LanguageCheck.js
-│  │  ├─ Role.js
-│  │  ├─ securePin.js
-│  │  └─ url.js
-│  ├─ index.css
-│  ├─ main.tsx
-│  ├─ pages
-│  │  ├─ admin
-│  │  │  ├─ AdminPage.tsx
-│  │  │  ├─ Calculation.tsx
-│  │  │  ├─ enquiry
-│  │  │  │  ├─ BarChart.tsx
-│  │  │  │  ├─ Enquiry.tsx
-│  │  │  │  ├─ EnquiryPage.tsx
-│  │  │  │  └─ PieChart.tsx
-│  │  │  ├─ franchisee
-│  │  │  │  ├─ FranchiseeCompanyPage.tsx
-│  │  │  │  └─ FranchiseeStorePage.tsx
-│  │  │  ├─ refund
-│  │  │  │  ├─ Refund.tsx
-│  │  │  │  └─ RefundPage.tsx
-│  │  │  └─ transaction
-│  │  │     ├─ DepositHistory.tsx
-│  │  │     └─ PointHistory.tsx
-│  │  ├─ auth
-│  │  │  ├─ EditPwPage.jsx
-│  │  │  ├─ EmailAuthPage.jsx
-│  │  │  ├─ FindIdPage.jsx
-│  │  │  ├─ FindPwPage.jsx
-│  │  │  ├─ LoginPage.jsx
-│  │  │  ├─ loginStyle.js
-│  │  │  ├─ PolicyPage.jsx
-│  │  │  └─ SignUpPage.jsx
-│  │  ├─ company
-│  │  │  ├─ account
-│  │  │  │  ├─ AccountPage.tsx
-│  │  │  │  ├─ ChangePassword.tsx
-│  │  │  │  ├─ Info.tsx
-│  │  │  │  └─ JoinMember.tsx
-│  │  │  ├─ dashboard
-│  │  │  │  ├─ DashBoard.tsx
-│  │  │  │  ├─ EnquiryHistory.tsx
-│  │  │  │  ├─ PointChart.tsx
-│  │  │  │  └─ PointHistory.tsx
-│  │  │  ├─ member
-│  │  │  │  ├─ EmployeeList.tsx
-│  │  │  │  └─ Member.tsx
-│  │  │  └─ transaction
-│  │  │     ├─ BuyPoint.tsx
-│  │  │     ├─ CpTransaction.tsx
-│  │  │     ├─ SendPoint.tsx
-│  │  │     └─ toss
-│  │  │        ├─ PaymentCheckoutPage.jsx
-│  │  │        └─ WidgetSuccess.jsx
-│  │  ├─ IndexPage.jsx
-│  │  ├─ NotFound.tsx
-│  │  ├─ service
-│  │  │  ├─ AboutPage.tsx
-│  │  │  ├─ AddCompanyPage.jsx
-│  │  │  ├─ AddStorePage.jsx
-│  │  │  ├─ auth
-│  │  │  │  └─ ServiceLoginPage.tsx
-│  │  │  ├─ EnrollServicePage.tsx
-│  │  │  ├─ IndexPage.tsx
-│  │  │  └─ notice
-│  │  │     ├─ Board.tsx
-│  │  │     ├─ DetailPage.tsx
-│  │  │     ├─ EditPostPage.tsx
-│  │  │     ├─ notice.css
-│  │  │     ├─ NoticePage.tsx
-│  │  │     ├─ Question.tsx
-│  │  │     └─ WritePostPage.tsx
-│  │  ├─ storeManager
-│  │  │  ├─ menu
-│  │  │  │  └─ StoreMenuPage.jsx
-│  │  │  ├─ review
-│  │  │  │  └─ StoreReviewPage.tsx
-│  │  │  ├─ salesConfirm
-│  │  │  │  ├─ LineChart.jsx
-│  │  │  │  ├─ Sales.jsx
-│  │  │  │  ├─ SalesConfirm.jsx
-│  │  │  │  └─ SalesPage.jsx
-│  │  │  ├─ SideBar.jsx
-│  │  │  ├─ SideBarRight.jsx
-│  │  │  ├─ storeAuth
-│  │  │  │  ├─ StoreInfo.jsx
-│  │  │  │  └─ StoreInfoPage.jsx
-│  │  │  ├─ StorePage.jsx
-│  │  │  └─ tableManage
-│  │  │     ├─ OderList.jsx
-│  │  │     └─ Table.jsx
-│  │  └─ user
-│  │     ├─ Index.tsx
-│  │     ├─ order
-│  │     │  ├─ IndexPage.jsx
-│  │     │  ├─ OrderLoading.jsx
-│  │     │  ├─ OrderMemberPage.jsx
-│  │     │  ├─ OrderPricePage.jsx
-│  │     │  ├─ OrderRequestPage.jsx
-│  │     │  ├─ PlaceToOrder.jsx
-│  │     │  ├─ QRCode.jsx
-│  │     │  └─ QRCodeScan.tsx
-│  │     ├─ payment
-│  │     │  ├─ PaymentList.jsx
-│  │     │  └─ RequestPayment.jsx
-│  │     ├─ restaurant
-│  │     │  ├─ MenuSelectPage.jsx
-│  │     │  ├─ RestaurantDetailPage.jsx
-│  │     │  ├─ RestaurantPage.jsx
-│  │     │  └─ RestaurantReviewPage.jsx
-│  │     ├─ userInfo
-│  │     │  ├─ EditInfoPage.jsx
-│  │     │  ├─ IndexPage.jsx
-│  │     │  ├─ MyReviewPage.jsx
-│  │     │  └─ WriteReview.tsx
-│  │     └─ UserMainPage.tsx
-│  └─ vite-env.d.ts
-├─ tailwind.config.js
-├─ tsconfig.app.json
-├─ tsconfig.json
-├─ tsconfig.node.json
-└─ vite.config.ts
+atta_pparune/
+├── public/                      # 정적 파일 (이미지, 로고 등)
+│   └── *.png, *.jpg, *.webp ...
+├── src/
+│   ├── assets/                  # 파비콘 등 정적 에셋
+│   ├── atoms/                   # Recoil 전역 상태 관리
+│   ├── components/              # 공통 UI 컴포넌트 및 레이아웃
+│   │   ├── layouts/             # 사용자별 레이아웃 모음
+│   │   ├── notification/        # 알림 관련 컴포넌트
+│   │   └── ...                  # 기타 공통 컴포넌트
+│   ├── constants/               # URL, 언어 설정, 사용자 역할구분 등
+│   ├── hooks/                   # 커스텀 훅
+│   ├── pages/                   # 페이지별 라우트 모음
+│   │   ├── auth/                # 로그인, 회원가입, 비밀번호 등
+│   │   ├── admin/               # 시스템 관리자 페이지
+│   │   ├── company/             # 가맹 회사 관리자 페이지
+│   │   ├── service/             # 서비스 소개, 공지사항
+│   │   ├── storeManager/        # 제휴 식당 관리자 기능
+│   │   └── user/                # 일반 사용자 페이지
+│   ├── index.css                # 전역 스타일
+│   ├── App.tsx                  # 라우팅 및 루트 컴포넌트
+│   ├── main.tsx                 # 앱 엔트리 포인트
+│   └── vite-env.d.ts            # 타입 환경설정
+├── .prettierrc            
+├── eslint.config.js    
+├── package.json              
+├── tailwind.config.js    
+├── tsconfig*.json            
+├── vite.config.ts             
+└── README.md
 
 ```
 
