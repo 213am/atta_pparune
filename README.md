@@ -37,10 +37,11 @@ function getDeviceType(): string {
 ```
 
 📍 라우팅 기준
-디바이스	조건	기본 라우팅
-📱 모바일	userAgent.includes('mobile')	/user (일반 사용자 페이지)
-📟 태블릿	userAgent.includes('tablet') or width 768 ~ 1400px	/store (식당 관리자 페이지)
-💻 데스크탑	그 외 모든 경우	/service (서비스 소개 페이지)
+
+📱 모바일	userAgent.includes('mobile')	/user (일반 사용자 페이지)   
+📟 태블릿	userAgent.includes('tablet') or width 768 ~ 1400px	/store (식당 관리자 페이지)   
+💻 데스크탑	그 외 모든 경우	/service (서비스 소개 페이지)   
+
 
 ---
 
