@@ -140,7 +140,7 @@ function getDeviceType(): string {
     </td>
     <td align="center">
       <b>업종별 보기</b><br><br>
-      <img src="https://github.com/user-attachments/assets/a631bf55-a112-4f95-87de-9035673334d9" width="250">
+      <img src="https://github.com/user-attachments/assets/fe4ff676-6377-4211-a1bb-dfe00409ed41" width="250">
     </td>
   </tr>
   <!-- 식당 찾기 -->
