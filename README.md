@@ -317,7 +317,7 @@ function getDeviceType(): string {
 
 ## 🖥️ **7. 설치 및 실행 방법**
 
-1️⃣ **`git clone https://github.com/jungho-Kang/second-project.git .`** → 프로젝트 클론  
+1️⃣ **`git clone https://github.com/213am/atta_pparune.git .`** → 프로젝트 클론  
 2️⃣ **`npm i`** → 라이브러리 설치  
 3️⃣ **`npm run dev`** → 프로젝트 실행
 
