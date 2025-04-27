@@ -326,7 +326,7 @@ function getDeviceType(): string {
 ## 📂 **8. 협업 자료**
 
 📜 **업무기록** 
-- [**Notion**](https://www.notion.so/2-17757d27ea1780b5bad3fea038d6931a)  
+- [**Notion**](https://typical-crowd-69f.notion.site/atta-parune-1c0148c3fe7580d2a579cd4e23f2f5e5?pvs=74)  
 
 🎨 **레이아웃**
 - [**2차 Figma**](https://www.figma.com/design/NefxkP15saJiPNTBjAluG8/2%EC%B0%A8-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-UI?node-id=18-8&p=f&t=kleJhbkLApa6Xhx8-0)
